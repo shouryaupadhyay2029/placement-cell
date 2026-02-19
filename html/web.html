@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Placement Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/web.css">
+</head>
+
+<body>
+    <div class="particles"></div>
+
+    <!-- SEMICIRCULAR SIDEBAR -->
+    <aside class="semi-sidebar">
+        <div class="semi-base"></div>
+        <ul class="semi-icons">
+            <li class="semi-item" data-section="dashboard" data-label="Dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </li>
+            <li class="semi-item" data-section="companies" data-label="Companies">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path>
+                </svg>
+            </li>
+            <li class="semi-item" data-section="students" data-label="Students">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </li>
+            <li class="semi-item" data-section="analytics" data-label="Analytics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                    <path d="M17 5c0 2.21-1.79 4-4 4s-4-1.79-4-4"></path>
+                    <path d="M17 19c0-2.21-1.79-4-4-4s-4 1.79-4 4"></path>
+                </svg>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo">
+            <header class="topbar">
+                Placement Portal
+            </header>
+        </div>
+        <div class="nav-links">
+            <a href="#">Login</a>
+            <a href="#">Sign Up</a>
+            <a href="#">About</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        <!-- MAIN CONTENT SECTIONS -->
+        <main class="main-content">
+
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard" class="section active">
+                <h1>Placement Overview - 2026 Batch</h1>
+                <p class="sub-text">
+                    212 Students Placed • 85% Placement Rate
+                </p>
+
+                <div class="stats-container">
+
+                    <div class="card">
+                        <h3>Total Companies</h3>
+                        <p class="number" data-target="0">0</p>
+                        <span>+5 from last year</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Students Placed</h3>
+                        <p class="number" data-target="212">0</p>
+                        <span>85% placement rate</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Highest Package</h3>
+                        <p class="number" data-target="32">0</p>
+                        <span>Offered by ABC Corp</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Average Package</h3>
+                        <p class="number" data-target="12">0</p>
+                        <span>Across all branches</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- COMPANIES SECTION -->
+            <section id="companies" class="section">
+                <h1>Companies</h1>
+                <p class="sub-text">Manage and view company information</p>
+
+                <div class="top-controls">
+                    <input type="text" placeholder="Search companies...">
+                    <select>
+                        <option>All Industries</option>
+                        <option>Technology</option>
+                        <option>Finance</option>
+                        <option>Consulting</option>
+                    </select>
+                    <button class="primary-btn">Add Company</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Industry</th>
+                                <th>Package (LPA)</th>
+                                <th>Openings</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ABC Corporation</td>
+                                <td>Technology</td>
+                                <td>12-15</td>
+                                <td>5</td>
+                                <td>Active</td>
+                                <td>
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Remove</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>XYZ Finance Ltd</td>
+                                <td>Finance</td>
+                                <td>10-14</td>
+                                <td>3</td>
+                                <td>Active</td>
+                                <td>
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Remove</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tech Solutions Inc</td>
+                                <td>Technology</td>
+                                <td>14-18</td>
+                                <td>8</td>
+                                <td>Active</td>
+                                <td>
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- STUDENTS SECTION -->
+            <section id="students" class="section">
+                <h1>Students</h1>
+                <p class="sub-text">Manage and view student information</p>
+
+                <div class="top-controls">
+                    <input type="text" placeholder="Search students...">
+                    <select>
+                        <option>All Branches</option>
+                        <option>CSE</option>
+                        <option>ECE</option>
+                        <option>Mechanical</option>
+                        <option>Civil</option>
+                    </select>
+                    <button class="primary-btn" id="addStudentBtn">Add Student</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Company</th>
+                                <th>Package (LPA)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rajesh Kumar</td>
+                                <td>CSE</td>
+                                <td>ABC Corporation</td>
+                                <td>14</td>
+                                <td>
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Priya Singh</td>
+                                <td>ECE</td>
+                                <td>Tech Solutions Inc</td>
+                                <td>16</td>
+                                <td>
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Amit Patel</td>
+                                <td>Mechanical</td>
+                                <td>XYZ Finance Ltd</td>
+                                <td>12</td>
+                                <td>
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal -->
+                <div id="studentModal" class="modal">
+                    <div class="modal-content">
+                        <h2 style="color: var(--primary); margin-bottom: 15px;">Add Student</h2>
+                        <label>Name</label>
+                        <input type="text" id="nameInput" placeholder="Enter name">
+                        <label>Branch</label>
+                        <input type="text" id="branchInput" placeholder="Enter branch">
+                        <label>Company</label>
+                        <input type="text" id="companyInput" placeholder="Enter company">
+                        <label>Package (LPA)</label>
+                        <input type="text" id="packageInput" placeholder="Enter package">
+                        <div class="modal-buttons">
+                            <button id="closeModal" class="primary-btn" style="background-color: rgba(239, 68, 68, 0.8);">Cancel</button>
+                            <button id="saveStudent" class="primary-btn">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS SECTION -->
+            <section id="analytics" class="section">
+                <h1>Analytics Dashboard</h1>
+                <p class="sub-text">View placement analytics and insights</p>
+
+                <div class="stats-container">
+                    <div class="card">
+                        <h3>Placement Rate</h3>
+                        <p class="number" data-target="85">0</p>
+                        <span>% students placed</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Average Package</h3>
+                        <p class="number" data-target="12">0</p>
+                        <span>LPA across all branches</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Highest Package</h3>
+                        <p class="number" data-target="32">0</p>
+                        <span>LPA offered this year</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Active Companies</h3>
+                        <p class="number" data-target="45">0</p>
+                        <span>Recruiting this semester</span>
+                    </div>
+                </div>
+
+                <h2 style="color: var(--text-main); margin-top: 50px; margin-bottom: 20px;">Top Recruiting Companies</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Company</th>
+                                <th>Students Hired</th>
+                                <th>Avg Package (LPA)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Tech Solutions Inc</td>
+                                <td>18</td>
+                                <td>16.5</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>ABC Corporation</td>
+                                <td>15</td>
+                                <td>14.2</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>XYZ Finance Ltd</td>
+                                <td>12</td>
+                                <td>12.8</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Global Consulting</td>
+                                <td>10</td>
+                                <td>13.5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SETTINGS SECTION -->
+            <section id="settings" class="section">
+                <h1>Settings</h1>
+                <p class="sub-text">Configure dashboard and notification settings</p>
+
+                <div style="max-width: 600px; margin-top: 30px;">
+                    <div style="background: var(--bg-surface); padding: 25px; border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.2); margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">General Settings</h3>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="color: var(--primary); font-weight: 500;">Academic Year</label>
+                            <input type="text" value="2025-2026" style="width: 100%; padding: 10px; margin-top: 8px; border: 1px solid rgba(250, 204, 21, 0.2); border-radius: 8px; background-color: #1a1a1a; color: var(--primary);">
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="color: var(--primary); font-weight: 500;">Institution Name</label>
+                            <input type="text" value="College of Engineering" style="width: 100%; padding: 10px; margin-top: 8px; border: 1px solid rgba(250, 204, 21, 0.2); border-radius: 8px; background-color: #1a1a1a; color: var(--primary);">
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="color: var(--primary); font-weight: 500;">Contact Email</label>
+                            <input type="email" value="placement@college.edu" style="width: 100%; padding: 10px; margin-top: 8px; border: 1px solid rgba(250, 204, 21, 0.2); border-radius: 8px; background-color: #1a1a1a; color: var(--primary);">
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-surface); padding: 25px; border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.2); margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">Notification Settings</h3>
+
+                        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="emailNotif" checked style="cursor: pointer;">
+                            <label for="emailNotif" style="color: var(--primary); cursor: pointer;">Email notifications for new placements</label>
+                        </div>
+
+                        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="updateNotif" checked style="cursor: pointer;">
+                            <label for="updateNotif" style="color: var(--primary); cursor: pointer;">Alert on company updates</label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="weeklyNotif" checked style="cursor: pointer;">
+                            <label for="weeklyNotif" style="color: var(--primary); cursor: pointer;">Weekly placement summary</label>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--bg-surface); padding: 25px; border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.2);">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">Security</h3>
+
+                        <button class="primary-btn" style="width: 100%; margin-bottom: 10px;">Change Password</button>
+                        <button class="primary-btn" style="width: 100%; background-color: rgba(239, 68, 68, 0.8);">Reset Dashboard</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- JS -->
+    <script src="../js/web.js"></script>
+</body>
+
+</html>
