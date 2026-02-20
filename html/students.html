@@ -27,13 +27,15 @@
     </header>
 
     <!-- MAIN CONTAINER -->
+    <div class="particles"></div>
+
     <div class="container">
 
         <!-- SEMICIRCLE SIDEBAR -->
         <aside class="semi-sidebar">
             <div class="semi-base"></div>
             <ul class="semi-icons">
-                <li class="semi-item" data-section="dashboard" onclick="window.location.href='web.html'">
+                <li class="semi-item" data-section="dashboard" data-label="Dashboard" data-nav="web.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
@@ -41,12 +43,14 @@
                         <rect x="3" y="14" width="7" height="7"></rect>
                     </svg>
                 </li>
-                <li class="semi-item" data-section="companies" onclick="window.location.href='companies.html'">
+                <li class="semi-item" data-section="companies" data-label="Companies" data-nav="companies.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path>
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z">
+                        </path>
                     </svg>
                 </li>
-                <li class="semi-item active" data-section="students">
+                <li class="semi-item active" data-section="students" data-label="Students">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                         <circle cx="9" cy="7" r="4"></circle>
@@ -54,7 +58,7 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </li>
-                <li class="semi-item" data-section="analytics">
+                <li class="semi-item" data-section="analytics" data-label="Analytics">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="2" x2="12" y2="22"></line>
                         <path d="M17 5c0 2.21-1.79 4-4 4s-4-1.79-4-4"></path>
@@ -68,17 +72,37 @@
         <main class="main-content">
             <h1>Placed Students - 2026 Batch</h1>
 
-            <!-- TOP CONTROLS -->
-            <div class="top-controls">
-                <input type="text" id="studentSearch" placeholder="Search student...">
+            <div class="stats-container">
+                <div class="card">
+                    <h3>Total Enrolled</h3>
+                    <p class="number">250</p>
+                    <span>Registered for Placements</span>
+                </div>
+                <div class="card">
+                    <h3>Students Placed</h3>
+                    <p class="number">212</p>
+                    <span>Successfully Hired</span>
+                </div>
+                <div class="card">
+                    <h3>Placement Rate</h3>
+                    <p class="number">85%</p>
+                    <span>High Achievement</span>
+                </div>
+            </div>
 
-                <select id="branchFilter">
-                    <option value="all">All Branches</option>
-                    <option value="CSE">CSE</option>
-                    <option value="ECE">ECE</option>
-                    <option value="Mechanical">Mechanical</option>
-                    <option value="Civil">Civil</option>
-                </select>
+            <!-- TOP CONTROLS (Action Bar) -->
+            <div class="top-controls">
+                <button class="primary-btn" id="addStudentBtn">+ Add Student</button>
+                <div class="control-group">
+                    <input type="text" id="studentSearch" placeholder="Search student...">
+                    <select id="branchFilter">
+                        <option value="all">All Branches</option>
+                        <option value="CSE">CSE</option>
+                        <option value="ECE">ECE</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Civil">Civil</option>
+                    </select>
+                </div>
             </div>
 
             <!-- TABLE -->
@@ -91,7 +115,6 @@
                             <th>Company</th>
                             <th>Package (LPA)</th>
                             <th>Actions</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -104,9 +127,7 @@
                                 <button class="edit-btn">Edit</button>
                                 <button class="delete-btn">Delete</button>
                             </td>
-
                         </tr>
-
                         <tr>
                             <td>Ananya Verma</td>
                             <td>ECE</td>
@@ -116,9 +137,7 @@
                                 <button class="edit-btn">Edit</button>
                                 <button class="delete-btn">Delete</button>
                             </td>
-
                         </tr>
-
                         <tr>
                             <td>Vikram Patel</td>
                             <td>Mechanical</td>
@@ -128,9 +147,7 @@
                                 <button class="edit-btn">Edit</button>
                                 <button class="delete-btn">Delete</button>
                             </td>
-
                         </tr>
-
                         <tr>
                             <td>Neha Singh</td>
                             <td>Civil</td>
@@ -140,22 +157,9 @@
                                 <button class="edit-btn">Edit</button>
                                 <button class="delete-btn">Delete</button>
                             </td>
-
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="top-controls">
-                <button class="primary-btn" id="addStudentBtn">+ Add Student</button>
-                <input type="text" id="studentSearch" placeholder="Search student...">
-                <select id="branchFilter">
-                <option value="all">All Branches</option>
-    <option value="CSE">CSE</option>
-    <option value="ECE">ECE</option>
-    <option value="Mechanical">Mechanical</option>
-    <option value="Civil">Civil</option>
-</select>
-
             </div>
 
 
@@ -174,7 +178,7 @@
         const rows = document.querySelectorAll("#studentTable tbody tr");
         const branchFilter = document.getElementById("branchFilter");
 
-        searchInput.addEventListener("keyup", function() {
+        searchInput.addEventListener("keyup", function () {
             const value = this.value.toLowerCase();
 
             rows.forEach(row => {
@@ -183,7 +187,7 @@
             });
         });
 
-        branchFilter.addEventListener("change", function() {
+        branchFilter.addEventListener("change", function () {
             const value = this.value;
 
             rows.forEach(row => {
