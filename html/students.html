@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Students - Placement Portal</title>
+    <title>Students - PlacePro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Google Font -->
@@ -14,20 +14,89 @@
 </head>
 
 <body>
-
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="logo">Placement Portal</div>
-        <div class="nav-links">
-            <a href="web.html">Dashboard</a>
-            <a href="companies.html">Companies</a>
-            <a href="students.html">Students</a>
-            <a href="#">Experiences</a>
+    <div class="loader-overlay" id="loader">
+        <div class="loader">
+            <div class="cube">
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+            </div>
+            <div class="loader-text">Loading</div>
         </div>
-    </header>
+    </div>
+
+
+    <!-- CIRCULAR LOGO -->
+    <a href="web.html" class="circular-logo" title="Back to Home">
+        <img src="../logo.jpeg" alt="PlacePro Logo">
+    </a>
+
+    <!-- NEON AUTH BUTTONS -->
+    <div class="neon-auth-container">
+        <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
+        <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
+        <div class="theme-switch-container">
+            <label class="theme-switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider-switch"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="auth-modal">
+        <div class="wrapper">
+            <div class="card-switch">
+                <label class="switch">
+                    <input type="checkbox" class="toggle" id="authToggle">
+                    <span class="slider"></span>
+                    <span class="card-side"></span>
+                    <div class="flip-card__inner">
+                        <div class="flip-card__front">
+                            <div class="title">Log in</div>
+                            <form class="flip-card__form" action="">
+                                <input class="flip-card__input" name="email" placeholder="Email" type="email">
+                                <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                                <button class="flip-card__btn">Let's go!</button>
+                            </form>
+                        </div>
+                        <div class="flip-card__back">
+                            <div class="title">Sign up</div>
+                            <form class="flip-card__form" action="">
+                                <input class="flip-card__input" placeholder="Name" type="name">
+                                <input class="flip-card__input" name="email" placeholder="Email" type="email">
+                                <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                                <button class="flip-card__btn">Confirm!</button>
+                            </form>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            <button class="modal-close" id="closeAuthModal">&times;</button>
+        </div>
+    </div>
 
     <!-- MAIN CONTAINER -->
-    <div class="particles"></div>
+    <div class="sidebar-3d-indicator">
+        <div class="indicator-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
+
 
     <div class="container">
 

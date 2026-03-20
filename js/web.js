@@ -7,6 +7,16 @@ if (document.readyState === "loading") {
     initSemiSidebar();
 }
 
+window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+    if (loader) {
+        // Add a small delay for premium feel
+        setTimeout(() => {
+            loader.classList.add("hidden");
+        }, 800);
+    }
+});
+
 // semicircle sidebar positioning
 function initSemiSidebar() {
     const items = document.querySelectorAll('.semi-item');
@@ -55,34 +65,40 @@ function initSemiSidebar() {
     let hideTimeout;
     const revealDistance = 250; // distance in px from left edge to start revealing
 
+    let isThrottled = false;
     document.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
+        if (isThrottled) return;
+        isThrottled = true;
+        requestAnimationFrame(() => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
 
-        // Get sidebar rect
-        const rect = semiSidebar.getBoundingClientRect();
-        // Since it's fixed, we can just check if cursor is near it
-        const centerY = rect.top + rect.height / 2;
-        const distanceToCenterY = Math.abs(mouseY - centerY);
+            // Get sidebar rect
+            const rect = semiSidebar.getBoundingClientRect();
+            // Since it's fixed, we can just check if cursor is near it
+            const centerY = rect.top + rect.height / 2;
+            const distanceToCenterY = Math.abs(mouseY - centerY);
 
-        // Reveal if mouse is near the left edge AND vertically near the sidebar
-        if (mouseX < revealDistance && distanceToCenterY < 400) {
-            clearTimeout(hideTimeout);
-            semiSidebar.classList.add('visible');
-            document.body.classList.add('sidebar-open');
-        } else {
-            // Delay disappearing
-            if (!hideTimeout && semiSidebar.classList.contains('visible')) {
-                hideTimeout = setTimeout(() => {
-                    // Don't hide if mouse is currently hovering
-                    if (!semiSidebar.matches(':hover')) {
-                        semiSidebar.classList.remove('visible');
-                        document.body.classList.remove('sidebar-open');
-                    }
-                    hideTimeout = null;
-                }, 1500);
+            // Reveal if mouse is near the left edge AND vertically near the sidebar
+            if (mouseX < revealDistance && distanceToCenterY < 400) {
+                clearTimeout(hideTimeout);
+                semiSidebar.classList.add('visible');
+                document.body.classList.add('sidebar-open');
+            } else {
+                // Delay disappearing
+                if (!hideTimeout && semiSidebar.classList.contains('visible')) {
+                    hideTimeout = setTimeout(() => {
+                        // Don't hide if mouse is currently hovering
+                        if (!semiSidebar.matches(':hover')) {
+                            semiSidebar.classList.remove('visible');
+                            document.body.classList.remove('sidebar-open');
+                        }
+                        hideTimeout = null;
+                    }, 1500);
+                }
             }
-        }
+            isThrottled = false;
+        });
     });
 
     // Hover Persistence
@@ -214,8 +230,9 @@ const glow = document.querySelector(".cursor-glow");
 
 document.addEventListener("mousemove", (e) => {
     if (glow) {
-        glow.style.left = e.clientX + "px";
-        glow.style.top = e.clientY + "px";
+        requestAnimationFrame(() => {
+            glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+        });
     }
 });
 
@@ -253,3 +270,120 @@ document.querySelectorAll("a").forEach(link => {
     });
 }
 );
+// AUTH MODAL LOGIC
+const authModal = document.getElementById("authModal");
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const closeAuthModal = document.getElementById("closeAuthModal");
+const authToggle = document.getElementById("authToggle");
+
+if (authModal && loginBtn && signupBtn && closeAuthModal) {
+    const showModal = (isSignup = false) => {
+        authModal.style.display = "flex";
+        setTimeout(() => {
+            authModal.classList.add("show");
+        }, 10);
+        authToggle.checked = isSignup;
+    };
+
+    const hideModal = () => {
+        authModal.classList.remove("show");
+        setTimeout(() => {
+            authModal.style.display = "none";
+        }, 400);
+    };
+
+    loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showModal(false);
+    });
+
+    signupBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showModal(true);
+    });
+
+    closeAuthModal.addEventListener("click", hideModal);
+
+    authModal.addEventListener("click", (e) => {
+        if (e.target === authModal) {
+            hideModal();
+        }
+    });
+
+    // Close on ESC key
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && authModal.classList.contains("show")) {
+            hideModal();
+        }
+    });
+}
+
+// Helper: create a single star element
+function createStar(extraClass) {
+    const star = document.createElement("span");
+    star.classList.add("star");
+    if (extraClass) star.classList.add(extraClass);
+
+    star.style.left = Math.random() * 100 + "vw";
+    star.style.top = (66 + Math.random() * 29) + "vh";
+
+    const duration = 10 + Math.random() * 10;
+    star.style.animationDuration = duration + "s";
+    star.style.animationDelay = Math.random() * 6 + "s";
+
+    const size = 1.5 + Math.random() * 2.5;
+    star.style.width = size + "px";
+    star.style.height = size + "px";
+
+    return star;
+}
+
+// Inject extra yellow stars for dark mode
+function addDarkStars() {
+    const container = document.querySelector(".particles");
+    if (!container) return;
+    for (let i = 0; i < 35; i++) {
+        container.appendChild(createStar("dark-extra-star"));
+    }
+}
+
+// Remove extra dark-mode stars
+function removeDarkStars() {
+    document.querySelectorAll(".dark-extra-star").forEach(el => el.remove());
+}
+
+// THEME SWITCHER LOGIC
+function initTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+        body.classList.add('dark-theme');
+        if (themeToggle) themeToggle.checked = true;
+        addDarkStars();
+    } else {
+        // Default: always start in light/bright theme
+        body.classList.remove('dark-theme');
+        if (themeToggle) themeToggle.checked = false;
+        localStorage.setItem('theme', 'light');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+                addDarkStars();
+            } else {
+                body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+                removeDarkStars();
+            }
+        });
+    }
+}
+
+// Call theme init
+initTheme();

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Placement Portal</title>
+    <title>PlacePro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Google Font -->
@@ -14,7 +14,38 @@
 </head>
 
 <body>
+    <div class="loader-overlay" id="loader">
+        <div class="loader">
+            <div class="cube">
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+            </div>
+            <div class="loader-text">Loading</div>
+        </div>
+    </div>
+
     <div class="particles"></div>
+
+    <div class="sidebar-3d-indicator">
+        <div class="indicator-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
 
     <div class="separation-line"></div>
     <div class="lower-region-layer"></div>
@@ -57,18 +88,73 @@
     </aside>
 
     <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="logo">
-            <header class="topbar">
-                Placement Portal
-            </header>
-        </div>
-        <div class="nav-links">
-            <a href="#">Login</a>
-            <a href="#">Sign Up</a>
-            <a href="#">About</a>
+    <header class="navbar-wrapper">
+        <button class="nav-btn navbar-left">
+            <span class="nav-btn-top">
+                <div class="logo">
+                    <header class="topbar">
+                        PlacePro
+                    </header>
+                </div>
+            </span>
+        </button>
+        <div class="navbar-right-group">
+            <button class="nav-btn navbar-right-item">
+                <span class="nav-btn-top nav-links" style="margin: 0;">
+                    <a href="#">About</a>
+                </span>
+            </button>
+            <button class="nav-btn navbar-right-item">
+                <span class="nav-btn-top nav-links" style="margin: 0;">
+                    <a href="#" id="loginBtn">Login</a>
+                    <a href="#" id="signupBtn">Sign Up</a>
+                </span>
+            </button>
+            <button class="nav-btn navbar-right-item">
+                <span class="nav-btn-top">
+                    <div class="theme-switch-container" style="margin-left: 0;">
+                        <label class="theme-switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+                </span>
+            </button>
         </div>
     </header>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="auth-modal">
+        <div class="wrapper">
+            <div class="card-switch">
+                <label class="switch">
+                    <input type="checkbox" class="toggle" id="authToggle">
+                    <span class="slider"></span>
+                    <span class="card-side"></span>
+                    <div class="flip-card__inner">
+                        <div class="flip-card__front">
+                            <div class="title">Log in</div>
+                            <form class="flip-card__form" action="">
+                                <input class="flip-card__input" name="email" placeholder="Email" type="email">
+                                <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                                <button class="flip-card__btn">Let's go!</button>
+                            </form>
+                        </div>
+                        <div class="flip-card__back">
+                            <div class="title">Sign up</div>
+                            <form class="flip-card__form" action="">
+                                <input class="flip-card__input" placeholder="Name" type="name">
+                                <input class="flip-card__input" name="email" placeholder="Email" type="email">
+                                <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                                <button class="flip-card__btn">Confirm!</button>
+                            </form>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            <button class="modal-close" id="closeAuthModal">&times;</button>
+        </div>
+    </div>
 
     <!-- MAIN CONTAINER -->
     <div class="container">
