@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics - PlacePro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/web.css">
+</head>
+
+<body>
+    <div class="loader-overlay" id="loader">
+        <div class="loader">
+            <div class="cube">
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+            </div>
+            <div class="loader-text">Loading</div>
+        </div>
+    </div>
+    <div class="particles"></div>
+
+    <div class="sidebar-3d-indicator">
+        <div class="indicator-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <!-- SEMICIRCULAR SIDEBAR -->
+    <aside class="semi-sidebar">
+        <div class="semi-base"></div>
+        <ul class="semi-icons">
+            <li class="semi-item" data-section="dashboard" data-label="Dashboard" data-nav="web.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </li>
+            <li class="semi-item" data-section="companies" data-label="Companies" data-nav="companies.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z">
+                    </path>
+                </svg>
+            </li>
+            <li class="semi-item" data-section="students" data-label="Students" data-nav="students.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </li>
+            <li class="semi-item active" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                    <path d="M17 5c0 2.21-1.79 4-4 4s-4-1.79-4-4"></path>
+                    <path d="M17 19c0-2.21-1.79-4-4-4s-4 1.79-4 4"></path>
+                </svg>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- NAVBAR -->
+    <header class="navbar-wrapper">
+        <a href="web.html" style="text-decoration: none;">
+            <div class="logo">
+                <span class="place-text">Place<span class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span class="box-right"></span></span><span class="pro-text">Pro<span class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span class="box-right"></span></span>
+                <div class="logo-tagline">Powering Student Success</div>
+            </div>
+        </a>
+        <div class="hamburger-container">
+            <label class="hamburger">
+                <input type="checkbox" id="hamburgerToggle">
+                <svg viewBox="0 0 32 32">
+                    <path class="line line-top-bottom"
+                        d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
+                    <path class="line" d="M7 16 27 16"></path>
+                    <path class="line line-top-bottom"
+                        d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
+                </svg>
+            </label>
+            <div class="dropdown-menu">
+                <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
+                <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
+
+                <div
+                    style="display: flex; gap: 15px; align-items: center; justify-content: space-between; margin: 10px 0; padding: 0 10px;">
+                    <div class="theme-switch-container" style="margin: 0; flex-shrink: 0;">
+                        <label class="theme-switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+                    <button class="neon-btn"
+                        style="flex: 1; margin: 0; min-height: 40px; font-size: 14px; display: flex; align-items: center; justify-content: center;">About</button>
+                </div>
+
+                <div class="social-links">
+                    <a href="https://github.com/shouryaupadhyay2029" target="_blank" class="social-btn" title="GitHub">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/shourya-upadhyay-693a02331" target="_blank" class="social-btn"
+                        title="LinkedIn">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <!-- ANALYTICS SECTION -->
+            <section id="analytics" class="section active">
+                <h1>Analytics Dashboard</h1>
+                <p class="sub-text">View placement analytics and insights</p>
+
+                <div class="stats-container">
+                    <div class="card">
+                        <h3>Placement Rate</h3>
+                        <p class="number" data-target="85">0</p>
+                        <span>% students placed</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Average Package</h3>
+                        <p class="number" data-target="12">0</p>
+                        <span>LPA across all branches</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Highest Package</h3>
+                        <p class="number" data-target="32">0</p>
+                        <span>LPA offered this year</span>
+                    </div>
+
+                    <div class="card">
+                        <h3>Active Companies</h3>
+                        <p class="number" data-target="45">0</p>
+                        <span>Recruiting this semester</span>
+                    </div>
+                </div>
+
+                <h2 style="color: var(--text-main); margin-top: 50px; margin-bottom: 20px;">Top Recruiting Companies
+                </h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Company</th>
+                                <th>Students Hired</th>
+                                <th>Avg Package (LPA)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Tech Solutions Inc</td>
+                                <td>18</td>
+                                <td>16.5</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>ABC Corporation</td>
+                                <td>15</td>
+                                <td>14.2</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>XYZ Finance Ltd</td>
+                                <td>12</td>
+                                <td>12.8</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Global Consulting</td>
+                                <td>10</td>
+                                <td>13.5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JS -->
+    <script src="../js/web.js"></script>
+</body>
+
+</html>
