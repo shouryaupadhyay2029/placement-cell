@@ -63,7 +63,7 @@ function initSemiSidebar() {
 
     // Proximity Reveal Logic
     let hideTimeout;
-    const revealDistance = 250; // distance in px from left edge to start revealing
+    const revealRadius = 180; // semicircular trigger distance in px
 
     let isThrottled = false;
     document.addEventListener('mousemove', (e) => {
@@ -73,28 +73,30 @@ function initSemiSidebar() {
             const mouseX = e.clientX;
             const mouseY = e.clientY;
 
-            // Get sidebar rect
+            // Get sidebar rect center
             const rect = semiSidebar.getBoundingClientRect();
-            // Since it's fixed, we can just check if cursor is near it
             const centerY = rect.top + rect.height / 2;
             const distanceToCenterY = Math.abs(mouseY - centerY);
+            
+            // Calculate semicircular physical distance from (0, centerY)
+            const distanceToCenter = Math.sqrt(mouseX * mouseX + distanceToCenterY * distanceToCenterY);
 
-            // Reveal if mouse is near the left edge AND vertically near the sidebar
-            if (mouseX < revealDistance && distanceToCenterY < 400) {
-                clearTimeout(hideTimeout);
+            // Reveal if inside the semicircle radius or directly hovering the navigation items
+            if (distanceToCenter < revealRadius || semiSidebar.matches(':hover')) {
+                if (hideTimeout) {
+                    clearTimeout(hideTimeout);
+                    hideTimeout = null;
+                }
                 semiSidebar.classList.add('visible');
                 document.body.classList.add('sidebar-open');
             } else {
-                // Delay disappearing
+                // Delay disappearing safely without overlapping timer issues
                 if (!hideTimeout && semiSidebar.classList.contains('visible')) {
                     hideTimeout = setTimeout(() => {
-                        // Don't hide if mouse is currently hovering
-                        if (!semiSidebar.matches(':hover')) {
-                            semiSidebar.classList.remove('visible');
-                            document.body.classList.remove('sidebar-open');
-                        }
+                        semiSidebar.classList.remove('visible');
+                        document.body.classList.remove('sidebar-open');
                         hideTimeout = null;
-                    }, 1500);
+                    }, 800); // Shorter, crisper delay
                 }
             }
             isThrottled = false;
@@ -359,12 +361,14 @@ function initTheme() {
     const body = document.body;
     const currentTheme = localStorage.getItem('theme');
 
+    // Initial sync
     if (currentTheme === 'dark') {
         body.classList.add('dark-theme');
         if (themeToggle) themeToggle.checked = true;
-        addDarkStars();
+        // Don't call addDarkStars directly to avoid potential race conditions
+        // Wait for DOM or call it with a check
+        setTimeout(addDarkStars, 0); 
     } else {
-        // Default: always start in light/bright theme
         body.classList.remove('dark-theme');
         if (themeToggle) themeToggle.checked = false;
         localStorage.setItem('theme', 'light');
@@ -385,5 +389,49 @@ function initTheme() {
     }
 }
 
-// Call theme init
-initTheme();
+// Call theme init correctly
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTheme);
+} else {
+    initTheme();
+}
+
+// HAMBURGER AUTO-CLOSE LOGIC
+document.addEventListener("DOMContentLoaded", () => {
+    const hamburgerToggle = document.getElementById("hamburgerToggle");
+    const hamburgerContainer = document.querySelector(".hamburger-container");
+    
+    if (hamburgerToggle && hamburgerContainer) {
+        let closeTimeout;
+
+        const startCloseTimer = () => {
+            if (hamburgerToggle.checked) {
+                clearTimeout(closeTimeout);
+                closeTimeout = setTimeout(() => {
+                    hamburgerToggle.checked = false;
+                }, 2500); // 2.5 seconds auto-close delay
+            }
+        };
+
+        const stopCloseTimer = () => {
+            clearTimeout(closeTimeout);
+        };
+
+        hamburgerToggle.addEventListener("change", () => {
+            if (hamburgerToggle.checked) {
+                if (!hamburgerContainer.matches(':hover')) {
+                    startCloseTimer();
+                }
+            } else {
+                stopCloseTimer();
+            }
+        });
+
+        hamburgerContainer.addEventListener("mouseenter", stopCloseTimer);
+        hamburgerContainer.addEventListener("mouseleave", () => {
+            if (hamburgerToggle.checked) {
+                startCloseTimer();
+            }
+        });
+    }
+});

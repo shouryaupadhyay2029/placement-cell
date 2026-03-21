@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/web.css">
@@ -27,6 +27,7 @@
             <div class="loader-text">Loading</div>
         </div>
     </div>
+    <div class="particles"></div>
 
 
     <!-- CIRCULAR LOGO -->
@@ -35,14 +36,25 @@
     </a>
 
     <!-- NEON AUTH BUTTONS -->
-    <div class="neon-auth-container">
-        <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
-        <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
-        <div class="theme-switch-container">
-            <label class="theme-switch">
-                <input type="checkbox" id="themeToggle">
-                <span class="slider-switch"></span>
-            </label>
+    <div class="hamburger-container">
+        <label class="hamburger">
+            <input type="checkbox" id="hamburgerToggle">
+            <svg viewBox="0 0 32 32">
+                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
+                <path class="line" d="M7 16 27 16"></path>
+                <path class="line line-top-bottom" d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
+            </svg>
+        </label>
+        <div class="dropdown-menu">
+            <button class="neon-btn">About</button>
+            <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
+            <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
+            <div class="theme-switch-container">
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider-switch"></span>
+                </label>
+            </div>
         </div>
     </div>
 
@@ -238,6 +250,22 @@
 
     </div>
 
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <h2>Add Student</h2>
+
+            <input type="text" id="nameInput" placeholder="Student Name">
+            <input type="text" id="branchInput" placeholder="Branch">
+            <input type="text" id="companyInput" placeholder="Company">
+            <input type="number" id="packageInput" placeholder="Package (LPA)">
+
+            <div class="modal-buttons">
+                <button id="saveStudent" class="primary-btn">Save</button>
+                <button id="closeModal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JS -->
     <script src="../js/web.js"></script>
 
@@ -270,22 +298,6 @@
             });
         });
     </script>
-
-    <div class="modal" id="studentModal">
-        <div class="modal-content">
-            <h2>Add Student</h2>
-
-            <input type="text" id="nameInput" placeholder="Student Name">
-            <input type="text" id="branchInput" placeholder="Branch">
-            <input type="text" id="companyInput" placeholder="Company">
-            <input type="number" id="packageInput" placeholder="Package (LPA)">
-
-            <div class="modal-buttons">
-                <button id="saveStudent" class="primary-btn">Save</button>
-                <button id="closeModal">Cancel</button>
-            </div>
-        </div>
-    </div>
 
 
 </body>
