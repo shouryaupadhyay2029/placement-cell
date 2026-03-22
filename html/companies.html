@@ -219,33 +219,15 @@
                         <tr>
                             <th>Company</th>
                             <th>Role</th>
-                            <th>CTC (LPA)</th>
-                            <th>Visit Date</th>
+                            <th>Package (LPA)</th>
                             <th>Location</th>
+                            <th>Eligibility</th>
+                            <th>Deadline</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>ABC Corp</td>
-                            <td>Software Engineer</td>
-                            <td>12</td>
-                            <td>12 Jan 2026</td>
-                            <td>Bangalore</td>
-                        </tr>
-                        <tr>
-                            <td>XYZ Tech</td>
-                            <td>Data Analyst</td>
-                            <td>18</td>
-                            <td>25 Jan 2026</td>
-                            <td>Hyderabad</td>
-                        </tr>
-                        <tr>
-                            <td>Innovate Ltd</td>
-                            <td>Graduate Trainee</td>
-                            <td>4</td>
-                            <td>10 Feb 2026</td>
-                            <td>Pune</td>
-                        </tr>
+                    <tbody id="companiesTableBody">
+                        <!-- Dynamic content will be injected here -->
                     </tbody>
                 </table>
             </div>
@@ -253,7 +235,62 @@
         </main>
     </div>
 
+    <!-- ADD COMPANY MODAL -->
+    <div id="companyModal" class="auth-modal">
+        <div class="wrapper" style="width: 600px; max-width: 95%;">
+            <div class="card-switch" style="width: 100%; height: auto; min-height: 500px;">
+                <div class="form-container" style="padding: 30px; background: #000; border-radius: 15px; border: 2px solid var(--primary); box-shadow: 0 0 20px var(--pro-glow-wide); max-height: 85vh; overflow-y: auto;">
+                    <div class="title" style="margin-bottom: 10px; color: var(--primary); text-align: center;">Add New Company</div>
+                    
+                    <!-- Instructions Section -->
+                    <div class="form-instructions" style="background: rgba(250, 204, 21, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: #ddd; line-height: 1.5;">
+                        <strong style="color: var(--primary); display: block; margin-bottom: 5px;">How to fill correctly:</strong>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            <li>Fields marked with <strong>*</strong> are mandatory.</li>
+                            <li><strong>Package:</strong> Enter as a number (e.g., 12 for 12 LPA).</li>
+                            <li><strong>Min CGPA:</strong> Use decimal format (e.g., 7.5 or 8.0).</li>
+                            <li><strong>Branches:</strong> Use commas to separate (e.g., CSE, IT, ECE).</li>
+                            <li><strong>CSV Import:</strong> Ensure your CSV headers match the field names exactly.</li>
+                        </ul>
+                    </div>
+
+                    <form id="companyForm" class="flip-card__form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <input class="flip-card__input" name="company_name" placeholder="Company Name *" type="text" required>
+                        <input class="flip-card__input" name="role" placeholder="Role *" type="text" required>
+                        <input class="flip-card__input" name="package" placeholder="Package (LPA) *" type="text" required>
+                        <input class="flip-card__input" name="location" placeholder="Location *" type="text" required>
+                        <input class="flip-card__input" name="eligibility" placeholder="Eligibility *" type="text" required>
+                        <input class="flip-card__input" name="deadline" placeholder="Deadline *" type="date" required style="color: grey;">
+                        <select class="flip-card__input" name="company_type" style="background: #111; color: #fff; cursor: pointer;">
+                            <option value="" disabled selected>Company Type</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Internship + PPO">Internship + PPO</option>
+                        </select>
+                        <input class="flip-card__input" name="min_cgpa" placeholder="Min CGPA" type="number" step="0.1">
+                        <input class="flip-card__input" name="allowed_branches" placeholder="Allowed Branches (e.g. CSE, IT)" type="text">
+                        <input class="flip-card__input" name="backlog_criteria" placeholder="Backlog Criteria" type="text">
+                        <input class="flip-card__input" name="application_link" placeholder="Application Link" type="url" style="grid-column: span 2;">
+                        <textarea class="flip-card__input" name="selection_process" placeholder="Selection Process" style="grid-column: span 2; height: 80px; padding: 12px; resize: none;"></textarea>
+                        <textarea class="flip-card__input" name="description" placeholder="Short Description" style="grid-column: span 2; height: 80px; padding: 12px; resize: none;"></textarea>
+                        
+                        <div style="grid-column: span 2; display: flex; gap: 15px; margin-top: 10px;">
+                            <button type="submit" class="flip-card__btn" style="flex: 2;">Save Company</button>
+                            <button type="button" id="csvImportBtn" class="flip-card__btn" style="flex: 1; background: #333; border-color: #555;">Import CSV</button>
+                        </div>
+                    </form>
+                    <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+                </div>
+            </div>
+            <button class="modal-close" id="closeCompanyModal">&times;</button>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
     <script src="../js/web.js"></script>
+    <script src="../js/companies.js"></script>
 </body>
 
 </html>

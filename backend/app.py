@@ -22,6 +22,145 @@ class Student(db.Model):
     branch = db.Column(db.String(50))
     year = db.Column(db.String(20))
 
+class Company(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_name = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(100), nullable=False)
+    package = db.Column(db.String(50), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    eligibility = db.Column(db.String(200), nullable=False)
+    deadline = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    # Extra fields
+    company_type = db.Column(db.String(50), nullable=True)
+    min_cgpa = db.Column(db.Float, nullable=True)
+    allowed_branches = db.Column(db.String(200), nullable=True)
+    backlog_criteria = db.Column(db.String(100), nullable=True)
+    selection_process = db.Column(db.Text, nullable=True)
+    application_link = db.Column(db.String(300), nullable=True)
+
+@app.route("/companies", methods=["POST"])
+def add_company():
+    data = request.get_json()
+
+    company_name = data.get("company_name")
+    role = data.get("role")
+    package = data.get("package")
+    location = data.get("location")
+    eligibility = data.get("eligibility")
+    deadline = data.get("deadline")
+    description = data.get("description")
+    
+    # Extra fields
+    company_type = data.get("company_type")
+    min_cgpa = data.get("min_cgpa")
+    allowed_branches = data.get("allowed_branches")
+    backlog_criteria = data.get("backlog_criteria")
+    selection_process = data.get("selection_process")
+    application_link = data.get("application_link")
+
+    if not company_name or not role or not package or not location or not eligibility or not deadline:
+        return jsonify({"error": "Required fields (Name, Role, Package, Location, Eligibility, Deadline) must be filled"}), 400
+
+    new_company = Company(
+        company_name=company_name,
+        role=role,
+        package=package,
+        location=location,
+        eligibility=eligibility,
+        deadline=deadline,
+        description=description,
+        company_type=company_type,
+        min_cgpa=min_cgpa,
+        allowed_branches=allowed_branches,
+        backlog_criteria=backlog_criteria,
+        selection_process=selection_process,
+        application_link=application_link
+    )
+
+    db.session.add(new_company)
+    db.session.commit()
+
+    return jsonify({"message": "Company added successfully"}), 201
+
+@app.route("/companies", methods=["GET"])
+def get_companies():
+    companies = Company.query.all()
+
+    company_list = []
+    for company in companies:
+        company_list.append({
+            "id": company.id,
+            "company_name": company.company_name,
+            "role": company.role,
+            "package": company.package,
+            "location": company.location,
+            "eligibility": company.eligibility,
+            "deadline": company.deadline,
+            "description": company.description,
+            "company_type": company.company_type,
+            "min_cgpa": company.min_cgpa,
+            "allowed_branches": company.allowed_branches,
+            "backlog_criteria": company.backlog_criteria,
+            "selection_process": company.selection_process,
+            "application_link": company.application_link
+        })
+
+    return jsonify(company_list), 200
+
+@app.route("/companies/import", methods=["POST"])
+def import_companies():
+    import csv
+    import io
+    
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+    
+    if file and file.filename.endswith(".csv"):
+        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+        csv_input = csv.DictReader(stream)
+        
+        imported_count = 0
+        errors = []
+        
+        for row in csv_input:
+            try:
+                # Basic validation for CSV fields
+                if not row.get("company_name") or not row.get("role"):
+                    errors.append(f"Row {imported_count + 1} missing required data")
+                    continue
+                
+                new_company = Company(
+                    company_name=row.get("company_name"),
+                    role=row.get("role"),
+                    package=row.get("package", ""),
+                    location=row.get("location", ""),
+                    eligibility=row.get("eligibility", ""),
+                    deadline=row.get("deadline", ""),
+                    description=row.get("description", ""),
+                    company_type=row.get("company_type", ""),
+                    min_cgpa=row.get("min_cgpa", 0.0),
+                    allowed_branches=row.get("allowed_branches", ""),
+                    backlog_criteria=row.get("backlog_criteria", ""),
+                    selection_process=row.get("selection_process", ""),
+                    application_link=row.get("application_link", "")
+                )
+                db.session.add(new_company)
+                imported_count += 1
+            except Exception as e:
+                errors.append(f"Error in row {imported_count + 1}: {str(e)}")
+        
+        db.session.commit()
+        return jsonify({
+            "message": f"Successfully imported {imported_count} companies",
+            "errors": errors
+        }), 201
+    
+    return jsonify({"error": "Invalid file format. Please upload a CSV."}), 400
 
 @app.route("/")
 def home():
