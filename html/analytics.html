@@ -88,51 +88,90 @@
     <header class="navbar-wrapper">
         <a href="web.html" style="text-decoration: none;">
             <div class="logo">
-                <span class="place-text">Place<span class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span class="box-right"></span></span><span class="pro-text">Pro<span class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span class="box-right"></span></span>
+                <span class="place-text">Place<span class="box-top"></span><span class="box-left"></span><span
+                        class="box-bottom"></span><span class="box-right"></span></span><span class="pro-text">Pro<span
+                        class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span
+                        class="box-right"></span></span>
                 <div class="logo-tagline">Powering Student Success</div>
             </div>
         </a>
-        <div class="hamburger-container">
-            <label class="hamburger">
-                <input type="checkbox" id="hamburgerToggle">
-                <svg viewBox="0 0 32 32">
-                    <path class="line line-top-bottom"
-                        d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
-                    <path class="line" d="M7 16 27 16"></path>
-                    <path class="line line-top-bottom"
-                        d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
-                </svg>
-            </label>
-            <div class="dropdown-menu">
-                <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
-                <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
-
-                <div
-                    style="display: flex; gap: 15px; align-items: center; justify-content: space-between; margin: 10px 0; padding: 0 10px;">
-                    <div class="theme-switch-container" style="margin: 0; flex-shrink: 0;">
-                        <label class="theme-switch">
-                            <input type="checkbox" id="themeToggle">
-                            <span class="slider-switch"></span>
-                        </label>
-                    </div>
-                    <button class="neon-btn"
-                        style="flex: 1; margin: 0; min-height: 40px; font-size: 14px; display: flex; align-items: center; justify-content: center;">About</button>
+        <div class="navbar-right-group">
+            <div class="user-profile" id="userProfile">
+                <div class="profile-trigger" id="profileTrigger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="user-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
                 </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="user-details">
+                            <h3 id="profileName" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                Guest
+                                <span id="adminBadge"
+                                    style="display: none; font-size: 10px; background: #111; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #333; box-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6);">Admin</span>
+                            </h3>
+                            <p class="detail-item"><strong>Email:</strong> <span id="profileEmail">—</span></p>
+                            <p class="detail-item"><strong>Branch:</strong> <span id="profileBranch">—</span></p>
+                            <p class="detail-item"><strong>Year:</strong> <span id="profileYear">—</span></p>
+                        </div>
+                        <div class="user-photo-container">
+                            <div class="profile-avatar" id="profileAvatar" style="position: relative;">?
+                                <span id="adminStar"
+                                    style="display: none; position: absolute; bottom: 0; right: -4px; background: #111; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6); font-weight: bold; border: 1px solid #333;">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-footer">
+                        <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+                    </div>
+                </div>
+            </div>
 
-                <div class="social-links">
-                    <a href="https://github.com/shouryaupadhyay2029" target="_blank" class="social-btn" title="GitHub">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                        </svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/shourya-upadhyay-693a02331" target="_blank" class="social-btn"
-                        title="LinkedIn">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                    </a>
+            <div class="hamburger-container">
+                <label class="hamburger">
+                    <input type="checkbox" id="hamburgerToggle">
+                    <svg viewBox="0 0 32 32">
+                        <path class="line line-top-bottom"
+                            d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
+                        <path class="line" d="M7 16 27 16"></path>
+                        <path class="line line-top-bottom"
+                            d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
+                    </svg>
+                </label>
+                <div class="dropdown-menu">
+                    <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
+                    <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
+
+                    <div
+                        style="display: flex; gap: 15px; align-items: center; justify-content: space-between; margin: 10px 0; padding: 0 10px;">
+                        <div class="theme-switch-container" style="margin: 0; flex-shrink: 0;">
+                            <label class="theme-switch">
+                                <input type="checkbox" id="themeToggle">
+                                <span class="slider-switch"></span>
+                            </label>
+                        </div>
+                        <button class="neon-btn"
+                            style="flex: 1; margin: 0; min-height: 40px; font-size: 14px; display: flex; align-items: center; justify-content: center;">About</button>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="https://github.com/shouryaupadhyay2029" target="_blank" class="social-btn"
+                            title="GitHub">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/shourya-upadhyay-693a02331" target="_blank"
+                            class="social-btn" title="LinkedIn">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,7 +6,8 @@
     <title>Companies - PlacePro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../css/web.css">
 </head>
 
@@ -87,37 +88,83 @@
         <div class="logo-tagline">Powering Student Success</div>
     </a>
 
-    <!-- NEON AUTH BUTTONS -->
-    <div class="hamburger-container" style="position: fixed; top: 25px; right: 30px; z-index: 1000;">
-        <label class="hamburger">
-            <input type="checkbox" id="hamburgerToggle">
-            <svg viewBox="0 0 32 32">
-                <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
-                <path class="line" d="M7 16 27 16"></path>
-                <path class="line line-top-bottom" d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
-            </svg>
-        </label>
-        <div class="dropdown-menu">
-            <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
-            <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
-            
-            <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between; margin: 10px 0; padding: 0 10px;">
-                <div class="theme-switch-container" style="margin: 0; flex-shrink: 0;">
-                    <label class="theme-switch">
-                        <input type="checkbox" id="themeToggle">
-                        <span class="slider-switch"></span>
-                    </label>
-                </div>
-                <button class="neon-btn" style="flex: 1; margin: 0; min-height: 40px; font-size: 14px; display: flex; align-items: center; justify-content: center;">About</button>
+    <!-- UNIFIED HEADER GROUP -->
+    <div class="navbar-right-group">
+        <div class="user-profile" id="userProfile">
+            <div class="profile-trigger" id="profileTrigger">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="user-icon">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
             </div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-header">
+                    <div class="user-details">
+                        <h3 id="profileName" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            Guest
+                            <span id="adminBadge"
+                                style="display: none; font-size: 10px; background: #111; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #333; box-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6);">Admin</span>
+                        </h3>
+                        <p class="detail-item"><strong>Email:</strong> <span id="profileEmail">—</span></p>
+                        <p class="detail-item"><strong>Branch:</strong> <span id="profileBranch">—</span></p>
+                        <p class="detail-item"><strong>Year:</strong> <span id="profileYear">—</span></p>
+                    </div>
+                    <div class="user-photo-container">
+                        <div class="profile-avatar" id="profileAvatar" style="position: relative;">?
+                            <span id="adminStar"
+                                style="display: none; position: absolute; bottom: 0; right: -4px; background: #111; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6); font-weight: bold; border: 1px solid #333;">★</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown-footer">
+                    <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+                </div>
+            </div>
+        </div>
 
-            <div class="social-links">
-                <a href="https://github.com/shouryaupadhyay2029" target="_blank" class="social-btn" title="GitHub">
-                    <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                </a>
-                <a href="https://www.linkedin.com/in/shourya-upadhyay-693a02331" target="_blank" class="social-btn" title="LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                </a>
+        <div class="hamburger-container">
+            <label class="hamburger">
+                <input type="checkbox" id="hamburgerToggle">
+                <svg viewBox="0 0 32 32">
+                    <path class="line line-top-bottom"
+                        d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
+                    <path class="line" d="M7 16 27 16"></path>
+                    <path class="line line-top-bottom"
+                        d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
+                </svg>
+            </label>
+            <div class="dropdown-menu">
+                <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
+                <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
+
+                <div
+                    style="display: flex; gap: 15px; align-items: center; justify-content: space-between; margin: 10px 0; padding: 0 10px;">
+                    <div class="theme-switch-container" style="margin: 0; flex-shrink: 0;">
+                        <label class="theme-switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+                    <button class="neon-btn"
+                        style="flex: 1; margin: 0; min-height: 40px; font-size: 14px; display: flex; align-items: center; justify-content: center;">About</button>
+                </div>
+
+                <div class="social-links">
+                    <a href="https://github.com/shouryaupadhyay2029" target="_blank" class="social-btn" title="GitHub">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/shourya-upadhyay-693a02331" target="_blank" class="social-btn"
+                        title="LinkedIn">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -203,6 +250,13 @@
                 <button class="primary-btn" id="addCompanyBtn">+ Add Company</button>
                 <div class="control-group">
                     <input type="text" id="searchInput" placeholder="Search company...">
+                    <select id="batchFilter">
+                        <option value="all">All Batches</option>
+                        <option value="2024">2024 Batch</option>
+                        <option value="2025">2025 Batch</option>
+                        <option value="2026">2026 Batch</option>
+                        <option value="2027">2027 Batch</option>
+                    </select>
                     <select id="ctcFilter">
                         <option value="all">All Packages</option>
                         <option value="high">Above 15 LPA</option>
@@ -218,12 +272,15 @@
                     <thead>
                         <tr>
                             <th>Company</th>
+                            <th>Batch</th>
                             <th>Role</th>
                             <th>Package (LPA)</th>
                             <th>Location</th>
                             <th>Eligibility</th>
                             <th>Deadline</th>
-                            <th>Description</th>
+                            <th>Status</th>
+                            <th id="applyHeader">Apply</th>
+                            <th id="actionsHeader">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="companiesTableBody">
@@ -239,12 +296,16 @@
     <div id="companyModal" class="auth-modal">
         <div class="wrapper" style="width: 600px; max-width: 95%;">
             <div class="card-switch" style="width: 100%; height: auto; min-height: 500px;">
-                <div class="form-container" style="padding: 30px; background: #000; border-radius: 15px; border: 2px solid var(--primary); box-shadow: 0 0 20px var(--pro-glow-wide); max-height: 85vh; overflow-y: auto;">
-                    <div class="title" style="margin-bottom: 10px; color: var(--primary); text-align: center;">Add New Company</div>
-                    
+                <div class="form-container"
+                    style="padding: 30px; background: #000; border-radius: 15px; border: 2px solid var(--primary); box-shadow: 0 0 20px var(--pro-glow-wide); max-height: 85vh; overflow-y: auto;">
+                    <div id="modalTitle" class="title"
+                        style="margin-bottom: 10px; color: var(--primary); text-align: center;">Add New Company</div>
+
                     <!-- Instructions Section -->
-                    <div class="form-instructions" style="background: rgba(250, 204, 21, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: #ddd; line-height: 1.5;">
-                        <strong style="color: var(--primary); display: block; margin-bottom: 5px;">How to fill correctly:</strong>
+                    <div class="form-instructions"
+                        style="background: rgba(250, 204, 21, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: #ddd; line-height: 1.5;">
+                        <strong style="color: var(--primary); display: block; margin-bottom: 5px;">How to fill
+                            correctly:</strong>
                         <ul style="padding-left: 20px; margin: 0;">
                             <li>Fields marked with <strong>*</strong> are mandatory.</li>
                             <li><strong>Package:</strong> Enter as a number (e.g., 12 for 12 LPA).</li>
@@ -254,29 +315,49 @@
                         </ul>
                     </div>
 
-                    <form id="companyForm" class="flip-card__form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <input class="flip-card__input" name="company_name" placeholder="Company Name *" type="text" required>
+                    <form id="companyForm" class="flip-card__form"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <input class="flip-card__input" name="company_name" placeholder="Company Name *" type="text"
+                            required>
+                        <input class="flip-card__input" name="batch_year" placeholder="Batch Year (e.g. 2026) *"
+                            type="text" required>
                         <input class="flip-card__input" name="role" placeholder="Role *" type="text" required>
-                        <input class="flip-card__input" name="package" placeholder="Package (LPA) *" type="text" required>
+                        <input class="flip-card__input" name="package" placeholder="Package (LPA) *" type="text"
+                            required>
                         <input class="flip-card__input" name="location" placeholder="Location *" type="text" required>
-                        <input class="flip-card__input" name="eligibility" placeholder="Eligibility *" type="text" required>
-                        <input class="flip-card__input" name="deadline" placeholder="Deadline *" type="date" required style="color: grey;">
-                        <select class="flip-card__input" name="company_type" style="background: #111; color: #fff; cursor: pointer;">
+                        <input class="flip-card__input" name="eligibility" placeholder="Eligibility *" type="text"
+                            required>
+                        <input class="flip-card__input" name="deadline" placeholder="Deadline *" type="date" required
+                            style="color: grey;">
+                        <select class="flip-card__input" name="status"
+                            style="background: #111; color: #fff; cursor: pointer;">
+                            <option value="Active" selected>Status: Active</option>
+                            <option value="Upcoming">Status: Upcoming</option>
+                            <option value="Closed">Status: Closed</option>
+                        </select>
+                        <select class="flip-card__input" name="company_type"
+                            style="grid-column: span 2; background: #111; color: #fff; cursor: pointer;">
                             <option value="" disabled selected>Company Type</option>
                             <option value="Internship">Internship</option>
                             <option value="Full-Time">Full-Time</option>
                             <option value="Internship + PPO">Internship + PPO</option>
                         </select>
                         <input class="flip-card__input" name="min_cgpa" placeholder="Min CGPA" type="number" step="0.1">
-                        <input class="flip-card__input" name="allowed_branches" placeholder="Allowed Branches (e.g. CSE, IT)" type="text">
-                        <input class="flip-card__input" name="backlog_criteria" placeholder="Backlog Criteria" type="text">
-                        <input class="flip-card__input" name="application_link" placeholder="Application Link" type="url" style="grid-column: span 2;">
-                        <textarea class="flip-card__input" name="selection_process" placeholder="Selection Process" style="grid-column: span 2; height: 80px; padding: 12px; resize: none;"></textarea>
-                        <textarea class="flip-card__input" name="description" placeholder="Short Description" style="grid-column: span 2; height: 80px; padding: 12px; resize: none;"></textarea>
-                        
+                        <input class="flip-card__input" name="allowed_branches"
+                            placeholder="Allowed Branches (e.g. CSE, IT)" type="text">
+                        <input class="flip-card__input" name="backlog_criteria" placeholder="Backlog Criteria"
+                            type="text" style="grid-column: span 2;">
+                        <input class="flip-card__input" name="application_link" placeholder="Application Link"
+                            type="url" style="grid-column: span 2;">
+                        <textarea class="flip-card__input" name="selection_process" placeholder="Selection Process"
+                            style="grid-column: span 2; height: 80px; padding: 12px; resize: none;"></textarea>
+                        <textarea class="flip-card__input" name="description" placeholder="Short Description"
+                            style="grid-column: span 2; height: 80px; padding: 12px; resize: none;"></textarea>
+
                         <div style="grid-column: span 2; display: flex; gap: 15px; margin-top: 10px;">
                             <button type="submit" class="flip-card__btn" style="flex: 2;">Save Company</button>
-                            <button type="button" id="csvImportBtn" class="flip-card__btn" style="flex: 1; background: #333; border-color: #555;">Import CSV</button>
+                            <button type="button" id="csvImportBtn" class="flip-card__btn"
+                                style="flex: 1; background: #333; border-color: #555;">Import CSV</button>
                         </div>
                     </form>
                     <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
@@ -287,7 +368,9 @@
     </div>
 
     <!-- TOAST CONTAINER -->
-    <div id="toastContainer" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+    <div id="toastContainer"
+        style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    </div>
 
     <script src="../js/web.js"></script>
     <script src="../js/companies.js"></script>

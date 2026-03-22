@@ -1478,7 +1478,8 @@ tbody tr:hover {
 }
 
 .pw-wrapper .flip-card__input {
-    padding-right: 44px; /* room for eye icon */
+    padding-right: 44px;
+    /* room for eye icon */
 }
 
 .pw-eye {
@@ -1518,9 +1519,18 @@ tbody tr:hover {
 }
 
 @keyframes eyePulse {
-    0%   { filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.9)); }
-    80%  { filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.9)); }
-    100% { filter: none; color: rgba(250, 204, 21, 0.5); }
+    0% {
+        filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.9));
+    }
+
+    80% {
+        filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.9));
+    }
+
+    100% {
+        filter: none;
+        color: rgba(250, 204, 21, 0.5);
+    }
 }
 
 .flip-card__btn {
@@ -2225,4 +2235,94 @@ body.fade-out {
 
 .social-btn:hover svg {
     transform: rotate(360deg);
+}
+
+/* Glossy Stat Popup */
+.glass-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-popup-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.glass-popup-content {
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.9));
+    border: 1px solid rgba(250, 204, 21, 0.4);
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.15), inset 0 0 20px rgba(250, 204, 21, 0.05);
+    border-radius: 16px;
+    padding: 30px;
+    width: 450px;
+    max-width: 90%;
+    transform: scale(0.8) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+.glass-popup-overlay.show .glass-popup-content {
+    transform: scale(1) translateY(0);
+}
+
+.glass-popup-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.3s, text-shadow 0.3s;
+    line-height: 1;
+}
+
+.glass-popup-close:hover {
+    transform: rotate(90deg) scale(1.1);
+    text-shadow: 0 0 10px var(--primary);
+}
+
+.popup-title {
+    color: var(--primary);
+    font-size: 22px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed rgba(250, 204, 21, 0.3);
+    padding-bottom: 12px;
+    font-weight: 600;
+}
+
+.popup-body {
+    font-size: 15px;
+    line-height: 1.7;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.popup-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.popup-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.popup-body::-webkit-scrollbar-thumb {
+    background: rgba(250, 204, 21, 0.3);
+    border-radius: 4px;
 }

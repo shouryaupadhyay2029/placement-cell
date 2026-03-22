@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from datetime import datetime
+from functools import wraps
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -21,9 +23,25 @@ class Student(db.Model):
     password = db.Column(db.String(200), nullable=False)
     branch = db.Column(db.String(50))
     year = db.Column(db.String(20))
+    role = db.Column(db.String(20), default="student", nullable=False)
+
+def role_required(*allowed_roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            student_id = session.get("student_id")
+            if not student_id:
+                return jsonify({"error": "Unauthorized"}), 401
+            student = db.session.get(Student, student_id)
+            if not student or student.role not in allowed_roles:
+                return jsonify({"error": "Forbidden: Admin or TPO access required."}), 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    batch_year = db.Column(db.String(20), nullable=False)
     company_name = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(100), nullable=False)
     package = db.Column(db.String(50), nullable=False)
@@ -31,38 +49,57 @@ class Company(db.Model):
     eligibility = db.Column(db.String(200), nullable=False)
     deadline = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    # Extra fields
     company_type = db.Column(db.String(50), nullable=True)
     min_cgpa = db.Column(db.Float, nullable=True)
     allowed_branches = db.Column(db.String(200), nullable=True)
     backlog_criteria = db.Column(db.String(100), nullable=True)
     selection_process = db.Column(db.Text, nullable=True)
     application_link = db.Column(db.String(300), nullable=True)
+    status = db.Column(db.String(50), default="Active")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    applications = db.relationship("Application", backref="company", lazy=True, cascade="all, delete-orphan")
+
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
+    status = db.Column(db.String(50), default="applied", nullable=False)
+    applied_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint("student_id", "company_id", name="uq_student_company"),
+    )
 
 @app.route("/companies", methods=["POST"])
+@role_required("admin", "tpo")
 def add_company():
     data = request.get_json()
 
+    batch_year = data.get("batch_year")
     company_name = data.get("company_name")
     role = data.get("role")
     package = data.get("package")
     location = data.get("location")
     eligibility = data.get("eligibility")
     deadline = data.get("deadline")
-    description = data.get("description")
     
-    # Extra fields
+    # Optional fields
+    description = data.get("description")
     company_type = data.get("company_type")
     min_cgpa = data.get("min_cgpa")
     allowed_branches = data.get("allowed_branches")
     backlog_criteria = data.get("backlog_criteria")
     selection_process = data.get("selection_process")
     application_link = data.get("application_link")
+    status = data.get("status", "Active")
 
-    if not company_name or not role or not package or not location or not eligibility or not deadline:
-        return jsonify({"error": "Required fields (Name, Role, Package, Location, Eligibility, Deadline) must be filled"}), 400
+    if not all([batch_year, company_name, role, package, location, eligibility, deadline]):
+        return jsonify({"error": "Required fields (Batch Year, Name, Role, Package, Location, Eligibility, Deadline) must be filled"}), 400
 
     new_company = Company(
+        batch_year=batch_year,
         company_name=company_name,
         role=role,
         package=package,
@@ -75,7 +112,8 @@ def add_company():
         allowed_branches=allowed_branches,
         backlog_criteria=backlog_criteria,
         selection_process=selection_process,
-        application_link=application_link
+        application_link=application_link,
+        status=status
     )
 
     db.session.add(new_company)
@@ -85,12 +123,26 @@ def add_company():
 
 @app.route("/companies", methods=["GET"])
 def get_companies():
-    companies = Company.query.all()
+    batch_year = request.args.get("batch_year")
+    status = request.args.get("status")
+    company_type = request.args.get("company_type")
+
+    query = Company.query
+
+    if batch_year:
+        query = query.filter_by(batch_year=batch_year)
+    if status:
+        query = query.filter_by(status=status)
+    if company_type:
+        query = query.filter_by(company_type=company_type)
+
+    companies = query.all()
 
     company_list = []
     for company in companies:
         company_list.append({
             "id": company.id,
+            "batch_year": company.batch_year,
             "company_name": company.company_name,
             "role": company.role,
             "package": company.package,
@@ -103,12 +155,58 @@ def get_companies():
             "allowed_branches": company.allowed_branches,
             "backlog_criteria": company.backlog_criteria,
             "selection_process": company.selection_process,
-            "application_link": company.application_link
+            "application_link": company.application_link,
+            "status": company.status,
+            "created_at": company.created_at.isoformat() if company.created_at else None,
+            "updated_at": company.updated_at.isoformat() if company.updated_at else None
         })
 
     return jsonify(company_list), 200
 
+@app.route("/companies/<int:company_id>", methods=["PUT"])
+@role_required("admin", "tpo")
+def update_company(company_id):
+    company = Company.query.get(company_id)
+    if not company:
+        return jsonify({"error": "Company not found"}), 404
+
+    data = request.get_json()
+
+    company.batch_year = data.get("batch_year", company.batch_year)
+    company.company_name = data.get("company_name", company.company_name)
+    company.role = data.get("role", company.role)
+    company.package = data.get("package", company.package)
+    company.location = data.get("location", company.location)
+    company.eligibility = data.get("eligibility", company.eligibility)
+    company.deadline = data.get("deadline", company.deadline)
+    company.description = data.get("description", company.description)
+    company.company_type = data.get("company_type", company.company_type)
+    
+    if data.get("min_cgpa") is not None and data.get("min_cgpa") != "":
+        company.min_cgpa = float(data.get("min_cgpa"))
+        
+    company.allowed_branches = data.get("allowed_branches", company.allowed_branches)
+    company.backlog_criteria = data.get("backlog_criteria", company.backlog_criteria)
+    company.selection_process = data.get("selection_process", company.selection_process)
+    company.application_link = data.get("application_link", company.application_link)
+    company.status = data.get("status", company.status)
+
+    db.session.commit()
+    return jsonify({"message": "Company updated successfully"}), 200
+
+@app.route("/companies/<int:company_id>", methods=["DELETE"])
+@role_required("admin", "tpo")
+def delete_company(company_id):
+    company = Company.query.get(company_id)
+    if not company:
+        return jsonify({"error": "Company not found"}), 404
+
+    db.session.delete(company)
+    db.session.commit()
+    return jsonify({"message": "Company deleted successfully"}), 200
+
 @app.route("/companies/import", methods=["POST"])
+@role_required("admin", "tpo")
 def import_companies():
     import csv
     import io
@@ -185,13 +283,18 @@ def signup():
         return jsonify({"error": "Email already exists"}), 409
 
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+    
+    # Auto-promote owner (either account)
+    OWNER_EMAILS = {"shouryaupadhyay2029@gmail.com", "upadhyayshourya352@gmail.com"}
+    assigned_role = "admin" if email.lower() in OWNER_EMAILS else "student"
 
     new_student = Student(
         full_name=full_name,
         email=email,
         password=hashed_password,
         branch=branch,
-        year=year
+        year=year,
+        role=assigned_role
     )
 
     db.session.add(new_student)
@@ -213,8 +316,15 @@ def login():
     student = Student.query.filter_by(email=email).first()
 
     if student and bcrypt.check_password_hash(student.password, password):
+        # Auto-promote owner retroactively if needed
+        OWNER_EMAILS = {"shouryaupadhyay2029@gmail.com", "upadhyayshourya352@gmail.com"}
+        if email.lower() in OWNER_EMAILS and student.role != "admin":
+            student.role = "admin"
+            db.session.commit()
+
         session["student_id"] = student.id
         session["student_name"] = student.full_name
+        session["student_role"] = student.role
 
         return jsonify({
             "message": "Login successful",
@@ -223,7 +333,8 @@ def login():
                 "full_name": student.full_name,
                 "email": student.email,
                 "branch": student.branch,
-                "year": student.year
+                "year": student.year,
+                "role": student.role
             }
         }), 200
 
@@ -247,7 +358,8 @@ def profile():
         "full_name": student.full_name,
         "email": student.email,
         "branch": student.branch,
-        "year": student.year
+        "year": student.year,
+        "role": student.role
     }), 200
 
 
@@ -257,7 +369,107 @@ def logout():
     return jsonify({"message": "Logged out successfully"}), 200
 
 
+# ================== APPLICATIONS ==================
+
+@app.route("/apply/<int:company_id>", methods=["POST"])
+def apply_to_company(company_id):
+    student_id = session.get("student_id")
+    if not student_id:
+        return jsonify({"error": "Unauthorized. Please log in."}), 401
+
+    company = Company.query.get(company_id)
+    if not company:
+        return jsonify({"error": "Company not found."}), 404
+
+    existing = Application.query.filter_by(
+        student_id=student_id, company_id=company_id
+    ).first()
+    if existing:
+        return jsonify({"error": "You have already applied to this company."}), 409
+
+    application = Application(
+        student_id=student_id,
+        company_id=company_id,
+        status="applied"
+    )
+    db.session.add(application)
+    db.session.commit()
+    return jsonify({"message": "Application submitted successfully!"}), 201
+
+
+@app.route("/my-applications", methods=["GET"])
+def my_applications():
+    student_id = session.get("student_id")
+    if not student_id:
+        return jsonify({"error": "Unauthorized. Please log in."}), 401
+
+    applications = db.session.query(Application, Company).join(
+        Company, Application.company_id == Company.id
+    ).filter(Application.student_id == student_id).all()
+
+    result = []
+    for app, company in applications:
+        result.append({
+            "application_id": app.id,
+            "status": app.status,
+            "applied_at": app.applied_at.strftime("%d %b %Y") if app.applied_at else "—",
+            "company_id": company.id,
+            "company_name": company.company_name,
+            "role": company.role,
+            "package": company.package,
+            "location": company.location,
+            "company_status": company.status,
+            "deadline": company.deadline,
+        })
+
+    return jsonify(result), 200
+
+
+@app.route("/admin/applications", methods=["GET"])
+@role_required("admin", "tpo")
+def all_applications():
+    """Admin view: all applications with student and company details."""
+    applications = db.session.query(Application, Student, Company).join(
+        Student, Application.student_id == Student.id
+    ).join(
+        Company, Application.company_id == Company.id
+    ).all()
+
+    result = []
+    for app, student, company in applications:
+        result.append({
+            "application_id": app.id,
+            "status": app.status,
+            "applied_at": app.applied_at.strftime("%d %b %Y") if app.applied_at else "—",
+            "student_name": student.full_name,
+            "student_email": student.email,
+            "company_name": company.company_name,
+            "role": company.role,
+        })
+
+    return jsonify(result), 200
+
+
+# TEMPORARY DEV ROUTE
+@app.route("/make_admin/<email>")
+def make_admin(email):
+    student = Student.query.filter_by(email=email).first()
+    if student:
+        student.role = "admin"
+        db.session.commit()
+        return f"<h3>Success!</h3><p>{email} is now an ADMIN.</p><a href='http://127.0.0.1:5500/html/web.html'>Go back to website</a>"
+    return "User not found. Please sign up on the website first."
+
+
 if __name__ == "__main__":
     with app.app_context():
+        try:
+            from sqlalchemy import text
+            db.session.execute(text("ALTER TABLE student ADD COLUMN role VARCHAR(20) DEFAULT 'student' NOT NULL;"))
+            db.session.commit()
+            print("Successfully migrated student table to include 'role' column.")
+        except Exception as e:
+            # Column likely already exists or table doesn't exist yet
+            db.session.rollback()
         db.create_all()
     app.run(debug=True)

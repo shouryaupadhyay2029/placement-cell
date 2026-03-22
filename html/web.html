@@ -111,16 +111,32 @@
                 <div class="profile-dropdown" id="profileDropdown">
                     <div class="dropdown-header">
                         <div class="user-details">
-                            <h3 id="profileName">Guest</h3>
+                            <h3 id="profileName" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                Guest
+                                <span id="adminBadge"
+                                    style="display: none; font-size: 10px; background: #111; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #333; box-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6);">Admin</span>
+                            </h3>
                             <p class="detail-item"><strong>Email:</strong> <span id="profileEmail">—</span></p>
                             <p class="detail-item"><strong>Branch:</strong> <span id="profileBranch">—</span></p>
                             <p class="detail-item"><strong>Year:</strong> <span id="profileYear">—</span></p>
                         </div>
                         <div class="user-photo-container">
-                            <div class="profile-avatar" id="profileAvatar">?</div>
+                            <div class="profile-avatar" id="profileAvatar" style="position: relative;">?
+                                <span id="adminStar"
+                                    style="display: none; position: absolute; bottom: 0; right: -4px; background: #111; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6); font-weight: bold; border: 1px solid #333;">★</span>
+                            </div>
                         </div>
                     </div>
                     <div class="dropdown-footer">
+                        <!-- My Applications panel (students only) -->
+                        <div id="myApplicationsPanel" style="display: none; margin-bottom: 12px;">
+                            <div style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--primary, #facc15); margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                                My Applications
+                            </div>
+                            <div id="myApplicationsList" style="display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; padding-right: 4px;">
+                                <p style="color: #888; font-size: 12px;">Loading...</p>
+                            </div>
+                        </div>
                         <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
                     </div>
                 </div>
@@ -191,9 +207,22 @@
                                 <div class="pw-wrapper">
                                     <input class="flip-card__input" id="loginPassword" name="password"
                                         placeholder="Password" type="password" required>
-                                    <button type="button" class="pw-eye" data-for="loginPassword" title="Hold to reveal">
-                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                    <button type="button" class="pw-eye" data-for="loginPassword"
+                                        title="Hold to reveal">
+                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            style="display:none">
+                                            <path
+                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                            <path
+                                                d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                            <line x1="1" y1="1" x2="23" y2="23" />
+                                        </svg>
                                     </button>
                                 </div>
                                 <button type="submit" class="flip-card__btn">Let's go!</button>
@@ -209,9 +238,22 @@
                                 <div class="pw-wrapper">
                                     <input class="flip-card__input" id="signupPassword" name="password"
                                         placeholder="Password" type="password" required>
-                                    <button type="button" class="pw-eye" data-for="signupPassword" title="Hold to reveal">
-                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                    <button type="button" class="pw-eye" data-for="signupPassword"
+                                        title="Hold to reveal">
+                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            style="display:none">
+                                            <path
+                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                            <path
+                                                d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                            <line x1="1" y1="1" x2="23" y2="23" />
+                                        </svg>
                                     </button>
                                 </div>
                                 <input class="flip-card__input" id="signupBranch" name="branch" placeholder="Branch"
@@ -236,37 +278,75 @@
 
             <!-- DASHBOARD SECTION -->
             <section id="dashboard" class="section active">
-                <h1>Placement Overview - 2026 Batch</h1>
-                <p class="sub-text">
-                    212 Students Placed • 85% Placement Rate
+                <h1 id="dashTitle">Placement Overview - 2025 Batch</h1>
+                <p class="sub-text" id="dashSubText">
+                    Loading data...
                 </p>
 
                 <div class="stats-container">
 
-                    <div class="card">
+                    <div class="card" id="card-companies" style="cursor: pointer;" title="Click for more details">
                         <h3>Total Companies</h3>
-                        <p class="number" data-target="0">0</p>
-                        <span>+5 from last year</span>
+                        <p class="number" id="dashCompanies" data-target="0">0</p>
+                        <span>Visited Campus</span>
                     </div>
 
-                    <div class="card">
+                    <div class="card" id="card-placed" style="cursor: pointer;" title="Click for more details">
                         <h3>Students Placed</h3>
-                        <p class="number" data-target="212">0</p>
-                        <span>85% placement rate</span>
+                        <p class="number" id="dashPlaced" data-target="0">0</p>
+                        <span>Loading Data...</span>
                     </div>
 
-                    <div class="card">
+                    <div class="card" id="card-highest" style="cursor: pointer;" title="Click for more details">
                         <h3>Highest Package</h3>
-                        <p class="number" data-target="32">0</p>
-                        <span>Offered by ABC Corp</span>
+                        <p class="number" id="dashHighest" data-target="0">0</p>
+                        <span id="dashHighestCaption">Loading...</span>
                     </div>
 
-                    <div class="card">
+                    <div class="card" id="card-average" style="cursor: pointer;" title="Click for more details">
                         <h3>Average Package</h3>
-                        <p class="number" data-target="12">0</p>
-                        <span>Across all branches</span>
+                        <p class="number" id="dashAverage" data-target="0">0</p>
+                        <span id="dashAvgCaption">Across all branches</span>
                     </div>
 
+                </div>
+
+                <!-- HIGHLIGHTS SECTION -->
+                <style>
+                    .placement-highlights {
+                        margin-top: 40px;
+                        background: rgba(20, 20, 20, 0.6);
+                        border: 1px solid rgba(250, 204, 21, 0.2);
+                        padding: 25px;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                        backdrop-filter: blur(5px);
+                    }
+
+                    .highlights-list {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                        color: #ddd;
+                        line-height: 1.8;
+                    }
+
+                    .highlights-list li {
+                        margin-bottom: 12px;
+                        font-size: 15px;
+                    }
+
+                    .highlights-list li strong {
+                        color: #fff;
+                        font-weight: 500;
+                    }
+                </style>
+                <div class="placement-highlights">
+                    <h3 style="color: var(--primary); margin: 0 0 15px 0; font-weight: 600; letter-spacing: 0.5px;">Top
+                        Placement Highlights</h3>
+                    <ul id="dashHighlightsList" class="highlights-list">
+                        <li>Loading official highlights...</li>
+                    </ul>
                 </div>
             </section>
 
@@ -488,6 +568,17 @@
 
         </main>
 
+    </div>
+
+    <!-- GLOSSY DASHBOARD POPUP MODAL -->
+    <div id="glassPopup" class="glass-popup-overlay">
+        <div class="glass-popup-content">
+            <button class="glass-popup-close" id="closeGlassPopup">&times;</button>
+            <h2 class="popup-title" id="glassPopupTitle">Details</h2>
+            <div class="popup-body" id="glassPopupBody">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
     </div>
 
     <!-- JS -->
