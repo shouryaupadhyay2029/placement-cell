@@ -77,7 +77,7 @@ function initSemiSidebar() {
             const rect = semiSidebar.getBoundingClientRect();
             const centerY = rect.top + rect.height / 2;
             const distanceToCenterY = Math.abs(mouseY - centerY);
-            
+
             // Calculate semicircular physical distance from (0, centerY)
             const distanceToCenter = Math.sqrt(mouseX * mouseX + distanceToCenterY * distanceToCenterY);
 
@@ -162,9 +162,9 @@ if (addBtn) {
             </td>
         `;
         tableBody.appendChild(newRow);
-        modal.style.display = "none";
+        modal.classList.remove("show");
     });
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", function(e) {
         if (e.target.classList.contains("delete-btn")) {
             e.target.closest("tr").remove();
         }
@@ -258,7 +258,7 @@ counters.forEach(counter => {
 });
 
 document.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", function (e) {
+    link.addEventListener("click", function(e) {
         const href = this.getAttribute("href");
 
         if (href && href.endsWith(".html")) {
@@ -270,8 +270,7 @@ document.querySelectorAll("a").forEach(link => {
             }, 300);
         }
     });
-}
-);
+});
 // AUTH MODAL LOGIC
 const authModal = document.getElementById("authModal");
 const loginBtn = document.getElementById("loginBtn");
@@ -367,7 +366,7 @@ function initTheme() {
         if (themeToggle) themeToggle.checked = true;
         // Don't call addDarkStars directly to avoid potential race conditions
         // Wait for DOM or call it with a check
-        setTimeout(addDarkStars, 0); 
+        setTimeout(addDarkStars, 0);
     } else {
         body.classList.remove('dark-theme');
         if (themeToggle) themeToggle.checked = false;
@@ -400,7 +399,38 @@ if (document.readyState === "loading") {
 document.addEventListener("DOMContentLoaded", () => {
     const hamburgerToggle = document.getElementById("hamburgerToggle");
     const hamburgerContainer = document.querySelector(".hamburger-container");
-    
+    const profileTrigger = document.getElementById("profileTrigger");
+    const profileDropdown = document.getElementById("profileDropdown");
+
+    // Profile Dropdown Toggle
+    if (profileTrigger && profileDropdown) {
+        profileTrigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle("show");
+
+            // Close hamburger if opening profile
+            if (profileDropdown.classList.contains("show") && hamburgerToggle) {
+                hamburgerToggle.checked = false;
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!profileDropdown.contains(e.target) && !profileTrigger.contains(e.target)) {
+                profileDropdown.classList.remove("show");
+            }
+        });
+
+        // Close dropdown if hamburger is opened
+        if (hamburgerToggle) {
+            hamburgerToggle.addEventListener("change", () => {
+                if (hamburgerToggle.checked) {
+                    profileDropdown.classList.remove("show");
+                }
+            });
+        }
+    }
+
     if (hamburgerToggle && hamburgerContainer) {
         let closeTimeout;
 
@@ -434,4 +464,191 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+});
+
+
+//auth section
+
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+    loginForm.addEventListener("submit", async(e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Close the auth modal
+                const authModal = document.getElementById("authModal");
+                if (authModal) {
+                    authModal.classList.remove("show");
+                    setTimeout(() => { authModal.style.display = "none"; }, 400);
+                }
+                await loadProfile();
+            } else {
+                alert(data.error || "Login failed");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Something went wrong");
+        }
+    });
+}
+
+const signupForm = document.getElementById("signupForm");
+if (signupForm) {
+    signupForm.addEventListener("submit", async(e) => {
+        e.preventDefault();
+
+        const full_name = document.getElementById("signupName").value;
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+        const branch = document.getElementById("signupBranch").value;
+        const year = document.getElementById("signupYear").value;
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({ full_name, email, password, branch, year })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Close the auth modal
+                const authModal = document.getElementById("authModal");
+                if (authModal) {
+                    authModal.classList.remove("show");
+                    setTimeout(() => { authModal.style.display = "none"; }, 400);
+                }
+                // Auto-login after signup
+                try {
+                    const loginResp = await fetch("http://127.0.0.1:5000/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ email, password })
+                    });
+                    if (loginResp.ok) {
+                        await loadProfile();
+                    } else {
+                        alert("Signup successful! Please log in.");
+                    }
+                } catch (_) {
+                    alert("Signup successful! Please log in.");
+                }
+            } else {
+                alert(data.error || "Signup failed");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Something went wrong");
+        }
+    });
+}
+
+async function loadProfile() {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/profile", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Populate profile dropdown fields
+            const nameEl    = document.getElementById("profileName");
+            const emailEl   = document.getElementById("profileEmail");
+            const branchEl  = document.getElementById("profileBranch");
+            const yearEl    = document.getElementById("profileYear");
+            const avatarEl  = document.getElementById("profileAvatar");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            if (nameEl)   nameEl.textContent   = data.full_name || "—";
+            if (emailEl)  emailEl.textContent   = data.email    || "—";
+            if (branchEl) branchEl.textContent  = data.branch   || "—";
+            if (yearEl)   yearEl.textContent    = data.year     || "—";
+
+            // Show first letter of name as avatar
+            if (avatarEl && data.full_name) {
+                avatarEl.textContent = data.full_name.charAt(0).toUpperCase();
+            }
+
+            // Show logout button
+            if (logoutBtn) logoutBtn.style.display = "block";
+
+            // Hide Login / Signup buttons in hamburger nav
+            const loginBtn  = document.getElementById("loginBtn");
+            const signupBtn = document.getElementById("signupBtn");
+            if (loginBtn)  loginBtn.style.display  = "none";
+            if (signupBtn) signupBtn.style.display = "none";
+
+        } else {
+            // Not logged in — reset to guest state
+            setGuestProfile();
+        }
+    } catch (error) {
+        console.error("Profile error:", error);
+        setGuestProfile();
+    }
+}
+
+function setGuestProfile() {
+    const nameEl    = document.getElementById("profileName");
+    const emailEl   = document.getElementById("profileEmail");
+    const branchEl  = document.getElementById("profileBranch");
+    const yearEl    = document.getElementById("profileYear");
+    const avatarEl  = document.getElementById("profileAvatar");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (nameEl)   nameEl.textContent  = "Guest";
+    if (emailEl)  emailEl.textContent  = "—";
+    if (branchEl) branchEl.textContent = "—";
+    if (yearEl)   yearEl.textContent   = "—";
+    if (avatarEl) avatarEl.textContent = "?";
+    if (logoutBtn) logoutBtn.style.display = "none";
+
+    const loginBtn  = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+    if (loginBtn)  loginBtn.style.display  = "";
+    if (signupBtn) signupBtn.style.display = "";
+}
+
+// Wire up Logout button
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await fetch("http://127.0.0.1:5000/logout", {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch(_) {}
+            setGuestProfile();
+            // Close the dropdown
+            const profileDropdown = document.getElementById("profileDropdown");
+            if (profileDropdown) profileDropdown.classList.remove("show");
+        });
+    }
+
+    // Restore session on page load
+    loadProfile();
 });
