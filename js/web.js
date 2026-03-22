@@ -467,6 +467,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// PASSWORD EYE REVEAL (2-second timed peek)
+document.addEventListener("DOMContentLoaded", () => {
+    const revealDuration = 2000; // ms
+
+    document.querySelectorAll(".pw-eye").forEach(btn => {
+        let hideTimer = null;
+
+        btn.addEventListener("click", () => {
+            const inputId = btn.getAttribute("data-for");
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            const eyeOpen   = btn.querySelector(".eye-open");
+            const eyeClosed = btn.querySelector(".eye-closed");
+
+            // If already revealing, reset the timer (user clicked again)
+            if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+
+            // Reveal
+            input.type = "text";
+            eyeOpen.style.display   = "none";
+            eyeClosed.style.display = "";
+
+            // Restart pulse animation
+            btn.classList.remove("revealing");
+            void btn.offsetWidth; // force reflow to restart animation
+            btn.classList.add("revealing");
+
+            // Auto-hide after 2 seconds
+            hideTimer = setTimeout(() => {
+                input.type = "password";
+                eyeOpen.style.display   = "";
+                eyeClosed.style.display = "none";
+                btn.classList.remove("revealing");
+                hideTimer = null;
+            }, revealDuration);
+        });
+    });
+});
+
 //auth section
 
 const loginForm = document.getElementById("loginForm");

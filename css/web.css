@@ -1458,6 +1458,71 @@ tbody tr:hover {
     background-color: #1a1a1a;
 }
 
+/* Override browser autofill white background */
+.flip-card__input:-webkit-autofill,
+.flip-card__input:-webkit-autofill:hover,
+.flip-card__input:-webkit-autofill:focus,
+.flip-card__input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 9999px #111 inset !important;
+    box-shadow: 0 0 0 9999px #111 inset !important;
+    -webkit-text-fill-color: #fff !important;
+    caret-color: #fff;
+    border: 2px solid var(--main-color) !important;
+    border-radius: 8px;
+}
+
+/* Password wrapper + eye toggle */
+.pw-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.pw-wrapper .flip-card__input {
+    padding-right: 44px; /* room for eye icon */
+}
+
+.pw-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(250, 204, 21, 0.5);
+    transition: color 0.2s ease, filter 0.2s ease;
+    outline: none;
+    border-radius: 4px;
+}
+
+.pw-eye:hover {
+    color: var(--main-color);
+    filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.7));
+}
+
+.pw-eye svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    pointer-events: none;
+}
+
+/* Pulse ring while password is revealed */
+.pw-eye.revealing {
+    color: var(--main-color);
+    animation: eyePulse 2s linear forwards;
+}
+
+@keyframes eyePulse {
+    0%   { filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.9)); }
+    80%  { filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.9)); }
+    100% { filter: none; color: rgba(250, 204, 21, 0.5); }
+}
+
 .flip-card__btn {
     margin-top: 20px;
     width: 160px;
