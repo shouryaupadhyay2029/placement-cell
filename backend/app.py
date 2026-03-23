@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -72,6 +72,14 @@ class Application(db.Model):
     __table_args__ = (
         db.UniqueConstraint("student_id", "company_id", name="uq_student_company"),
     )
+
+
+class PlacementRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_name = db.Column(db.String(100), nullable=False)
+    student_name = db.Column(db.String(100), nullable=False)
+    branch = db.Column(db.String(100), nullable=False)
+    year = db.Column(db.Integer, nullable=False)
 
 @app.route("/companies", methods=["POST"])
 @role_required("admin", "tpo")
@@ -679,6 +687,22 @@ def company_recruitment():
         "students_placed": [v for _, v in sorted_data],
         "total_placed": total_placed,
     }), 200
+
+
+@app.route("/api/placements", methods=["GET"])
+def get_placements():
+    """Returns all placement records from the PDF extraction."""
+    placements = PlacementRecord.query.all()
+    result = []
+    for p in placements:
+        result.append({
+            "id": p.id,
+            "company_name": p.company_name,
+            "student_name": p.student_name,
+            "branch": p.branch,
+            "year": p.year
+        })
+    return jsonify(result), 200
 
 
 # TEMPORARY DEV ROUTE

@@ -1,0 +1,18 @@
+
+--- Table in C:\Users\Shourya Upadhyay\OneDrive\Documents\students3.pdf ---
+Row 0: ['S. No', 'University\nEnrollment Number', 'Name of Student', 'College', 'Degree', 'Year of\npassing']
+Row 1: ['1', '10319011921', 'Archit Gupta', 'USAR', 'B.Tech(AI& DS)', '2025']
+Row 2: ['2', '1719011921', 'Krishna Gupta', 'USAR', 'B.Tech(AI& DS)', '2025']
+Row 3: ['3', '319011922', 'Syed Shareem Ahmad', 'USAR', 'B.Tech(AI& DS)', '2025']
+Row 4: ['4', '00719011622', 'Divyansh Saxena', 'USAR', 'B.Tech(AI& ML)', '2025']
+Row 0: ['21', '316412821', 'Aditya Pathak', 'USICT', 'B.Tech(ECE)', '2025']
+Row 1: ['22', '2016412821', 'Atul Kumar Kanojia', 'USICT', 'B.Tech(ECE)', '2025']
+Row 2: ['23', '6316412821', 'Harsh Upraity', 'USICT', 'B.Tech(ECE)', '2025']
+Row 3: ['24', '516412821', 'Kunal Gambhir', 'USICT', 'B.Tech(ECE)', '2025']
+Row 4: ['25', '4016412821', 'Nitesh Singh', 'USICT', 'B.Tech(ECE)', '2025']
+
+--- Table in C:\Users\Shourya Upadhyay\OneDrive\Documents\students4.pdf ---
+Row 0: ['U\nS. E\nNo N', 'niversity\nnrollment\number', 'Name of Student', 'College', 'Degree', 'Year of\npassing']
+Row 1: ['1. 1', '0119011921', 'Ansh Rai', 'University School of Automation and Robotics', 'B.Tech(AI&DS)', '2025']
+Row 2: ['2. 0', '2016403221', 'Srijan', 'University School of Information, Communication &\nTechnology', 'B.Tech(CSE)', '2025']
+Row 3: ['3. 0', '3516404523', 'Vaibhav Dubey', 'University School of Information, Communication &\nTechnology', 'MCA(SE)', '2025']

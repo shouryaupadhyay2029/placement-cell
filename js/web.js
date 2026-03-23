@@ -543,6 +543,101 @@ async function fetchDashboardStats(year = "2025") {
     }
 }
 
+// FETCH RECRUITMENT DATA (PDF EXTRACTION)
+async function fetchRecruitmentData() {
+    const tableBody = document.getElementById("recruitmentTableBody");
+    if (!tableBody) return;
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/placements');
+        if (!response.ok) throw new Error("Recruitment fetch failed");
+        const data = await response.json();
+
+        // Group by company and year
+        const grouped = {};
+        data.forEach(p => {
+            const key = `${p.company_name}|${p.year}`;
+            if (!grouped[key]) {
+                grouped[key] = {
+                    company_name: p.company_name,
+                    year: p.year,
+                    students: []
+                };
+            }
+            grouped[key].students.push(p);
+        });
+
+        tableBody.innerHTML = "";
+        
+        for (const key in grouped) {
+            const group = grouped[key];
+            
+            // Create main row
+            const mainRow = document.createElement("tr");
+            mainRow.className = "main-row";
+            mainRow.innerHTML = `
+                <td>
+                    <span class="expand-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </span>
+                    ${group.company_name}
+                    <span class="click-hint">Click to view students</span>
+                </td>
+                <td>${group.students.length} Students</td>
+                <td>${group.year}</td>
+            `;
+            
+            // Create details row
+            const detailsRow = document.createElement("tr");
+            detailsRow.className = "details-row";
+            
+            let studentListHtml = group.students.map(s => `
+                <li class="student-item">
+                    <span class="name">${s.student_name}</span>
+                    <span class="branch">${s.branch}</span>
+                </li>
+            `).join("");
+            
+            detailsRow.innerHTML = `
+                <td colspan="3">
+                    <div class="details-container">
+                        <div class="details-title">${group.company_name} - Selected Candidates</div>
+                        <ul class="student-list">
+                            ${studentListHtml}
+                        </ul>
+                    </div>
+                </td>
+            `;
+            
+            // Click to toggle
+            mainRow.addEventListener("click", () => {
+                const isOpen = detailsRow.classList.contains("show");
+                
+                // Close others (optional, but cleaner)
+                // document.querySelectorAll(".details-row").forEach(r => r.classList.remove("show"));
+                // document.querySelectorAll(".main-row").forEach(r => r.classList.remove("active"));
+                
+                if (isOpen) {
+                    detailsRow.classList.remove("show");
+                    mainRow.classList.remove("active");
+                } else {
+                    detailsRow.classList.add("show");
+                    mainRow.classList.add("active");
+                }
+            });
+            
+            tableBody.appendChild(mainRow);
+            tableBody.appendChild(detailsRow);
+        }
+
+    } catch (error) {
+        console.error("Error fetching recruitment data:", error);
+        tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--danger);">Failed to load recruitment data.</td></tr>`;
+    }
+}
+
 // Call on load
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Restore year from localStorage or default to 2024 (as per analytics)
@@ -561,6 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // 3. Initial Fetch
     fetchDashboardStats(storedYear);
+    fetchRecruitmentData();
 });
 
 
