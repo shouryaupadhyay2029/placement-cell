@@ -2326,3 +2326,118 @@ body.fade-out {
     background: rgba(250, 204, 21, 0.3);
     border-radius: 4px;
 }
+
+/* SMOOTH TRANSITIONS FOR FILTERS */
+.fade-out {
+    opacity: 0 !important;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-in {
+    opacity: 1 !important;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stat Card Loading State */
+.stat-card-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-loading::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(250, 204, 21, 0.05) 50%, 
+        transparent 100%);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    to {
+        left: 100%;
+    }
+}
+
+/* Batch Year Select Dropdown - Professional Theme */
+.batch-year-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: rgba(20, 20, 20, 0.95);
+    color: var(--primary);
+    border: 1.5px solid rgba(250, 204, 21, 0.3);
+    border-radius: 8px;
+    padding: 8px 35px 8px 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(250, 204, 21, 0.05);
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23facc15" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: calc(100% - 10px);
+    background-position-y: center;
+    backdrop-filter: blur(10px);
+}
+
+.batch-year-select:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(250, 204, 21, 0.2);
+    transform: translateY(-2px);
+    background-color: rgba(25, 25, 25, 0.95);
+}
+
+.batch-year-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.3);
+}
+
+.batch-year-select option {
+    background-color: #111;
+    color: var(--primary);
+    font-weight: 500;
+    padding: 10px;
+    border: none;
+}
+
+/* Circular PP Logo Styles */
+.pp-logo-circle {
+    fill: #111;
+    transition: fill 0.3s ease;
+}
+.pp-logo-path {
+    stroke: var(--primary);
+    transition: stroke 0.3s ease;
+}
+
+body.dark-theme .pp-logo-circle {
+    fill: var(--primary);
+}
+body.dark-theme .pp-logo-path {
+    stroke: #111;
+}

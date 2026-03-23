@@ -86,9 +86,23 @@
 
 
     <!-- CIRCULAR LOGO -->
-    <a href="web.html" class="circular-logo" title="Back to Home">
-        <img src="../logo.jpeg" alt="PlacePro Logo">
-        <div class="logo-tagline">Powering Student Success</div>
+    <a href="web.html" class="circular-logo pp-logo" title="Back to Home" style="text-decoration: none; display: flex; align-items: center; justify-content: center; color: var(--text-theme-main); transition: all 0.3s ease;">
+        <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+          <defs>
+            <mask id="gap-mask">
+              <rect width="100" height="100" fill="white" />
+              <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" stroke="black" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+            </mask>
+            <mask id="patch-mask">
+              <rect width="100" height="100" fill="black" />
+              <circle cx="70" cy="25" r="20" fill="white" />
+            </mask>
+          </defs>
+          <circle cx="50" cy="50" r="48" class="pp-logo-circle" stroke="none" />
+          <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#gap-mask)"/>
+          <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)"/>
+        </svg>
     </a>
 
     <!-- UNIFIED HEADER GROUP -->
@@ -245,7 +259,7 @@
                         </path>
                     </svg>
                 </li>
-                <li class="semi-item active" data-section="students" data-label="Students">
+                <li class="semi-item active" data-section="students" data-label="Students" data-nav="students.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                         <circle cx="9" cy="7" r="4"></circle>
@@ -253,7 +267,7 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </li>
-                <li class="semi-item" data-section="analytics" data-label="Analytics">
+                <li class="semi-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="2" x2="12" y2="22"></line>
                         <path d="M17 5c0 2.21-1.79 4-4 4s-4-1.79-4-4"></path>
@@ -265,23 +279,34 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
-            <h1>Placed Students - 2026 Batch</h1>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                <h1 id="dashTitle" style="margin: 0;">Placed Students</h1>
+                <select id="batchYearSelector" class="batch-year-select">
+                    <option value="2025" selected>2025 Batch</option>
+                    <option value="2024">2024 Batch</option>
+                </select>
+            </div>
 
             <div class="stats-container">
                 <div class="card" id="card-enrolled" style="cursor: pointer;" title="Click for details">
                     <h3>Total Enrolled</h3>
-                    <p class="number" data-target="251">0</p>
-                    <span>Registered for Placements</span>
+                    <p class="number" id="dashEnrolled" data-target="251">0</p>
+                    <span id="dashEnrolledCaption">Registered for Placements</span>
                 </div>
                 <div class="card" id="card-placed-students" style="cursor: pointer;" title="Click for details">
                     <h3>Students Placed</h3>
-                    <p class="number" data-target="115">0</p>
-                    <span>Successfully Hired</span>
+                    <p class="number" id="dashPlaced" data-target="115">0</p>
+                    <span id="dashPlacedCaption">Successfully Hired</span>
                 </div>
                 <div class="card" id="card-rate" style="cursor: pointer;" title="Click for details">
                     <h3>Placement Rate</h3>
-                    <p class="number" data-target="46">0</p>
-                    <span>% High Achievement</span>
+                    <p class="number" id="dashRate" data-target="45.81">0</p>
+                    <span>% of Participated Students</span>
+                </div>
+                <div class="card" id="card-average" style="cursor: pointer;" title="Click for details">
+                    <h3>Average Package</h3>
+                    <p class="number" id="dashAverage" data-target="6.11">0</p>
+                    <span id="dashAvgCaption">LPA across all branches</span>
                 </div>
             </div>
 

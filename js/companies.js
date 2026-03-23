@@ -58,8 +58,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         let url = "http://127.0.0.1:5000/companies";
-        if (batchFilter && batchFilter.value !== "all") {
-            url += `?batch_year=${batchFilter.value}`;
+        const header = document.getElementById("companiesHeader");
+        const batchValue = batchFilter ? batchFilter.value : "all";
+
+        if (batchValue !== "all") {
+            url += `?batch_year=${batchValue}`;
+            if (header) header.textContent = `Companies Visited - ${batchValue} Batch`;
+        } else {
+            // Find year range for "All Batches"
+            const options = Array.from(batchFilter.options)
+                                 .map(o => parseInt(o.value))
+                                 .filter(v => !isNaN(v));
+            if (options.length > 0 && header) {
+                const minYear = Math.min(...options);
+                const maxYear = Math.max(...options);
+                header.textContent = `Companies Visited: ${minYear} - ${maxYear} Academic Years`;
+            } else if (header) {
+                header.textContent = "Companies Visited Till Now";
+            }
         }
 
         try {
@@ -73,15 +89,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function renderCompanies(companies) {
+    async function renderCompanies(companies) {
         if (!tableBody) return;
+        
+        // Start fade out
+        tableBody.classList.add("fade-out");
+        
+        // Brief delay for transition
+        await new Promise(resolve => setTimeout(resolve, 300));
+
         if (companies.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">No companies available yet</td></tr>`;
-            return;
-        }
-
-        tableBody.innerHTML = companies.map(company => {
-            const alreadyApplied = appliedCompanyIds.has(company.id);
+        } else {
+            tableBody.innerHTML = companies.map(company => {
+                const alreadyApplied = appliedCompanyIds.has(company.id);
             const isClosed = company.status === 'Closed';
 
             const applyBtnHtml = isStudent ? `
@@ -125,7 +146,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${applyBtnHtml}
                 ${actionsBtnHtml}
             </tr>`;
-        }).join('');
+            }).join('');
+        }
+        
+        // Remove fade out and trigger fade in
+        tableBody.classList.remove("fade-out");
+        tableBody.classList.add("fade-in");
+        
+        setTimeout(() => {
+            if (tableBody) tableBody.classList.remove("fade-in");
+        }, 300);
     }
 
     // Global Apply function

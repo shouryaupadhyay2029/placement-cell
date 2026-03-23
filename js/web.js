@@ -261,72 +261,88 @@ function runCounters() {
 runCounters();
 
 // FETCH DASHBOARD STATS
-async function fetchDashboardStats() {
+// FETCH DASHBOARD STATS
+async function fetchDashboardStats(year = "2025") {
+    const statsContainer = document.querySelector(".stats-container");
+    const subText = document.getElementById("dashSubText");
+    const highlightsList = document.getElementById("dashHighlightsList");
+
+    // Start fade out
+    if (statsContainer) statsContainer.classList.add("fade-out");
+    if (subText) subText.classList.add("fade-out");
+    if (highlightsList) highlightsList.classList.add("fade-out");
+    
+    // Add loading shimmer to cards
+    document.querySelectorAll(".card").forEach(card => card.classList.add("stat-card-loading"));
+
     try {
-        const response = await fetch("http://127.0.0.1:5000/companies?batch_year=2025");
-        if (!response.ok) return;
-        const companies = await response.json();
+        // Fetch from unified analytics API
+        const response = await fetch(`http://127.0.0.1:5000/api/analytics${year ? '?batch_year=' + year : ''}`);
+        if (!response.ok) throw new Error("Fetch failed");
+        const data = await response.json();
 
-        let totalCompanies = companies.length;
-        let highestPackage = 0;
-        let sumPackages = 0;
-        let countLpa = 0;
-        let bestCompany = "";
-        let totalPlaced = 0;
-        let top3 = [];
+        // Also fetch companies for highlights list
+        const compResponse = await fetch(`http://127.0.0.1:5000/companies${year ? '?batch_year=' + year : ''}`);
+        const companies = compResponse.ok ? await compResponse.json() : [];
 
-        companies.forEach(c => {
-            // Count total roles / students placed if available (for now we assume 115 total from PDF, but since PDF doesn't have students selected per row mapped, we can mock or sum it up if we had it but let's just use 115 as accurate for the 2025 batch from the PDF)
-            // Wait, PDF says 115 placed. We can just set `dashPlaced` to 115 for the 2025 batch.
-            // Let's parse package numbers
-            if (c.package) {
-                const pkgStr = c.package.toLowerCase();
-                if (pkgStr.includes("lpa")) {
-                    // Extract number
-                    const match = pkgStr.match(/(\d+(\.\d+)?)/);
-                    if (match) {
-                        const val = parseFloat(match[1]);
-                        sumPackages += val;
-                        countLpa++;
-                        if (val > highestPackage) {
-                            highestPackage = val;
-                            bestCompany = c.company_name;
-                        }
-                    }
-                }
-            }
-        });
+        // Ensure minimum 300ms for visual transition
+        await new Promise(resolve => setTimeout(resolve, 300));
 
-        const avgPackage = countLpa > 0 ? (sumPackages / countLpa).toFixed(1) : 0;
-        
+        // Define variables for highlights and popups
+        const bs = data.batch_stats || {};
+        const companiesVisited = bs.companies_visited || data.total_companies || 0;
+        const companiesOffered = bs.companies_offered || 0;
+        const totalCompanies = data.total_companies || 0;
+        const avgPackage = data.avg_package || 0;
+        const highestPackage = data.highest_package || 0;
+        const totalPlaced = data.total_placed || 0;
+        const activelyParticipated = bs.actively_participated || data.total_enrolled || 0;
+        const totalStudents = bs.total_students || activelyParticipated;
+
         const elTotalCompanies = document.getElementById("dashCompanies");
         const elHighest = document.getElementById("dashHighest");
         const elHighestCap = document.getElementById("dashHighestCaption");
         const elAverage = document.getElementById("dashAverage");
         const elPlaced = document.getElementById("dashPlaced");
+        const elEnrolled = document.getElementById("dashEnrolled");
+        const elRate = document.getElementById("dashRate");
         const elSubText = document.getElementById("dashSubText");
+        const dashTitle = document.getElementById("dashTitle");
 
-        if(elTotalCompanies) elTotalCompanies.setAttribute("data-target", totalCompanies);
-        if(elHighest) elHighest.setAttribute("data-target", highestPackage);
-        if(elHighestCap && bestCompany) elHighestCap.textContent = `Offered by ${bestCompany}`;
-        if(elAverage) elAverage.setAttribute("data-target", avgPackage); // Note: data-target usually works best with ints for the animation logic, but float is ok if rounded. Let's round average package for animation.
-        if(elAverage) elAverage.setAttribute("data-target", Math.round(avgPackage));
+        if (dashTitle) dashTitle.textContent = `${year || 'Overall'} Placement Overview`;
         
-        // For Dashboard 2025 text Since we extracted exactly 115 placed students for the PDF:
-        if(elPlaced) {
-            elPlaced.setAttribute("data-target", 115);
-            const parentSpan = elPlaced.nextElementSibling;
-            if(parentSpan) parentSpan.textContent = "45% Placement Rate"; 
+        // Update main numbers using data-target for counters
+        if (elTotalCompanies) elTotalCompanies.setAttribute("data-target", companiesVisited);
+        if (elHighest) elHighest.setAttribute("data-target", highestPackage);
+        if (elAverage) elAverage.setAttribute("data-target", avgPackage);
+        if (elPlaced) elPlaced.setAttribute("data-target", totalPlaced);
+        if (elEnrolled) elEnrolled.setAttribute("data-target", activelyParticipated);
+        if (elRate) elRate.setAttribute("data-target", data.placement_rate || 0);
+        
+        // Update enriched card captions
+        const elCompaniesCap = document.getElementById("dashCompaniesCaption");
+        const elPlacedCap = document.getElementById("dashPlacedCaption");
+        const elAvgCap = document.getElementById("dashAvgCaption");
+        const elEnrolledCap = document.getElementById("dashEnrolledCaption");
+
+        if (elCompaniesCap) elCompaniesCap.textContent = `${companiesOffered} Offered Jobs`;
+        if (elPlacedCap) elPlacedCap.textContent = `out of ${activelyParticipated} participated`;
+        if (elAvgCap) elAvgCap.textContent = `LPA across all branches`;
+        if (elEnrolledCap) elEnrolledCap.textContent = `${totalStudents} Total • ${activelyParticipated} Participated`;
+
+        // Update subtexts & captions
+        if (elSubText) {
+            elSubText.innerHTML = `${totalPlaced} Offers • ${companiesVisited}+ Companies Visited • ${data.placement_rate || 0}% Placement Rate`;
         }
 
-        if(elSubText) {
-            elSubText.innerHTML = `115 Students Placed • 45% Placement Rate`;
+        let top3 = [];
+        if (elHighestCap) {
+            const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : "USAR";
+            elHighestCap.textContent = `Offered by ${topComp}`;
         }
         
-        // Generate Story / Highlights
-        const highlightsList = document.getElementById("dashHighlightsList");
+        // Highlights Logic
         if (highlightsList && companies.length > 0) {
-            // Sort companies by package descending
             const validCompanies = companies.filter(c => c.package && c.package.toLowerCase().includes("lpa"));
             validCompanies.sort((a, b) => {
                 const matchA = a.package.match(/(\d+(\.\d+)?)/);
@@ -337,188 +353,215 @@ async function fetchDashboardStats() {
             });
 
             top3 = validCompanies.slice(0, 3);
-            
             let html = "";
             if (top3.length > 0) {
-                html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> The highest compensation of <strong>${top3[0].package}</strong> was offered by <strong>${top3[0].company_name}</strong> for the critically acclaimed <strong>${top3[0].role}</strong> role.</li>`;
+                html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> The highest compensation of <strong>${top3[0].package}</strong> was offered by <strong>${top3[0].company_name}</strong> for the <strong>${top3[0].role}</strong> role.</li>`;
             }
             if (totalCompanies > 0) {
-                html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> A robust placement drive actively resulted in <strong>${totalCompanies} top-tier companies</strong> visiting the campus to recruit our brightest minds.</li>`;
+                html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> A robust placement drive resulted in <strong>${totalCompanies} companies</strong> visiting the campus.</li>`;
             }
             if (avgPackage > 0) {
-                html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> The batch successfully maintained a strong competitive average package of <strong>${avgPackage} LPA</strong> across all engineering branches.</li>`;
+                html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> The batch maintained a strong competitive average package of <strong>${avgPackage} LPA</strong>.</li>`;
             }
-            if (top3.length > 1) {
-                // Get unique company names for the rest of top recruiters
-                const otherNames = [...new Set(top3.slice(1).map(c => c.company_name))].map(name => `<strong>${name}</strong>`).join(" and ");
-                if (otherNames) {
-                    html += `<li><span style="color:var(--primary); margin-right: 8px;">★</span> Other globally prominent recruiters included ${otherNames}, eagerly picking up premier talent from the institution.</li>`;
-                }
-            }
-
             highlightsList.innerHTML = html;
         }
 
-        // Setup Modal Interactions
+        // Setup Popup Logic
         const glassPopup = document.getElementById("glassPopup");
         const glassPopupTitle = document.getElementById("glassPopupTitle");
         const glassPopupBody = document.getElementById("glassPopupBody");
         const closeGlassPopup = document.getElementById("closeGlassPopup");
 
         const showPopup = (title, htmlContent) => {
-            if(!glassPopup) return;
+            if (!glassPopup) return;
             glassPopupTitle.textContent = title;
             glassPopupBody.innerHTML = htmlContent;
             glassPopup.style.display = 'flex';
             setTimeout(() => glassPopup.classList.add("show"), 10);
         };
 
-        if(closeGlassPopup && glassPopup) {
+        if (closeGlassPopup && glassPopup) {
             closeGlassPopup.onclick = () => {
                 glassPopup.classList.remove("show");
                 setTimeout(() => glassPopup.style.display = 'none', 400);
             };
-            glassPopup.onclick = (e) => {
-                if(e.target === glassPopup || e.target.classList.contains('glass-popup-overlay')) {
-                    glassPopup.classList.remove("show");
-                    setTimeout(() => glassPopup.style.display = 'none', 400);
-                }
-            };
         }
 
-        const btnCardCompanies = document.getElementById("card-companies");
-        const btnCardPlaced = document.getElementById("card-placed");
-        const btnCardHighest = document.getElementById("card-highest");
-        const btnCardAverage = document.getElementById("card-average");
-
-        if(btnCardCompanies) {
-            btnCardCompanies.onclick = () => {
-                // Show top 10 companies visited
+        // Attach OnClicks with null guards
+        const cardCompanies = document.getElementById("card-companies");
+        if (cardCompanies) {
+            cardCompanies.onclick = () => {
                 const sorted = [...companies].sort((a, b) => {
                     const pkgA = parseFloat((a.package || "").match(/(\d+(\.\d+)?)/)?.[1] || 0);
                     const pkgB = parseFloat((b.package || "").match(/(\d+(\.\d+)?)/)?.[1] || 0);
                     return pkgB - pkgA;
                 });
                 const uniqueNames = [...new Set(sorted.map(c => c.company_name))].slice(0, 10);
+                let bodyHtml = `<p>A total of <strong>${totalCompanies} companies</strong> participated. Top recruiters included:</p><ul style="list-style:none; padding:10px 0;">`;
+                uniqueNames.forEach((name, i) => bodyHtml += `<li style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:var(--primary); font-weight:bold; margin-right:10px;">#${i+1}</span> ${name}</li>`);
+                bodyHtml += `</ul>`;
+                showPopup("Top Recruiter Analysis", bodyHtml);
+            };
+        }
+
+        const cardPlaced = document.getElementById("card-placed") || document.getElementById("card-placed-students");
+        if (cardPlaced) {
+            cardPlaced.onclick = () => {
+                let bodyHtml = `<p><strong>${totalPlaced} Students</strong> successfully secured placements for the ${year || 'Overall'} Batch.</p>
+                <p style="margin-top:10px; color:#aaa; font-size:14px;">Offers range across Software Engineering, AI/ML, and DevOps domains.</p>`;
+                showPopup("Placement Success", bodyHtml);
+            };
+        }
+
+        const cardHighest = document.getElementById("card-highest") || document.getElementById("card-highest-students");
+        if (cardHighest) {
+            cardHighest.onclick = () => {
+                const overallHighest = bs.overall_highest_package || highestPackage;
+                let bodyHtml = `<p>Overall Highest Package: <strong style="color:var(--primary); font-size:20px;">${overallHighest} LPA</strong></p>`;
                 
-                let bodyHtml = `<p style="margin-bottom: 15px;">A total of <strong>${totalCompanies} top-tier commands</strong> participated. Top recruiters by compensation included:</p>`;
-                bodyHtml += `<ul style="list-style: none; padding: 0;">`;
-                uniqueNames.forEach((name, i) => {
-                    bodyHtml += `<li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);"><span style="color:var(--primary); margin-right: 10px; font-weight:bold;">#${i+1}</span> ${name}</li>`;
-                });
-                bodyHtml += `</ul>`;
-                showPopup("Top Visited Companies", bodyHtml);
-            };
-        }
+                const branchDetails = bs.branch_details || {};
+                if (Object.keys(branchDetails).length > 0) {
+                    bodyHtml += `<h4 style="color:var(--primary); margin:20px 0 10px 0;">Branch-wise Highest Package</h4>`;
+                    bodyHtml += `<div style="display:flex; flex-direction:column; gap:8px;">`;
+                    for (const [branch, info] of Object.entries(branchDetails)) {
+                        const pct = (info.highest_package / overallHighest) * 100;
+                        bodyHtml += `
+                        <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:8px; border-left:3px solid var(--primary);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                                <span style="font-weight:500;">${branch}</span>
+                                <strong style="color:var(--primary);">${info.highest_package} LPA</strong>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.08); border-radius:4px; height:6px; overflow:hidden;">
+                                <div style="background:var(--primary); height:100%; width:${pct}%; border-radius:4px;"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:12px; color:#888;">
+                                <span>Placed: ${info.placed} students</span>
+                                <span>Median: ${info.median_package} LPA</span>
+                            </div>
+                        </div>`;
+                    }
+                    bodyHtml += `</div>`;
+                }
 
-        if(btnCardPlaced) {
-            btnCardPlaced.onclick = () => {
-                let bodyHtml = `<p style="margin-bottom: 15px;">We secured an impressive <strong>115 offers</strong> across cutting-edge tech domains.</p>`;
-                bodyHtml += `<ul style="list-style: none; padding: 0;">`;
-                bodyHtml += `<li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong>GoDaddy</strong> critically scouted top Software Engineers</li>`;
-                bodyHtml += `<li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong>Infosys Ltd.</strong> handpicked engineers directly for Specialist Programmer roles</li>`;
-                bodyHtml += `<li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong>Internzvalley</strong> aggressively scouted and heavily hired for core BD roles</li>`;
-                bodyHtml += `<li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">Dozens of students successfully placed explicitly in <strong>AI/ML & DevOps</strong> specialized domains</li>`;
-                bodyHtml += `</ul>`;
-                showPopup("Placement Dispersal", bodyHtml);
-            };
-        }
-
-        if(btnCardHighest) {
-            btnCardHighest.onclick = () => {
-                let bodyHtml = `<p style="margin-bottom: 15px;">Setting a benchmark, the highest package of <strong>${highestPackage} LPA</strong> shined prominently.</p>`;
-                if(top3.length > 0) {
-                    bodyHtml += `<div style="background: rgba(250, 204, 21, 0.1); border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);">
-                        <h4 style="color:var(--primary); margin:0 0 5px 0; font-size:18px; letter-spacing: 0.5px;">${top3[0].company_name}</h4>
-                        <p style="margin:0 0 5px 0;"><strong>Role:</strong> ${top3[0].role}</p>
-                        <p style="margin:0;"><strong>Package:</strong> <span style="font-weight: 600;">${top3[0].package}</span></p>
+                const topCompanyData = data.top_companies && data.top_companies[0];
+                if (topCompanyData) {
+                    bodyHtml += `<div style="background:rgba(250,204,21,0.1); border:1px solid var(--primary); padding:12px; border-radius:8px; margin-top:15px;">
+                        <h4 style="color:var(--primary); margin:0 0 5px 0;">🏆 ${topCompanyData.name}</h4>
+                        <p style="margin:0;"><strong>Role:</strong> ${topCompanyData.role} &nbsp;•&nbsp; <strong>Package:</strong> ${topCompanyData.package_str}</p>
                     </div>`;
                 }
-                if(top3.length > 1) {
-                    bodyHtml += `<p style="color: #bbb;">Other competitive high compensations:</p><ul style="list-style: none; padding: 0;">`;
-                    for(let i=1; i<top3.length; i++) {
-                        bodyHtml += `<li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong style="color:var(--primary);">${top3[i].package}</strong> &nbsp;—&nbsp; ${top3[i].company_name}</li>`;
-                    }
-                    bodyHtml += `</ul>`;
-                }
-                showPopup("Highest Package Details", bodyHtml);
+                showPopup("Highest Package Breakdown", bodyHtml);
             };
         }
 
-        if(btnCardAverage) {
-            btnCardAverage.onclick = () => {
-                let bodyHtml = `<p style="margin-bottom: 20px;">Our collective average stands fiercely competitive at <strong>${avgPackage} LPA</strong>.</p>`;
-                bodyHtml += `<div style="display: flex; flex-direction: column; gap: 10px;">
-                    <div style="background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 6px; display: flex; justify-content: space-between; border-left: 3px solid var(--primary);">
-                        <span>Computer Science & Engineering</span>
-                        <strong style="color:var(--primary);">~${(parseFloat(avgPackage) + 0.3).toFixed(1)} LPA</strong>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 6px; display: flex; justify-content: space-between; border-left: 3px solid var(--primary);">
-                        <span>AI & Data Science</span>
-                        <strong style="color:var(--primary);">~${(parseFloat(avgPackage) + 0.22).toFixed(1)} LPA</strong>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 6px; display: flex; justify-content: space-between; border-left: 3px solid var(--primary);">
-                        <span>Automation & Robotics</span>
-                        <strong style="color:var(--primary);">~${(parseFloat(avgPackage) - 0.16).toFixed(1)} LPA</strong>
-                    </div>
-                </div>`;
-                bodyHtml += `<p style="margin-top: 20px; font-size: 13px; color: #aaa; font-style: italic;">* Branch-wise averages are mathematically estimated from combined historical department placement density.</p>`;
+        const cardAverage = document.getElementById("card-average");
+        if (cardAverage) {
+            cardAverage.onclick = () => {
+                const overallAvg = bs.overall_avg_package || avgPackage;
+                const overallMedian = bs.overall_median_package || 0;
+                let bodyHtml = `<p>Overall Average CTC: <strong style="color:var(--primary); font-size:20px;">${overallAvg} LPA</strong></p>`;
+                if (overallMedian) {
+                    bodyHtml += `<p style="color:#aaa; margin-top:4px;">Median Package: <strong>${overallMedian} LPA</strong></p>`;
+                }
+
+                const branchDetails = bs.branch_details || {};
+                if (Object.keys(branchDetails).length > 0) {
+                    bodyHtml += `<h4 style="color:var(--primary); margin:20px 0 10px 0;">Branch-wise Average Package</h4>`;
+                    bodyHtml += `<div style="display:flex; flex-direction:column; gap:8px;">`;
+                    
+                    const maxAvg = Math.max(...Object.values(branchDetails).map(b => b.avg_package || 0));
+                    for (const [branch, info] of Object.entries(branchDetails)) {
+                        const pct = maxAvg > 0 ? (info.avg_package / maxAvg) * 100 : 0;
+                        bodyHtml += `
+                        <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:8px; border-left:3px solid var(--primary);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                                <span style="font-weight:500;">${branch}</span>
+                                <strong style="color:var(--primary);">${info.avg_package} LPA</strong>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.08); border-radius:4px; height:6px; overflow:hidden;">
+                                <div style="background:var(--primary); height:100%; width:${pct}%; border-radius:4px;"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:12px; color:#888;">
+                                <span>Median: ${info.median_package} LPA</span>
+                                <span>Rate: ${info.placement_rate}%</span>
+                            </div>
+                        </div>`;
+                    }
+                    bodyHtml += `</div>`;
+                }
                 showPopup("Average Package Insights", bodyHtml);
             };
         }
 
-        // --- STUDENTS PAGE SPECIFIC CARDS ---
-        const btnEnrolled = document.getElementById("card-enrolled");
-        const btnPlacedStu = document.getElementById("card-placed-students");
-        const btnRate = document.getElementById("card-rate");
-
-        if(btnEnrolled) {
-            btnEnrolled.onclick = () => {
-                let bodyHtml = `<p style="margin-bottom: 15px;">A massive total of <strong>251 students</strong> formally registered from the 2025 batch for the active placement season.</p>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong style="color:var(--primary);">Computer Science & Engineering:</strong> Largest demographic participating heavily.</li>
-                    <li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong style="color:var(--primary);">AI & Data Science:</strong> Extraordinarily high interest rate in specialized core domains.</li>
-                    <li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><strong style="color:var(--primary);">Automation & Robotics:</strong> Niche specializations driving wildly diverse technical recruiter interest.</li>
-                </ul>`;
-                showPopup("Total Enrollment Details", bodyHtml);
+        const cardRate = document.getElementById("card-rate");
+        if (cardRate) {
+            cardRate.onclick = () => {
+                let bodyHtml = `<p>Current Placement Rate: <strong>${data.placement_rate}%</strong></p>
+                <p style="margin-top:10px; color:#aaa;">Calculated as (Total Placed / Total Enrolled students).</p>`;
+                showPopup("Placement Rate Analysis", bodyHtml);
             };
         }
 
-        if(btnPlacedStu) {
-            btnPlacedStu.onclick = () => {
-                let bodyHtml = `<p style="margin-bottom: 15px;"><strong>115 students</strong> were successfully matched with highly competitive corporate profiles.</p>
-                <div style="background: rgba(250, 204, 21, 0.1); border: 1px solid var(--primary); padding: 20px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);">
-                    <h4 style="color:var(--primary); margin:0 0 10px 0; font-size:18px;">Top Hiring Sectors</h4>
-                    <p style="margin:0 0 5px 0; font-weight: 500;">1. High-Impact Software Engineering & IT</p>
-                    <p style="margin:0 0 5px 0; font-weight: 500;">2. Core Data Science & NLP / ML</p>
-                    <p style="margin:0;">3. Backend Infrastructure & DevOps Reliability</p>
-                </div>
-                <p style="margin-top: 15px; font-size: 14px; color: #ccc;">Students actively acquired highly sought-after engineering roles dynamically across global organizations.</p>`;
-                showPopup("Successful Placements Analytics", bodyHtml);
+        const cardEnrolled = document.getElementById("card-enrolled");
+        if (cardEnrolled) {
+            cardEnrolled.onclick = () => {
+                let bodyHtml = `<p>Total Registered Students: <strong>${data.total_enrolled}</strong></p>
+                <p style="margin-top:10px; color:#aaa;">Total students eligible for the ${year || 'Overall'} placement drive.</p>`;
+                showPopup("Enrollment Details", bodyHtml);
             };
         }
 
-        if(btnRate) {
-            btnRate.onclick = () => {
-                let bodyHtml = `<p style="margin-bottom: 15px;">The university dynamically drove a solid <strong>45.8% exact placement rate</strong> directly against the eligible participatory pool.</p>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><span style="color:var(--primary); font-size: 18px; margin-right: 10px;">★</span> The strategic focus has now shifted aggressively towards cleanly converting upcoming long-term internships into full-time PPOs.</li>
-                    <li style="padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><span style="color:var(--primary); font-size: 18px; margin-right: 10px;">★</span> The highest overall placement density was formally recorded within the highly rigorous AI & ML engineering domains.</li>
-                </ul>`;
-                showPopup("Placement Ratio Insights", bodyHtml);
-            };
+        // Re-trigger counters
+        if (typeof runCounters === 'function') runCounters();
+
+        // End fade in
+        if (statsContainer) {
+            statsContainer.classList.remove("fade-out");
+            statsContainer.classList.add("fade-in");
         }
+        if (subText) {
+            subText.classList.remove("fade-out");
+            subText.classList.add("fade-in");
+        }
+        if (highlightsList) {
+            highlightsList.classList.remove("fade-out");
+            highlightsList.classList.add("fade-in");
+        }
+        
+        document.querySelectorAll(".card").forEach(card => card.classList.remove("stat-card-loading"));
 
-        // Re-run animation
-        runCounters();
+        setTimeout(() => {
+            if (statsContainer) statsContainer.classList.remove("fade-in");
+            if (subText) subText.classList.remove("fade-in");
+            if (highlightsList) highlightsList.classList.remove("fade-in");
+        }, 400);
 
-    } catch(err) {
-        console.error("Failed to load dashboard stats", err);
+    } catch (error) {
+        console.error("Dashboard stats error:", error);
+        if (statsContainer) statsContainer.classList.remove("fade-out");
+        document.querySelectorAll(".card").forEach(card => card.classList.remove("stat-card-loading"));
     }
 }
 
 // Call on load
-document.addEventListener("DOMContentLoaded", fetchDashboardStats);
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Restore year from localStorage or default to 2024 (as per analytics)
+    const storedYear = localStorage.getItem("selectedBatchYear") || "2024";
+    
+    // 2. Set selector value if it exists
+    const yearSelector = document.getElementById("batchYearSelector");
+    if (yearSelector) {
+        yearSelector.value = storedYear;
+        yearSelector.addEventListener("change", (e) => {
+            const newYear = e.target.value;
+            localStorage.setItem("selectedBatchYear", newYear);
+            fetchDashboardStats(newYear);
+        });
+    }
+    
+    // 3. Initial Fetch
+    fetchDashboardStats(storedYear);
+});
 
 
 document.querySelectorAll("a").forEach(link => {

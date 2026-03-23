@@ -278,7 +278,13 @@
 
             <!-- DASHBOARD SECTION -->
             <section id="dashboard" class="section active">
-                <h1 id="dashTitle">Placement Overview - 2025 Batch</h1>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                    <h1 id="dashTitle" style="margin: 0;">Placement Overview</h1>
+                    <select id="batchYearSelector" class="batch-year-select">
+                        <option value="2025" selected>2025 Batch</option>
+                        <option value="2024">2024 Batch</option>
+                    </select>
+                </div>
                 <p class="sub-text" id="dashSubText">
                     Loading data...
                 </p>
@@ -286,15 +292,15 @@
                 <div class="stats-container">
 
                     <div class="card" id="card-companies" style="cursor: pointer;" title="Click for more details">
-                        <h3>Total Companies</h3>
+                        <h3>Companies Visited</h3>
                         <p class="number" id="dashCompanies" data-target="0">0</p>
-                        <span>Visited Campus</span>
+                        <span id="dashCompaniesCaption">Loading...</span>
                     </div>
 
                     <div class="card" id="card-placed" style="cursor: pointer;" title="Click for more details">
                         <h3>Students Placed</h3>
                         <p class="number" id="dashPlaced" data-target="0">0</p>
-                        <span>Loading Data...</span>
+                        <span id="dashPlacedCaption">Loading...</span>
                     </div>
 
                     <div class="card" id="card-highest" style="cursor: pointer;" title="Click for more details">
