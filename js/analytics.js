@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Shared PlacePro Theme Colors Configuration
-    const primaryColor = '#facc15';
+    const primaryColor = '#10b981';
     const surfaceColor = 'rgba(20, 20, 20, 0.8)';
     const textColor = '#f8f8f8';
-    const gridColor = 'rgba(250, 204, 21, 0.1)';
+    const gridColor = 'rgba(16, 185, 129, 0.1)';
     const tooltipBg = 'rgba(0, 0, 0, 0.8)';
 
     Chart.defaults.color = textColor;
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 labels: keys,
                 datasets: [{
                     data: values,
-                    backgroundColor: [primaryColor, '#eab308', '#ca8a04', '#a16207', '#854d0e', surfaceColor],
+                    backgroundColor: [primaryColor, '#10b981', '#059669', '#064e3b', '#064e3b', surfaceColor],
                     borderWidth: 2,
                     borderColor: '#111'
                 }]
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 datasets: [{
                     label: 'Companies',
                     data: topValues,
-                    backgroundColor: '#eab308',
+                    backgroundColor: '#10b981',
                     borderRadius: 4,
                     barPercentage: 0.6
                 }]
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     datasets: [{
                         label: 'Students Placed',
                         data: placed,
-                        backgroundColor: companies.map((_, i) => i % 2 === 0 ? primaryColor : '#eab308'),
+                        backgroundColor: companies.map((_, i) => i % 2 === 0 ? primaryColor : '#10b981'),
                         borderRadius: 6,
                         barPercentage: 0.65,
                     }]

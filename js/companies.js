@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const actionsBtnHtml = isPrivileged ? `
                 <td>
                     <div style="display:flex; gap: 8px;">
-                        <button class="edit-btn" onclick="editCompany(${company.id})" style="background: #facc15; border: 1px solid #ca8a04; color: #000; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600;">Edit</button>
+                        <button class="edit-btn" onclick="editCompany(${company.id})" style="background: #10b981; border: 1px solid #059669; color: #000; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600;">Edit</button>
                         <button class="delete-btn" onclick="deleteCompany(${company.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif;">Del</button>
                     </div>
                 </td>` : '';
@@ -138,8 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${company.deadline}</td>
                 <td>
                     <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;
-                        background: ${company.status === 'Active' ? 'rgba(34, 197, 94, 0.2)' : company.status === 'Upcoming' ? 'rgba(234, 179, 8, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
-                        color: ${company.status === 'Active' ? '#22c55e' : company.status === 'Upcoming' ? '#eab308' : '#ef4444'};">
+                        background: ${company.status === 'Active' ? 'rgba(34, 197, 94, 0.2)' : company.status === 'Upcoming' ? 'rgba(5, 150, 105, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
+                        color: ${company.status === 'Active' ? '#22c55e' : company.status === 'Upcoming' ? '#10b981' : '#ef4444'};">
                         ${company.status || 'Active'}
                     </span>
                 </td>
@@ -383,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
             border-radius: 8px;
             background: #111;
             color: #fff;
-            border-left: 5px solid ${type === "success" ? "#22c55e" : type === "error" ? "#ef4444" : "#facc15"};
+            border-left: 5px solid ${type === "success" ? "#22c55e" : type === "error" ? "#ef4444" : "#10b981"};
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             font-size: 14px;
             font-weight: 500;

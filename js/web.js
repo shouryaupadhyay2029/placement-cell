@@ -445,7 +445,7 @@ async function fetchDashboardStats(year = "2025") {
 
                 const topCompanyData = data.top_companies && data.top_companies[0];
                 if (topCompanyData) {
-                    bodyHtml += `<div style="background:rgba(250,204,21,0.1); border:1px solid var(--primary); padding:12px; border-radius:8px; margin-top:15px;">
+                    bodyHtml += `<div style="background:rgba(16, 185, 129,0.1); border:1px solid var(--primary); padding:12px; border-radius:8px; margin-top:15px;">
                         <h4 style="color:var(--primary); margin:0 0 5px 0;">🏆 ${topCompanyData.name}</h4>
                         <p style="margin:0;"><strong>Role:</strong> ${topCompanyData.role} &nbsp;•&nbsp; <strong>Package:</strong> ${topCompanyData.package_str}</p>
                     </div>`;
@@ -743,7 +743,7 @@ function createStar(extraClass) {
     return star;
 }
 
-// Inject extra yellow stars for dark mode
+// Inject extra emerald stars for dark mode
 function addDarkStars() {
     const container = document.querySelector(".particles");
     if (!container) return;
@@ -1170,7 +1170,7 @@ async function loadMyApplications() {
             return;
         }
 
-        const statusColor = (s) => s === 'applied' ? '#facc15' : s === 'shortlisted' ? '#22c55e' : s === 'rejected' ? '#ef4444' : '#aaa';
+        const statusColor = (s) => s === 'applied' ? '#10b981' : s === 'shortlisted' ? '#22c55e' : s === 'rejected' ? '#ef4444' : '#aaa';
 
         list.innerHTML = apps.map(app => `
             <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); border-radius:6px; padding:8px 10px; border: 1px solid rgba(255,255,255,0.07);">
