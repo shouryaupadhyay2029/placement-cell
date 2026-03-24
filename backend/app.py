@@ -474,22 +474,22 @@ def get_analytics():
             "actively_participated": 251,
             "companies_visited": 80,
             "companies_offered": 26,
-            "total_offers": 115,
+            "total_offers": 110,
             "overall_avg_package": 6.11,
             "overall_median_package": 6,
             "overall_highest_package": 27,
             "branch_offers": {
-                "AI & DS": 36,
+                "AI & DS": 35,
                 "AI & ML": 30,
-                "IIOT": 33,
-                "A&R": 16
+                "IIOT": 30,
+                "A&R": 15
             },
             "branch_details": {
                 "AI & Data Science": {
                     "total_students": 132,
                     "participated": 75,
-                    "placed": 36,
-                    "placement_rate": 48.0,
+                    "placed": 35,
+                    "placement_rate": 46.7,
                     "avg_package": 6.33,
                     "median_package": 6.35,
                     "highest_package": 12
@@ -506,8 +506,8 @@ def get_analytics():
                 "Industrial Internet of Things": {
                     "total_students": 127,
                     "participated": 66,
-                    "placed": 33,
-                    "placement_rate": 50.0,
+                    "placed": 30,
+                    "placement_rate": 45.4,
                     "avg_package": 5.88,
                     "median_package": 4.5,
                     "highest_package": 27
@@ -515,8 +515,8 @@ def get_analytics():
                 "Automation & Robotics": {
                     "total_students": 111,
                     "participated": 41,
-                    "placed": 16,
-                    "placement_rate": 39.02,
+                    "placed": 15,
+                    "placement_rate": 36.6,
                     "avg_package": 5.95,
                     "median_package": 6,
                     "highest_package": 8
@@ -658,51 +658,111 @@ def get_analytics():
 
 @app.route("/api/company-recruitment", methods=["GET"])
 def company_recruitment():
-    """Returns company-wise student placement counts for the analytics chart."""
+    """Returns company-wise student placement counts. Combines manual lists with actual records."""
     batch_year = request.args.get("batch_year")
-    query = Company.query
+    
+    # 1. Initialize with ALL companies from Company table to ensure visibility
+    company_query = Company.query
     if batch_year:
-        query = query.filter_by(batch_year=batch_year)
-
-    companies = query.all()
-
-    # Aggregate by company_name (sum students_placed)
+        company_query = company_query.filter_by(batch_year=batch_year)
+    
+    companies = company_query.all()
     agg = {}
+    meta = {}
+    
     for c in companies:
         name = c.company_name.strip()
-        placed = c.students_placed or 0
-        if name in agg:
-            agg[name] += placed
-        else:
-            agg[name] = placed
+        # Initialize with manual count (source of truth if no PlacementRecord exists)
+        agg[name] = agg.get(name, 0) + (c.students_placed or 0)
+        # Store metadata
+        if name not in meta or c.company_type:
+            meta[name] = {
+                "type": c.company_type or "Technology",
+                "location": c.location or "India"
+            }
 
-    # Sort descending by students placed
-    sorted_data = sorted(agg.items(), key=lambda x: x[1], reverse=True)
+    # 2. Override/Update with actual PlacementRecord counts (Student List sync)
+    record_query = PlacementRecord.query
+    if batch_year:
+        try:
+            record_query = record_query.filter_by(year=int(batch_year))
+        except ValueError:
+            pass
 
-    total_placed = sum(v for _, v in sorted_data)
-    total_students = Student.query.count() or total_placed  # fallback
+    for r in record_query.all():
+        name = r.branch = r.company_name.strip()
+        agg[name] = agg.get(name, 0) + 1 # Dynamic count aggregation
+
+    # Re-fetch counts from PlacementRecord for entries existing there (Source of Truth)
+    # This prevents double-counting if we had both a manual entry and a student list entry.
+    # Actually, the logic in Step 1029 was better. Let's use a fresh approach.
+    
+    # Let's recalibrate: If we have PlacementRecords for a company, they ARE the count.
+    # If not, we use the Company.students_placed.
+    
+    record_counts = {}
+    for r in record_query.all():
+        name = r.company_name.strip()
+        record_counts[name] = record_counts.get(name, 0) + 1
+    
+    for name, count in record_counts.items():
+        agg[name] = count
+
+    # Sorting
+    sorted_items = sorted(agg.items(), key=lambda x: x[1], reverse=True)
+
+    result_companies = []
+    result_counts = []
+    result_types = []
+    result_locations = []
+
+    for name, count in sorted_items:
+        result_companies.append(name)
+        result_counts.append(count)
+        m = meta.get(name, {"type": "Technology", "location": "India"})
+        result_types.append(m["type"])
+        result_locations.append(m["location"])
 
     return jsonify({
-        "companies": [k for k, _ in sorted_data],
-        "students_placed": [v for _, v in sorted_data],
-        "total_placed": total_placed,
+        "companies": result_companies,
+        "students_placed": result_counts,
+        "company_types": result_types,
+        "company_locations": result_locations,
+        "total_placed": sum(agg.values()),
     }), 200
 
+@app.route("/api/branch-stats", methods=["GET"])
+def branch_stats():
+    """Returns branch-wise student placement breakdown."""
+    batch_year = request.args.get("batch_year")
+    
+    query = PlacementRecord.query
+    if batch_year:
+        try:
+            query = query.filter_by(year=int(batch_year))
+        except ValueError:
+            pass
+            
+    records = query.all()
+    
+    # Pre-defined branch list for consistency
+    branches = ["AI-DS", "AI-ML", "IIOT", "A&R"]
+    counts = {b: 0 for b in branches}
+    
+    for r in records:
+        branch = r.branch.upper().strip()
+        if branch in counts:
+            counts[branch] += 1
+        else:
+            # Fallback/Unknown branch
+            counts[branch] = counts.get(branch, 0) + 1
 
-@app.route("/api/placements", methods=["GET"])
-def get_placements():
-    """Returns all placement records from the PDF extraction."""
-    placements = PlacementRecord.query.all()
-    result = []
-    for p in placements:
-        result.append({
-            "id": p.id,
-            "company_name": p.company_name,
-            "student_name": p.student_name,
-            "branch": p.branch,
-            "year": p.year
-        })
-    return jsonify(result), 200
+    # Return results
+    return jsonify({
+        "labels": list(counts.keys()),
+        "counts": list(counts.values()),
+        "total": len(records)
+    }), 200
 
 
 # TEMPORARY DEV ROUTE
@@ -714,6 +774,22 @@ def make_admin(email):
         db.session.commit()
         return f"<h3>Success!</h3><p>{email} is now an ADMIN.</p><a href='http://127.0.0.1:5500/html/web.html'>Go back to website</a>"
     return "User not found. Please sign up on the website first."
+
+
+@app.route("/api/placements", methods=["GET"])
+def get_placements():
+    """Returns all placement records for students list."""
+    placements = PlacementRecord.query.all()
+    result = []
+    for p in placements:
+        result.append({
+            "id": p.id,
+            "company_name": p.company_name,
+            "student_name": p.student_name,
+            "branch": p.branch,
+            "year": p.year
+        })
+    return jsonify(result), 200
 
 
 if __name__ == "__main__":

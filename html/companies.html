@@ -83,22 +83,28 @@
 
 
     <!-- CIRCULAR LOGO -->
-    <a href="web.html" class="circular-logo pp-logo" title="Back to Home" style="text-decoration: none; display: flex; align-items: center; justify-content: center; color: var(--text-theme-main); transition: all 0.3s ease;">
-        <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
-          <defs>
-            <mask id="gap-mask">
-              <rect width="100" height="100" fill="white" />
-              <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" stroke="black" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-            </mask>
-            <mask id="patch-mask">
-              <rect width="100" height="100" fill="black" />
-              <circle cx="70" cy="25" r="20" fill="white" />
-            </mask>
-          </defs>
-          <circle cx="50" cy="50" r="48" class="pp-logo-circle" stroke="none" />
-          <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#gap-mask)"/>
-          <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)"/>
+    <a href="web.html" class="circular-logo pp-logo" title="Back to Home"
+        style="text-decoration: none; display: flex; align-items: center; justify-content: center; color: var(--text-theme-main); transition: all 0.3s ease;">
+        <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+            <defs>
+                <mask id="gap-mask">
+                    <rect width="100" height="100" fill="white" />
+                    <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" stroke="black"
+                        stroke-width="20" stroke-linecap="round" stroke-linejoin="round" />
+                </mask>
+                <mask id="patch-mask">
+                    <rect width="100" height="100" fill="black" />
+                    <circle cx="70" cy="25" r="20" fill="white" />
+                </mask>
+            </defs>
+            <circle cx="50" cy="50" r="48" class="pp-logo-circle" stroke="none" />
+            <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path"
+                stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#gap-mask)" />
+            <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" class="pp-logo-path"
+                stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path"
+                stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)" />
         </svg>
     </a>
 
@@ -113,26 +119,67 @@
                 </svg>
             </div>
             <div class="profile-dropdown" id="profileDropdown">
-                <div class="dropdown-header">
-                    <div class="user-details">
-                        <h3 id="profileName" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            Guest
-                            <span id="adminBadge"
-                                style="display: none; font-size: 10px; background: #111; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #333; box-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6);">Admin</span>
-                        </h3>
-                        <p class="detail-item"><strong>Email:</strong> <span id="profileEmail">—</span></p>
-                        <p class="detail-item"><strong>Branch:</strong> <span id="profileBranch">—</span></p>
-                        <p class="detail-item"><strong>Year:</strong> <span id="profileYear">—</span></p>
-                    </div>
-                    <div class="user-photo-container">
-                        <div class="profile-avatar" id="profileAvatar" style="position: relative;">?
-                            <span id="adminStar"
-                                style="display: none; position: absolute; bottom: 0; right: -4px; background: #111; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6); font-weight: bold; border: 1px solid #333;">★</span>
+                <!-- Logged In State Content -->
+                <div id="loggedInContent" style="display: none;">
+                    <div class="dropdown-header">
+                        <div class="user-details">
+                            <span id="adminBadge" class="admin-badge" style="display: none;">Admin</span>
+                            <h3 id="profileName" class="user-name-title">Guest</h3>
+                            <div class="user-info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Email</span>
+                                    <span id="profileEmail" class="info-value">—</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Branch</span>
+                                    <span id="profileBranch" class="info-value">—</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Year</span>
+                                    <span id="profileYear" class="info-value">—</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-visual-area">
+                            <div class="profile-avatar-wrapper">
+                                <div class="profile-avatar" id="profileAvatar">?
+                                    <span id="adminStar" class="admin-star" style="display: none;">★</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Guest State Content -->
+                <div id="guestContent" class="guest-container">
+                    <div class="guest-info-block">
+                        <div class="guest-icon-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="guest-message">
+                            <h4>You are not logged in</h4>
+                            <p>Log in to access personalized placement tools</p>
+                        </div>
+                    </div>
+                    <div class="guest-divider"></div>
+                    <p class="guest-support-text">Track your profile, placement data, and relevant updates in one place.</p>
+                </div>
+
                 <div class="dropdown-footer">
-                    <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+                    <!-- My Applications panel (students only) -->
+                    <div id="myApplicationsPanel" style="display: none; margin-bottom: 12px;">
+                        <div class="panel-tag">My Applications</div>
+                        <div id="myApplicationsList" class="apps-mini-list">
+                            <p class="loading-mini">Loading...</p>
+                        </div>
+                    </div>
+                    <button id="logoutBtn" class="logout-btn" style="display:none;">Logout Account</button>
+                    <div id="guestActions" class="guest-actions">
+                        <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In Now</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -305,6 +352,11 @@
 
         </main>
     </div>
+
+    <footer class="footer-note">
+        Every data and report is taken from official college website 
+        <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a>
+    </footer>
 
     <!-- ADD COMPANY MODAL -->
     <div id="companyModal" class="auth-modal">

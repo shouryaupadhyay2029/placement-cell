@@ -87,27 +87,33 @@
     <!-- NAVBAR -->
     <header class="navbar-wrapper">
         <a href="web.html" style="text-decoration: none;">
-            <div class="logo pp-logo" style="display: flex; align-items: center; justify-content: center; color: var(--text-theme-main); transform-origin: left center; transition: all 0.3s ease;">
-                <svg width="55" height="55" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
-                  <defs>
-                    <mask id="gap-mask">
-                      <rect width="100" height="100" fill="white" />
-                      <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" stroke="black" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-                    </mask>
-                    <mask id="patch-mask">
-                      <rect width="100" height="100" fill="black" />
-                      <circle cx="70" cy="25" r="20" fill="white" />
-                    </mask>
-                  </defs>
-                  <!-- Circle Background (Theme aware) -->
-                  <circle cx="50" cy="50" r="48" class="pp-logo-circle" stroke="none" />
-                  
-                  <!-- Background P (Theme aware) -->
-                  <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#gap-mask)"/>
-                  <!-- Foreground P (Theme aware) -->
-                  <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-                  <!-- Interweaving Patch -->
-                  <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)"/>
+            <div class="logo pp-logo"
+                style="display: flex; align-items: center; justify-content: center; color: var(--text-theme-main); transform-origin: left center; transition: all 0.3s ease;">
+                <svg width="55" height="55" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                    <defs>
+                        <mask id="gap-mask">
+                            <rect width="100" height="100" fill="white" />
+                            <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" stroke="black"
+                                stroke-width="20" stroke-linecap="round" stroke-linejoin="round" />
+                        </mask>
+                        <mask id="patch-mask">
+                            <rect width="100" height="100" fill="black" />
+                            <circle cx="70" cy="25" r="20" fill="white" />
+                        </mask>
+                    </defs>
+                    <!-- Circle Background (Theme aware) -->
+                    <circle cx="50" cy="50" r="48" class="pp-logo-circle" stroke="none" />
+
+                    <!-- Background P (Theme aware) -->
+                    <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path"
+                        stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#gap-mask)" />
+                    <!-- Foreground P (Theme aware) -->
+                    <path d="M45 25 V90 M45 25 H70 C85 25 90 38 90 50 C90 62 85 75 70 75 H45" class="pp-logo-path"
+                        stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+                    <!-- Interweaving Patch -->
+                    <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path"
+                        stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)" />
                 </svg>
             </div>
         </a>
@@ -121,26 +127,67 @@
                     </svg>
                 </div>
                 <div class="profile-dropdown" id="profileDropdown">
-                    <div class="dropdown-header">
-                        <div class="user-details">
-                            <h3 id="profileName" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                Guest
-                                <span id="adminBadge"
-                                    style="display: none; font-size: 10px; background: #111; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #333; box-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6);">Admin</span>
-                            </h3>
-                            <p class="detail-item"><strong>Email:</strong> <span id="profileEmail">—</span></p>
-                            <p class="detail-item"><strong>Branch:</strong> <span id="profileBranch">—</span></p>
-                            <p class="detail-item"><strong>Year:</strong> <span id="profileYear">—</span></p>
-                        </div>
-                        <div class="user-photo-container">
-                            <div class="profile-avatar" id="profileAvatar" style="position: relative;">?
-                                <span id="adminStar"
-                                    style="display: none; position: absolute; bottom: 0; right: -4px; background: #111; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6); font-weight: bold; border: 1px solid #333;">★</span>
+                    <!-- Logged In State Content -->
+                    <div id="loggedInContent" style="display: none;">
+                        <div class="dropdown-header">
+                            <div class="user-details">
+                                <span id="adminBadge" class="admin-badge" style="display: none;">Admin</span>
+                                <h3 id="profileName" class="user-name-title">Guest</h3>
+                                <div class="user-info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Email</span>
+                                        <span id="profileEmail" class="info-value">—</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Branch</span>
+                                        <span id="profileBranch" class="info-value">—</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Year</span>
+                                        <span id="profileYear" class="info-value">—</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-visual-area">
+                                <div class="profile-avatar-wrapper">
+                                    <div class="profile-avatar" id="profileAvatar">?
+                                        <span id="adminStar" class="admin-star" style="display: none;">★</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Guest State Content -->
+                    <div id="guestContent" class="guest-container">
+                        <div class="guest-info-block">
+                            <div class="guest-icon-circle">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="guest-message">
+                                <h4>You are not logged in</h4>
+                                <p>Log in to access personalized placement tools</p>
+                            </div>
+                        </div>
+                        <div class="guest-divider"></div>
+                        <p class="guest-support-text">Track your profile, placement data, and relevant updates in one place.</p>
+                    </div>
+
                     <div class="dropdown-footer">
-                        <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+                        <!-- My Applications panel (students only) -->
+                        <div id="myApplicationsPanel" style="display: none; margin-bottom: 12px;">
+                            <div class="panel-tag">My Applications</div>
+                            <div id="myApplicationsList" class="apps-mini-list">
+                                <p class="loading-mini">Loading...</p>
+                            </div>
+                        </div>
+                        <button id="logoutBtn" class="logout-btn" style="display:none;">Logout Account</button>
+                        <div id="guestActions" class="guest-actions">
+                            <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,102 +242,177 @@
 
     <div class="container">
         <main class="main-content">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-                    <div>
-                        <h1 style="margin: 0; margin-bottom: 5px;">Analytics Dashboard</h1>
-                        <p class="sub-text" style="margin: 0;">View placement analytics and insights</p>
-                    </div>
-                    <div class="filter-group" style="display: flex; align-items: center; gap: 10px; background: rgba(20, 20, 20, 0.6); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <span style="color: var(--text-theme-main); font-size: 14px; font-weight: 500;">Batch Year:</span>
-                        <select id="globalBatchYear" style="padding: 6px 12px; border: 1px solid rgba(16, 185, 129,0.3); border-radius: 8px; background: rgba(10,10,10,0.8); color: var(--primary); font-size: 14px; cursor: pointer; outline: none; min-width: 120px;">
-                            <option value="">All Batches</option>
-                            <option value="2025">2025 Batch</option>
-                            <option value="2024">2024 Batch</option>
-                        </select>
+            <div
+                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h1 style="margin: 0; margin-bottom: 5px;">Analytics Dashboard</h1>
+                    <p class="sub-text" style="margin: 0;">View placement analytics and insights</p>
+                </div>
+                <div class="filter-group"
+                    style="display: flex; align-items: center; gap: 10px; background: rgba(20, 20, 20, 0.6); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--text-theme-main); font-size: 14px; font-weight: 500;">Batch Year:</span>
+                    <select id="globalBatchYear"
+                        style="padding: 6px 12px; border: 1px solid rgba(16, 185, 129,0.3); border-radius: 8px; background: rgba(10,10,10,0.8); color: var(--primary); font-size: 14px; cursor: pointer; outline: none; min-width: 120px;">
+                        <option value="">All Batches</option>
+                        <option value="2025">2025 Batch</option>
+                        <option value="2024">2024 Batch</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="card">
+                    <h3>Placement Rate</h3>
+                    <p class="number" id="placementRate">0</p>
+                    <span>% students placed</span>
+                </div>
+
+                <div class="card">
+                    <h3>Average Package</h3>
+                    <p class="number" id="avgPackage">0</p>
+                    <span>LPA across all branches</span>
+                </div>
+
+                <div class="card">
+                    <h3>Highest Package</h3>
+                    <p class="number" id="highestPackage">0</p>
+                    <span>LPA offered this year</span>
+                </div>
+
+                <div class="card">
+                    <h3>Active Companies</h3>
+                    <p class="number" id="activeCompanies">0</p>
+                    <span>Recruiting this semester</span>
+                </div>
+            </div>
+
+            <div class="charts-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px;">
+                <div class="chart-card"
+                    style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
+                    <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Batch Year Distribution
+                    </h3>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="batchYearChart"></canvas>
                     </div>
                 </div>
 
-                <div class="stats-container">
-                    <div class="card">
-                        <h3>Placement Rate</h3>
-                        <p class="number" id="placementRate">0</p>
-                        <span>% students placed</span>
-                    </div>
-
-                    <div class="card">
-                        <h3>Average Package</h3>
-                        <p class="number" id="avgPackage">0</p>
-                        <span>LPA across all branches</span>
-                    </div>
-
-                    <div class="card">
-                        <h3>Highest Package</h3>
-                        <p class="number" id="highestPackage">0</p>
-                        <span>LPA offered this year</span>
-                    </div>
-
-                    <div class="card">
-                        <h3>Active Companies</h3>
-                        <p class="number" id="activeCompanies">0</p>
-                        <span>Recruiting this semester</span>
+                <div class="chart-card"
+                    style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
+                    <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Company Type</h3>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="companyTypeChart"></canvas>
                     </div>
                 </div>
 
-                <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px;">
-                    <div class="chart-card" style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
-                        <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Batch Year Distribution</h3>
-                        <div style="height: 250px; position: relative;">
-                            <canvas id="batchYearChart"></canvas>
-                        </div>
+                <div class="chart-card"
+                    style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
+                    <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Locations</h3>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="locationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Recruitment Chart -->
+            <h2 id="recruitmentChartTitle" style="color: var(--text-main); margin-top: 50px; margin-bottom: 20px;">
+                Company-wise Recruitment</h2>
+            <div class="chart-card"
+                style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); margin-bottom: 40px;">
+                <div class="chart-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                    <div class="chart-title-group">
+                        <h3 style="color: var(--primary); font-weight: 700; margin: 0; font-size: 1.1rem; letter-spacing: 0.5px;">Recruitment Statistics</h3>
+                        <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.4);">Individual student placement counts</p>
                     </div>
                     
-                    <div class="chart-card" style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
-                        <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Company Type</h3>
-                        <div style="height: 250px; position: relative;">
-                            <canvas id="companyTypeChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-card" style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
-                        <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Locations</h3>
-                        <div style="height: 250px; position: relative;">
-                            <canvas id="locationChart"></canvas>
-                        </div>
+                    <div class="chart-view-mode" id="chartViewMode">
+                        <button class="chart-pill active" data-view="10">Top 10</button>
+                        <button class="chart-pill" data-view="20">Top 20</button>
+                        <button class="chart-pill" data-view="all">Show All</button>
                     </div>
                 </div>
 
-                <!-- Company Recruitment Chart -->
-                <h2 id="recruitmentChartTitle" style="color: var(--text-main); margin-top: 50px; margin-bottom: 20px;">Company-wise Recruitment</h2>
-                <div class="chart-card" style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); margin-bottom: 40px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                        <h3 style="color: var(--primary); font-weight: 600; margin: 0;">Students Placed per Company</h3>
-                    </div>
-                    <div style="height: 350px; position: relative;">
+                <div class="recruitment-scroll-wrapper" style="max-height: 500px; overflow-y: auto; overflow-x: hidden; position: relative; padding-right: 5px;">
+                    <div id="chartResizableContainer" style="height: 380px; position: relative; transition: height 0.4s ease;">
                         <canvas id="companyRecruitmentChart"></canvas>
                     </div>
-                    <p id="totalPlacedLabel" style="margin-top:15px; color: var(--primary); font-size: 14px; font-weight: 600; text-align: right;"></p>
                 </div>
 
-                <h2 style="color: var(--text-main); margin-top: 50px; margin-bottom: 20px;">Top Recruiting Companies</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Company</th>
-                                <th>Role</th>
-                                <th>Package</th>
-                                <th>Students Placed</th>
-                            </tr>
-                        </thead>
-                        <tbody id="topCompaniesBody">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 25px; border-top: 1px solid rgba(16, 185, 129, 0.1); padding-top: 20px;">
+                    <button class="glass-btn secondary" id="toggleRankingBtn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                        </svg>
+                        View Full Ranking
+                    </button>
+                    <p id="totalPlacedLabel" style="color: var(--primary); font-size: 14px; font-weight: 600; margin: 0;"></p>
                 </div>
+
+                <!-- Hidden Full Ranking Table -->
+                <div id="fullRankingPanel" style="display: none; margin-top: 25px; animation: slideDown 0.4s ease forwards;">
+                    <div class="table-container mini-table">
+                        <table style="font-size: 13px;">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Company</th>
+                                    <th>Type</th>
+                                    <th>Location</th>
+                                    <th>Count</th>
+                                    <th>Share (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fullRankingBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <!-- Branch-wise Stats Section -->
+            <div class="analytics-card" style="margin-top: 30px;">
+                <div class="card-header" style="margin-bottom: 25px;">
+                    <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                        Branch-wise Placement Statistics
+                    </h3>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+                    <!-- Branch Chart -->
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="branchBreakdownChart"></canvas>
+                    </div>
+
+                    <!-- Branch Table Info -->
+                    <div>
+                        <div class="table-container mini-table">
+                            <table style="font-size: 13px;">
+                                <thead>
+                                    <tr>
+                                        <th>Branch</th>
+                                        <th>Students</th>
+                                        <th>Percent</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="branchStatsBody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <p id="branchTotalLabel" style="margin-top: 15px; font-size: 13px; color: var(--text-muted); text-align: right;"></p>
+                    </div>
+                </div>
+            </div>
             </section>
         </main>
     </div>
+
+    <footer class="footer-note">
+        Every data and report is taken from official college website 
+        <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a>
+    </footer>
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

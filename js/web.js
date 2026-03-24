@@ -164,7 +164,7 @@ if (addBtn) {
         tableBody.appendChild(newRow);
         modal.classList.remove("show");
     });
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         if (e.target.classList.contains("delete-btn")) {
             e.target.closest("tr").remove();
         }
@@ -271,7 +271,7 @@ async function fetchDashboardStats(year = "2025") {
     if (statsContainer) statsContainer.classList.add("fade-out");
     if (subText) subText.classList.add("fade-out");
     if (highlightsList) highlightsList.classList.add("fade-out");
-    
+
     // Add loading shimmer to cards
     document.querySelectorAll(".card").forEach(card => card.classList.add("stat-card-loading"));
 
@@ -310,7 +310,7 @@ async function fetchDashboardStats(year = "2025") {
         const dashTitle = document.getElementById("dashTitle");
 
         if (dashTitle) dashTitle.textContent = `${year || 'Overall'} Placement Overview`;
-        
+
         // Update main numbers using data-target for counters
         if (elTotalCompanies) elTotalCompanies.setAttribute("data-target", companiesVisited);
         if (elHighest) elHighest.setAttribute("data-target", highestPackage);
@@ -318,7 +318,7 @@ async function fetchDashboardStats(year = "2025") {
         if (elPlaced) elPlaced.setAttribute("data-target", totalPlaced);
         if (elEnrolled) elEnrolled.setAttribute("data-target", activelyParticipated);
         if (elRate) elRate.setAttribute("data-target", data.placement_rate || 0);
-        
+
         // Update enriched card captions
         const elCompaniesCap = document.getElementById("dashCompaniesCaption");
         const elPlacedCap = document.getElementById("dashPlacedCaption");
@@ -340,7 +340,7 @@ async function fetchDashboardStats(year = "2025") {
             const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : "USAR";
             elHighestCap.textContent = `Offered by ${topComp}`;
         }
-        
+
         // Highlights Logic
         if (highlightsList && companies.length > 0) {
             const validCompanies = companies.filter(c => c.package && c.package.toLowerCase().includes("lpa"));
@@ -398,7 +398,7 @@ async function fetchDashboardStats(year = "2025") {
                 });
                 const uniqueNames = [...new Set(sorted.map(c => c.company_name))].slice(0, 10);
                 let bodyHtml = `<p>A total of <strong>${totalCompanies} companies</strong> participated. Top recruiters included:</p><ul style="list-style:none; padding:10px 0;">`;
-                uniqueNames.forEach((name, i) => bodyHtml += `<li style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:var(--primary); font-weight:bold; margin-right:10px;">#${i+1}</span> ${name}</li>`);
+                uniqueNames.forEach((name, i) => bodyHtml += `<li style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:var(--primary); font-weight:bold; margin-right:10px;">#${i + 1}</span> ${name}</li>`);
                 bodyHtml += `</ul>`;
                 showPopup("Top Recruiter Analysis", bodyHtml);
             };
@@ -418,7 +418,7 @@ async function fetchDashboardStats(year = "2025") {
             cardHighest.onclick = () => {
                 const overallHighest = bs.overall_highest_package || highestPackage;
                 let bodyHtml = `<p>Overall Highest Package: <strong style="color:var(--primary); font-size:20px;">${overallHighest} LPA</strong></p>`;
-                
+
                 const branchDetails = bs.branch_details || {};
                 if (Object.keys(branchDetails).length > 0) {
                     bodyHtml += `<h4 style="color:var(--primary); margin:20px 0 10px 0;">Branch-wise Highest Package</h4>`;
@@ -468,7 +468,7 @@ async function fetchDashboardStats(year = "2025") {
                 if (Object.keys(branchDetails).length > 0) {
                     bodyHtml += `<h4 style="color:var(--primary); margin:20px 0 10px 0;">Branch-wise Average Package</h4>`;
                     bodyHtml += `<div style="display:flex; flex-direction:column; gap:8px;">`;
-                    
+
                     const maxAvg = Math.max(...Object.values(branchDetails).map(b => b.avg_package || 0));
                     for (const [branch, info] of Object.entries(branchDetails)) {
                         const pct = maxAvg > 0 ? (info.avg_package / maxAvg) * 100 : 0;
@@ -527,7 +527,7 @@ async function fetchDashboardStats(year = "2025") {
             highlightsList.classList.remove("fade-out");
             highlightsList.classList.add("fade-in");
         }
-        
+
         document.querySelectorAll(".card").forEach(card => card.classList.remove("stat-card-loading"));
 
         setTimeout(() => {
@@ -553,9 +553,14 @@ async function fetchRecruitmentData() {
         if (!response.ok) throw new Error("Recruitment fetch failed");
         const data = await response.json();
 
-        // Group by company and year
+        // Check if user is logged in for privacy logic
+        const isGuest = !localStorage.getItem("user");
+
+        // Group by company and year - FILTERED FOR 2024 ONLY AS REQUESTED
+        const filteredForStudents = data.filter(p => parseInt(p.year) === 2024);
+        
         const grouped = {};
-        data.forEach(p => {
+        filteredForStudents.forEach(p => {
             const key = `${p.company_name}|${p.year}`;
             if (!grouped[key]) {
                 grouped[key] = {
@@ -568,10 +573,10 @@ async function fetchRecruitmentData() {
         });
 
         tableBody.innerHTML = "";
-        
+
         for (const key in grouped) {
             const group = grouped[key];
-            
+
             // Create main row
             const mainRow = document.createElement("tr");
             mainRow.className = "main-row";
@@ -588,37 +593,85 @@ async function fetchRecruitmentData() {
                 <td>${group.students.length} Students</td>
                 <td>${group.year}</td>
             `;
-            
+
             // Create details row
             const detailsRow = document.createElement("tr");
             detailsRow.className = "details-row";
-            
-            let studentListHtml = group.students.map(s => `
-                <li class="student-item">
-                    <span class="name">${s.student_name}</span>
-                    <span class="branch">${s.branch}</span>
-                </li>
-            `).join("");
-            
+
+            const safeKey = key.replace(/[^a-z0-9]/gi, '_');
+
+            let studentListHtml = group.students.map(s => {
+                let displayName = s.student_name;
+
+                // Privacy decision: Anonymize for Guests (First Name + Last Initial)
+                if (isGuest) {
+                    const parts = s.student_name.trim().split(/\s+/);
+                    if (parts.length > 1) {
+                        displayName = `${parts[0]} ${parts[parts.length - 1][0]}.`;
+                    } else if (s.student_name.length > 3) {
+                        displayName = `${s.student_name.slice(0, 3)}...`;
+                    }
+                }
+
+                return `
+                    <li class="student-item">
+                        <span class="name">${displayName}</span>
+                        <span class="branch">${s.branch}</span>
+                    </li>
+                `;
+            }).join("");
+
             detailsRow.innerHTML = `
                 <td colspan="3">
                     <div class="details-container">
-                        <div class="details-title">${group.company_name} - Selected Candidates</div>
-                        <ul class="student-list">
+                        <div class="expanded-header">
+                            <div class="expanded-title-group">
+                                <h3 class="expanded-title">${group.company_name}</h3>
+                                <div class="expanded-subtitle">Selected Candidates • <span class="expanded-count">${group.students.length} students</span> ${isGuest ? '| <span style="font-style: italic; opacity: 0.7; font-size: 0.8rem; margin-left: 5px;">Log in to see full names</span>' : ''}</div>
+                            </div>
+                            <div class="expanded-search-wrapper">
+                                <svg class="search-icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="text" class="expanded-student-search" placeholder="Search selected students..." data-company-id="${safeKey}">
+                            </div>
+                        </div>
+                        <ul class="student-list" id="student-list-${safeKey}">
                             ${studentListHtml}
                         </ul>
                     </div>
                 </td>
             `;
-            
+
+            // Attach search listener
+            const searchInput = detailsRow.querySelector(".expanded-student-search");
+            const studentList = detailsRow.querySelector(".student-list");
+
+            if (searchInput && studentList) {
+                searchInput.addEventListener("keyup", (e) => {
+                    const q = e.target.value.toLowerCase();
+                    const items = studentList.querySelectorAll(".student-item");
+                    items.forEach(item => {
+                        const name = item.querySelector(".name").textContent.toLowerCase();
+                        const branch = item.querySelector(".branch").textContent.toLowerCase();
+                        if (name.includes(q) || branch.includes(q)) {
+                            item.style.display = "flex";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    });
+                });
+            }
+
             // Click to toggle
             mainRow.addEventListener("click", () => {
                 const isOpen = detailsRow.classList.contains("show");
-                
+
                 // Close others (optional, but cleaner)
                 // document.querySelectorAll(".details-row").forEach(r => r.classList.remove("show"));
                 // document.querySelectorAll(".main-row").forEach(r => r.classList.remove("active"));
-                
+
                 if (isOpen) {
                     detailsRow.classList.remove("show");
                     mainRow.classList.remove("active");
@@ -627,7 +680,7 @@ async function fetchRecruitmentData() {
                     mainRow.classList.add("active");
                 }
             });
-            
+
             tableBody.appendChild(mainRow);
             tableBody.appendChild(detailsRow);
         }
@@ -641,27 +694,102 @@ async function fetchRecruitmentData() {
 // Call on load
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Restore year from localStorage or default to 2024 (as per analytics)
-    const storedYear = localStorage.getItem("selectedBatchYear") || "2024";
-    
-    // 2. Set selector value if it exists
-    const yearSelector = document.getElementById("batchYearSelector");
-    if (yearSelector) {
-        yearSelector.value = storedYear;
-        yearSelector.addEventListener("change", (e) => {
-            const newYear = e.target.value;
-            localStorage.setItem("selectedBatchYear", newYear);
-            fetchDashboardStats(newYear);
+    const storedYear = localStorage.getItem("selectedBatchYear") || "";
+
+    // 2. Set tabs active state and add listeners
+    const batchTabsContainer = document.getElementById("batchSwitchTabs");
+    if (batchTabsContainer) {
+        batchTabsContainer.querySelectorAll(".batch-tab").forEach(tab => {
+            const yearAttr = tab.getAttribute("data-year") || "";
+            if (yearAttr === storedYear) {
+                batchTabsContainer.querySelectorAll(".batch-tab").forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+            }
+            tab.addEventListener("click", () => {
+                const newYear = tab.getAttribute("data-year") || "";
+                if (localStorage.getItem("selectedBatchYear") === newYear) return;
+
+                batchTabsContainer.querySelectorAll(".batch-tab").forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                localStorage.setItem("selectedBatchYear", newYear);
+                fetchDashboardStats(newYear);
+            });
         });
     }
-    
+
     // 3. Initial Fetch
     fetchDashboardStats(storedYear);
     fetchRecruitmentData();
+    fetchAllStudents();
 });
+
+async function fetchAllStudents() {
+    const tableBody = document.getElementById("fullStudentsTableBody");
+    if (!tableBody) return;
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/placements');
+        let data = await response.json();
+        
+        // FILTER FOR 2024 ONLY AS REQUESTED
+        data = data.filter(p => parseInt(p.year) === 2024);
+
+        const isGuest = !localStorage.getItem("user");
+
+        const render = (filteredData) => {
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; opacity:0.6;">No students found matching your criteria.</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = filteredData.map(s => {
+                let name = s.student_name;
+                if (isGuest) {
+                    const pts = s.student_name.trim().split(/\s+/);
+                    name = pts.length > 1 ? `${pts[0]} ${pts[pts.length-1][0]}.` : (name.length > 3 ? name.slice(0,3)+'...' : '***');
+                }
+                return `
+                    <tr>
+                        <td style="font-weight:600; color:var(--text-main);">${name}</td>
+                        <td>${s.branch}</td>
+                        <td style="color:var(--primary); font-weight:500;">${s.company_name}</td>
+                        <td style="opacity:0.8;">${s.package_str || (s.package ? s.package + ' LPA' : '—')}</td>
+                        <td>${s.year}</td>
+                    </tr>
+                `;
+            }).join("");
+        };
+
+        render(data);
+
+        const searchInput = document.getElementById("studentSearch");
+        const branchFilter = document.getElementById("branchFilter");
+
+        if (searchInput || branchFilter) {
+            const updateFilters = () => {
+                const term = searchInput ? searchInput.value.toLowerCase() : "";
+                const branch = branchFilter ? branchFilter.value : "all";
+                const filtered = data.filter(s => {
+                    const matchesSearch = s.student_name.toLowerCase().includes(term) || s.company_name.toLowerCase().includes(term);
+                    const matchesBranch = branch === "all" || s.branch === branch;
+                    return matchesSearch && matchesBranch;
+                });
+                render(filtered);
+            };
+
+            if (searchInput) searchInput.addEventListener("input", updateFilters);
+            if (branchFilter) branchFilter.addEventListener("change", updateFilters);
+        }
+
+    } catch (e) {
+        console.error("Student list error:", e);
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; color:var(--danger);">Error loading student data.</td></tr>';
+    }
+}
 
 
 document.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", function(e) {
+    link.addEventListener("click", function (e) {
         const href = this.getAttribute("href");
 
         if (href && href.endsWith(".html")) {
@@ -882,7 +1010,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const input = document.getElementById(inputId);
             if (!input) return;
 
-            const eyeOpen   = btn.querySelector(".eye-open");
+            const eyeOpen = btn.querySelector(".eye-open");
             const eyeClosed = btn.querySelector(".eye-closed");
 
             // If already revealing, reset the timer (user clicked again)
@@ -893,7 +1021,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Reveal
             input.type = "text";
-            eyeOpen.style.display   = "none";
+            eyeOpen.style.display = "none";
             eyeClosed.style.display = "";
 
             // Restart pulse animation
@@ -904,7 +1032,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Auto-hide after 2 seconds
             hideTimer = setTimeout(() => {
                 input.type = "password";
-                eyeOpen.style.display   = "";
+                eyeOpen.style.display = "";
                 eyeClosed.style.display = "none";
                 btn.classList.remove("revealing");
                 hideTimer = null;
@@ -917,7 +1045,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-    loginForm.addEventListener("submit", async(e) => {
+    loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const email = document.getElementById("loginEmail").value;
@@ -955,7 +1083,7 @@ if (loginForm) {
 
 const signupForm = document.getElementById("signupForm");
 if (signupForm) {
-    signupForm.addEventListener("submit", async(e) => {
+    signupForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const full_name = document.getElementById("signupName").value;
@@ -1022,62 +1150,69 @@ async function loadProfile() {
             // Save to localStorage so RBAC works across pages
             localStorage.setItem("user", JSON.stringify(data));
 
+            // Toggle visibility
+            const loggedInContent = document.getElementById("loggedInContent");
+            const guestContent = document.getElementById("guestContent");
+            const guestActions = document.getElementById("guestActions");
+            if (loggedInContent) loggedInContent.style.display = "block";
+            if (guestContent) guestContent.style.display = "none";
+            if (guestActions) guestActions.style.display = "none";
+
             // Populate profile dropdown fields
-            const nameEl    = document.getElementById("profileName");
-            const emailEl   = document.getElementById("profileEmail");
-            const branchEl  = document.getElementById("profileBranch");
-            const yearEl    = document.getElementById("profileYear");
-            const avatarEl  = document.getElementById("profileAvatar");
+            const nameEl = document.getElementById("profileName");
+            const emailEl = document.getElementById("profileEmail");
+            const branchEl = document.getElementById("profileBranch");
+            const yearEl = document.getElementById("profileYear");
+            const avatarEl = document.getElementById("profileAvatar");
             const logoutBtn = document.getElementById("logoutBtn");
 
-            if (nameEl)   nameEl.textContent   = data.full_name || "—";
-            if (emailEl)  emailEl.textContent   = data.email    || "—";
-            if (branchEl) branchEl.textContent  = data.branch   || "—";
-            if (yearEl)   yearEl.textContent    = data.year     || "—";
+            if (nameEl) {
+                nameEl.textContent = data.full_name || "—";
+            }
+            if (emailEl) {
+                emailEl.textContent = data.email || "—";
+                emailEl.title = data.email || ""; // Tooltip on hover
+            }
+            if (branchEl) branchEl.textContent = data.branch || "—";
+            if (yearEl) yearEl.textContent = data.year || "—";
 
             // Set avatar letter WITHOUT wiping the child adminStar span
             if (avatarEl && data.full_name) {
-                // Find or create a text node for the initial letter
                 let textNode = null;
                 for (let node of avatarEl.childNodes) {
                     if (node.nodeType === Node.TEXT_NODE) { textNode = node; break; }
                 }
+                const firstLetter = data.full_name.charAt(0).toUpperCase();
                 if (textNode) {
-                    textNode.textContent = data.full_name.charAt(0).toUpperCase();
+                    textNode.textContent = firstLetter;
                 } else {
-                    avatarEl.insertBefore(
-                        document.createTextNode(data.full_name.charAt(0).toUpperCase()),
-                        avatarEl.firstChild
-                    );
+                    avatarEl.insertBefore(document.createTextNode(firstLetter), avatarEl.firstChild);
                 }
             }
 
             // Handle Admin UI Badge & Star
             const adminBadge = document.getElementById("adminBadge");
-            const adminStar  = document.getElementById("adminStar");
+            const adminStar = document.getElementById("adminStar");
             if (data.role === 'admin' || data.role === 'tpo') {
                 if (adminBadge) adminBadge.style.display = 'inline-block';
-                if (adminStar) {
-                    adminStar.style.display = 'flex';
-                    if (avatarEl) {
-                        avatarEl.style.border = '2px solid #111';
-                        avatarEl.style.boxShadow = '0 0 12px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.5)';
-                    }
+                if (adminStar) adminStar.style.display = 'flex';
+                if (avatarEl) {
+                    avatarEl.classList.add('admin-border');
                 }
             } else {
                 if (adminBadge) adminBadge.style.display = 'none';
-                if (adminStar)  adminStar.style.display  = 'none';
-                if (avatarEl)  { avatarEl.style.border = 'none'; avatarEl.style.boxShadow = 'none'; }
+                if (adminStar) adminStar.style.display = 'none';
+                if (avatarEl) avatarEl.classList.remove('admin-border');
             }
 
             // Show logout button
             if (logoutBtn) logoutBtn.style.display = "block";
 
             // Hide Login / Signup buttons in hamburger nav
-            const loginBtn  = document.getElementById("loginBtn");
-            const signupBtn = document.getElementById("signupBtn");
-            if (loginBtn)  loginBtn.style.display  = "none";
-            if (signupBtn) signupBtn.style.display = "none";
+            const loginBtnNav = document.getElementById("loginBtn");
+            const signupBtnNav = document.getElementById("signupBtn");
+            if (loginBtnNav) loginBtnNav.style.display = "none";
+            if (signupBtnNav) signupBtnNav.style.display = "none";
 
             // Load My Applications for students
             if (data.role === 'student') {
@@ -1095,17 +1230,20 @@ async function loadProfile() {
 
 function setGuestProfile() {
     localStorage.removeItem("user");
-    const nameEl    = document.getElementById("profileName");
-    const emailEl   = document.getElementById("profileEmail");
-    const branchEl  = document.getElementById("profileBranch");
-    const yearEl    = document.getElementById("profileYear");
-    const avatarEl  = document.getElementById("profileAvatar");
+
+    // Toggle visibility
+    const loggedInContent = document.getElementById("loggedInContent");
+    const guestContent = document.getElementById("guestContent");
+    const guestActions = document.getElementById("guestActions");
+    if (loggedInContent) loggedInContent.style.display = "none";
+    if (guestContent) guestContent.style.display = "block";
+    if (guestActions) guestActions.style.display = "block";
+
+    const nameEl = document.getElementById("profileName");
+    const avatarEl = document.getElementById("profileAvatar");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    if (nameEl)   nameEl.textContent  = "Guest";
-    if (emailEl)  emailEl.textContent  = "—";
-    if (branchEl) branchEl.textContent = "—";
-    if (yearEl)   yearEl.textContent   = "—";
+    if (nameEl) nameEl.textContent = "Guest";
     if (avatarEl) avatarEl.textContent = "?";
     if (logoutBtn) logoutBtn.style.display = "none";
 
@@ -1116,22 +1254,25 @@ function setGuestProfile() {
     const adminBadge = document.getElementById("adminBadge");
     const adminStar = document.getElementById("adminStar");
     if (adminBadge) adminBadge.style.display = 'none';
-    if (adminStar && avatarEl) {
+    if (adminStar) {
         adminStar.style.display = 'none';
-        avatarEl.style.border = 'none';
-        avatarEl.style.boxShadow = 'none';
-        avatarEl.appendChild(adminStar);
+    }
+    if (avatarEl) {
+        avatarEl.classList.remove('admin-border');
+        if (adminStar) avatarEl.appendChild(adminStar);
     }
 
-    const loginBtn  = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
-    if (loginBtn)  loginBtn.style.display  = "";
-    if (signupBtn) signupBtn.style.display = "";
+    const loginBtnNav = document.getElementById("loginBtn");
+    const signupBtnNav = document.getElementById("signupBtn");
+    if (loginBtnNav) loginBtnNav.style.display = "";
+    if (signupBtnNav) signupBtnNav.style.display = "";
 }
 
 // Wire up Logout button
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
+    const signInTrigger = document.querySelector(".sign-in-trigger");
+
     if (logoutBtn) {
         logoutBtn.addEventListener("click", async () => {
             try {
@@ -1139,11 +1280,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     method: "POST",
                     credentials: "include"
                 });
-            } catch(_) {}
+            } catch (_) { }
             setGuestProfile();
             // Close the dropdown
             const profileDropdown = document.getElementById("profileDropdown");
             if (profileDropdown) profileDropdown.classList.remove("show");
+        });
+    }
+
+    if (signInTrigger) {
+        signInTrigger.addEventListener("click", () => {
+            // Open auth modal
+            const authModal = document.getElementById("authModal");
+            const authToggle = document.getElementById("authToggle");
+            if (authModal && authToggle) {
+                authModal.style.display = "flex";
+                setTimeout(() => authModal.classList.add("show"), 10);
+                authToggle.checked = false; // Show login
+
+                // Close dropdown
+                const profileDropdown = document.getElementById("profileDropdown");
+                if (profileDropdown) profileDropdown.classList.remove("show");
+            }
         });
     }
 
@@ -1154,7 +1312,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ====== My Applications Fetch + Render ======
 async function loadMyApplications() {
     const panel = document.getElementById("myApplicationsPanel");
-    const list  = document.getElementById("myApplicationsList");
+    const list = document.getElementById("myApplicationsList");
     if (!panel || !list) return;
 
     panel.style.display = "block";
@@ -1183,7 +1341,7 @@ async function loadMyApplications() {
                 </span>
             </div>
         `).join('');
-    } catch(_) {
+    } catch (_) {
         list.innerHTML = '<p style="color:#888; font-size:12px;">Error loading applications.</p>';
     }
-}
+}

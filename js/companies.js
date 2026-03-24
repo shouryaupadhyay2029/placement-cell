@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const apps = await appRes.json();
                     appliedCompanyIds = new Set(apps.map(a => a.company_id));
                 }
-            } catch (_) {}
+            } catch (_) { }
         }
 
         let url = "http://127.0.0.1:5000/companies";
@@ -67,8 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             // Find year range for "All Batches"
             const options = Array.from(batchFilter.options)
-                                 .map(o => parseInt(o.value))
-                                 .filter(v => !isNaN(v));
+                .map(o => parseInt(o.value))
+                .filter(v => !isNaN(v));
             if (options.length > 0 && header) {
                 const minYear = Math.min(...options);
                 const maxYear = Math.max(...options);
@@ -91,10 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function renderCompanies(companies) {
         if (!tableBody) return;
-        
+
         // Start fade out
         tableBody.classList.add("fade-out");
-        
+
         // Brief delay for transition
         await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -103,43 +103,39 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             tableBody.innerHTML = companies.map(company => {
                 const alreadyApplied = appliedCompanyIds.has(company.id);
-            const isClosed = company.status === 'Closed';
+                const isClosed = company.status === 'Closed';
 
-            const applyBtnHtml = isStudent ? `
+                const applyBtnHtml = isStudent ? `
                 <td>
                     <button
                         id="apply-btn-${company.id}"
                         onclick="applyToCompany(${company.id})"
+                        class="apply-btn-student"
                         ${alreadyApplied || isClosed ? 'disabled' : ''}
-                        style="padding: 5px 12px; border-radius: 4px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 12px; cursor: ${alreadyApplied || isClosed ? 'not-allowed' : 'pointer'}; border: none;
-                               background: ${alreadyApplied ? 'rgba(34, 197, 94, 0.15)' : isClosed ? 'rgba(100,100,100,0.15)' : '#22c55e'};
-                               color: ${alreadyApplied ? '#22c55e' : isClosed ? '#888' : '#000'};
-                               border: 1px solid ${alreadyApplied ? '#22c55e' : isClosed ? '#555' : '#16a34a'};
-                               opacity: ${alreadyApplied || isClosed ? '0.8' : '1'};"
                     >${alreadyApplied ? '✓ Applied' : isClosed ? 'Closed' : 'Apply'}</button>
                 </td>` : '';
 
-            const actionsBtnHtml = isPrivileged ? `
+                const actionsBtnHtml = isPrivileged ? `
                 <td>
-                    <div style="display:flex; gap: 8px;">
-                        <button class="edit-btn" onclick="editCompany(${company.id})" style="background: #10b981; border: 1px solid #059669; color: #000; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600;">Edit</button>
-                        <button class="delete-btn" onclick="deleteCompany(${company.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif;">Del</button>
+                    <div style="display:flex; gap: 10px;">
+                        <button class="edit-btn" onclick="editCompany(${company.id})">Edit</button>
+                        <button class="delete-btn" onclick="deleteCompany(${company.id})">Delete</button>
                     </div>
                 </td>` : '';
 
-            return `
+                const statusClass = company.status === 'Active' ? 'status-active' : company.status === 'Upcoming' ? 'status-upcoming' : 'status-closed';
+
+                return `
             <tr>
                 <td>${company.company_name}</td>
-                <td>${company.batch_year || '—'}</td>
+                <td style="color: rgba(255,255,255,0.6); font-size: 13px;">${company.batch_year || '—'}</td>
                 <td>${company.role}</td>
-                <td>${company.package}</td>
+                <td style="color: var(--primary); font-weight: 700;">${company.package} LPA</td>
                 <td>${company.location}</td>
-                <td>${company.eligibility}</td>
-                <td>${company.deadline}</td>
+                <td style="font-size: 13px; opacity: 0.8;">${company.eligibility}</td>
+                <td style="font-size: 13px; color: #888;">${company.deadline}</td>
                 <td>
-                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;
-                        background: ${company.status === 'Active' ? 'rgba(34, 197, 94, 0.2)' : company.status === 'Upcoming' ? 'rgba(5, 150, 105, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
-                        color: ${company.status === 'Active' ? '#22c55e' : company.status === 'Upcoming' ? '#10b981' : '#ef4444'};">
+                    <span class="status-pill ${statusClass}">
                         ${company.status || 'Active'}
                     </span>
                 </td>
@@ -148,18 +144,18 @@ document.addEventListener("DOMContentLoaded", () => {
             </tr>`;
             }).join('');
         }
-        
+
         // Remove fade out and trigger fade in
         tableBody.classList.remove("fade-out");
         tableBody.classList.add("fade-in");
-        
+
         setTimeout(() => {
             if (tableBody) tableBody.classList.remove("fade-in");
         }, 300);
     }
 
     // Global Apply function
-    window.applyToCompany = async function(companyId) {
+    window.applyToCompany = async function (companyId) {
         const btn = document.getElementById(`apply-btn-${companyId}`);
         if (btn) { btn.disabled = true; btn.textContent = 'Applying...'; }
         try {
@@ -173,23 +169,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast("Application submitted! ✓", "success");
                 if (btn) {
                     btn.textContent = '✓ Applied';
-                    btn.style.background = 'rgba(34, 197, 94, 0.15)';
-                    btn.style.color = '#22c55e';
-                    btn.style.border = '1px solid #22c55e';
-                    btn.style.cursor = 'not-allowed';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.style.filter = 'grayscale(0.5)';
                 }
             } else {
                 showToast(data.error || "Failed to apply", "error");
                 if (btn) { btn.disabled = false; btn.textContent = 'Apply'; }
             }
-        } catch(_) {
+        } catch (_) {
             showToast("Network error. Please try again.", "error");
             if (btn) { btn.disabled = false; btn.textContent = 'Apply'; }
         }
     };
 
     // Global delete function
-    window.deleteCompany = async function(id) {
+    window.deleteCompany = async function (id) {
         if (!confirm("Are you sure you want to delete this company?")) return;
         try {
             const response = await fetch(`http://127.0.0.1:5000/companies/${id}`, {
@@ -209,12 +204,12 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Global edit function so it can be called from onclick
-    window.editCompany = function(id) {
+    window.editCompany = function (id) {
         const company = allCompanies.find(c => c.id === id);
         if (!company) return;
 
         editingCompanyId = id;
-        
+
         // Fill form fields
         companyForm.company_name.value = company.company_name || "";
         companyForm.batch_year.value = company.batch_year || "";
@@ -234,10 +229,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Update modal UI
         const modalTitle = document.getElementById("modalTitle");
-        if(modalTitle) modalTitle.textContent = "Edit Company";
-        
+        if (modalTitle) modalTitle.textContent = "Edit Company";
+
         const submitBtn = document.querySelector("#companyForm button[type='submit']");
-        if(submitBtn) submitBtn.textContent = "Update Company";
+        if (submitBtn) submitBtn.textContent = "Update Company";
 
         // Show modal
         const container = companyModal.querySelector('.form-container');
@@ -254,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const name = (company.company_name || "").toLowerCase();
             const role = (company.role || "").toLowerCase();
             const matchesSearch = name.includes(searchValue) || role.includes(searchValue);
-            
+
             const ctc = parseFloat(company.package);
             let matchesFilter = true;
             if (filterValue === "high") matchesFilter = ctc > 15;
@@ -272,13 +267,13 @@ document.addEventListener("DOMContentLoaded", () => {
         addCompanyBtn.addEventListener("click", () => {
             editingCompanyId = null;
             companyForm.reset();
-            
+
             // Revert modal UI for Add
             const modalTitle = document.getElementById("modalTitle");
-            if(modalTitle) modalTitle.textContent = "Add New Company";
-            
+            if (modalTitle) modalTitle.textContent = "Add New Company";
+
             const submitBtn = document.querySelector("#companyForm button[type='submit']");
-            if(submitBtn) submitBtn.textContent = "Save Company";
+            if (submitBtn) submitBtn.textContent = "Save Company";
 
             const container = companyModal.querySelector('.form-container');
             if (container) container.scrollTop = 0;
@@ -308,10 +303,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
-                const url = editingCompanyId 
+                const url = editingCompanyId
                     ? `http://127.0.0.1:5000/companies/${editingCompanyId}`
                     : "http://127.0.0.1:5000/companies";
-                
+
                 const method = editingCompanyId ? "PUT" : "POST";
 
                 const response = await fetch(url, {
@@ -395,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toast.textContent = message;
 
         container.appendChild(toast);
-        
+
         // Appear
         requestAnimationFrame(() => {
             toast.style.opacity = "1";

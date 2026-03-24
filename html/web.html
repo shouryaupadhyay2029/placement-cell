@@ -109,35 +109,67 @@
                     </svg>
                 </div>
                 <div class="profile-dropdown" id="profileDropdown">
-                    <div class="dropdown-header">
-                        <div class="user-details">
-                            <h3 id="profileName" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                Guest
-                                <span id="adminBadge"
-                                    style="display: none; font-size: 10px; background: #111; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #333; box-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6);">Admin</span>
-                            </h3>
-                            <p class="detail-item"><strong>Email:</strong> <span id="profileEmail">—</span></p>
-                            <p class="detail-item"><strong>Branch:</strong> <span id="profileBranch">—</span></p>
-                            <p class="detail-item"><strong>Year:</strong> <span id="profileYear">—</span></p>
-                        </div>
-                        <div class="user-photo-container">
-                            <div class="profile-avatar" id="profileAvatar" style="position: relative;">?
-                                <span id="adminStar"
-                                    style="display: none; position: absolute; bottom: 0; right: -4px; background: #111; color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6); font-weight: bold; border: 1px solid #333;">★</span>
+                    <!-- Logged In State Content -->
+                    <div id="loggedInContent" style="display: none;">
+                        <div class="dropdown-header">
+                            <div class="user-details">
+                                <span id="adminBadge" class="admin-badge" style="display: none;">Admin</span>
+                                <h3 id="profileName" class="user-name-title">Guest</h3>
+                                <div class="user-info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Email</span>
+                                        <span id="profileEmail" class="info-value">—</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Branch</span>
+                                        <span id="profileBranch" class="info-value">—</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Year</span>
+                                        <span id="profileYear" class="info-value">—</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-visual-area">
+                                <div class="profile-avatar-wrapper">
+                                    <div class="profile-avatar" id="profileAvatar">?
+                                        <span id="adminStar" class="admin-star" style="display: none;">★</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Guest State Content -->
+                    <div id="guestContent" class="guest-container">
+                        <div class="guest-info-block">
+                            <div class="guest-icon-circle">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="guest-message">
+                                <h4>You are not logged in</h4>
+                                <p>Log in to access personalized placement tools</p>
+                            </div>
+                        </div>
+                        <div class="guest-divider"></div>
+                        <p class="guest-support-text">Track your profile, placement data, and relevant updates in one place.</p>
+                    </div>
+
                     <div class="dropdown-footer">
                         <!-- My Applications panel (students only) -->
                         <div id="myApplicationsPanel" style="display: none; margin-bottom: 12px;">
-                            <div style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--primary, #10b981); margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
-                                My Applications
-                            </div>
-                            <div id="myApplicationsList" style="display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; padding-right: 4px;">
-                                <p style="color: #888; font-size: 12px;">Loading...</p>
+                            <div class="panel-tag">My Applications</div>
+                            <div id="myApplicationsList" class="apps-mini-list">
+                                <p class="loading-mini">Loading...</p>
                             </div>
                         </div>
-                        <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+                        <button id="logoutBtn" class="logout-btn" style="display:none;">Logout Account</button>
+                        <div id="guestActions" class="guest-actions">
+                            <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -278,12 +310,24 @@
 
             <!-- DASHBOARD SECTION -->
             <section id="dashboard" class="section active">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
-                    <h1 id="dashTitle" style="margin: 0;">Placement Overview</h1>
-                    <select id="batchYearSelector" class="batch-year-select">
-                        <option value="2025" selected>2025 Batch</option>
-                        <option value="2024">2024 Batch</option>
-                    </select>
+                <div class="dashboard-header">
+                    <div class="title-group">
+                        <h1 id="dashTitle">Placement Overview</h1>
+                        <div class="trust-signal">
+                            <div class="trust-badge-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <path d="M9 12l2 2 4-4"></path>
+                                </svg>
+                            </div>
+                            <span>Batch-wise institutional placement records</span>
+                        </div>
+                    </div>
+                    <div class="batch-switch-tabs" id="batchSwitchTabs">
+                        <button class="batch-tab active" data-year="2025">2025 Batch</button>
+                        <button class="batch-tab" data-year="2024">2024 Batch</button>
+                        <button class="batch-tab" data-year="">Overall</button>
+                    </div>
                 </div>
                 <p class="sub-text" id="dashSubText">
                     Loading data...
@@ -586,6 +630,11 @@
             </div>
         </div>
     </div>
+
+    <footer class="footer-note">
+        Every data and report is taken from official college website 
+        <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a>
+    </footer>
 
     <!-- JS -->
     <script src="../js/web.js"></script>
