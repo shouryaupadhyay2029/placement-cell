@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${company.company_name}</td>
                 <td style="color: rgba(255,255,255,0.6); font-size: 13px;">${company.batch_year || '—'}</td>
                 <td>${company.role}</td>
-                <td style="color: var(--primary); font-weight: 700;">${company.package} LPA</td>
+                <td style="color: var(--primary); font-weight: 700;">${company.package.toString().includes('LPA') ? company.package : (company.package + ' LPA')}</td>
                 <td>${company.location}</td>
                 <td style="font-size: 13px; opacity: 0.8;">${company.eligibility}</td>
                 <td style="font-size: 13px; color: #888;">${company.deadline}</td>

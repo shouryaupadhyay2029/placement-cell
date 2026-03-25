@@ -544,9 +544,20 @@ async function fetchDashboardStats(year = "2025") {
 }
 
 // FETCH RECRUITMENT DATA (PDF EXTRACTION)
-async function fetchRecruitmentData() {
+async function fetchRecruitmentData(year = "2025") {
     const tableBody = document.getElementById("recruitmentTableBody");
     if (!tableBody) return;
+
+    // Show loading state
+    tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 40px; opacity:0.6;">Loading recruitment data...</td></tr>`;
+
+    // ADDED AS PER USER REQUEST: Specifically show no data available for 2025 batch
+    if (year === "2025") {
+        setTimeout(() => {
+            tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 40px; opacity:0.6;">No data available for 2025 Batch.</td></tr>`;
+        }, 300);
+        return;
+    }
 
     try {
         const response = await fetch('http://127.0.0.1:5000/api/placements');
@@ -556,9 +567,14 @@ async function fetchRecruitmentData() {
         // Check if user is logged in for privacy logic
         const isGuest = !localStorage.getItem("user");
 
-        // Group by company and year - FILTERED FOR 2024 ONLY AS REQUESTED
-        const filteredForStudents = data.filter(p => parseInt(p.year) === 2024);
+        // Filter and group by company and year
+        const filteredForStudents = data.filter(p => parseInt(p.year) === parseInt(year));
         
+        if (filteredForStudents.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 40px; opacity:0.6;">No data available for ${year} Batch.</td></tr>`;
+            return;
+        }
+
         const grouped = {};
         filteredForStudents.forEach(p => {
             const key = `${p.company_name}|${p.year}`;
@@ -693,10 +709,10 @@ async function fetchRecruitmentData() {
 
 // Call on load
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Restore year from localStorage or default to 2024 (as per analytics)
-    const storedYear = localStorage.getItem("selectedBatchYear") || "";
+    // 1. Restore year from localStorage or default to 2025
+    const storedYear = localStorage.getItem("selectedBatchYear") || "2025";
 
-    // 2. Set tabs active state and add listeners
+    // 2. Set tabs active state and add listeners (for analytics page if present)
     const batchTabsContainer = document.getElementById("batchSwitchTabs");
     if (batchTabsContainer) {
         batchTabsContainer.querySelectorAll(".batch-tab").forEach(tab => {
@@ -717,13 +733,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. Initial Fetch
+    // 3. Batch Year Selector (Dropdown on Students Page)
+    const batchYearSelector = document.getElementById("batchYearSelector");
+    if (batchYearSelector) {
+        batchYearSelector.value = storedYear;
+        batchYearSelector.addEventListener("change", (e) => {
+            const newYear = e.target.value;
+            localStorage.setItem("selectedBatchYear", newYear);
+            
+            // Sync all page components
+            fetchDashboardStats(newYear);
+            fetchRecruitmentData(newYear);
+            if (typeof fetchAllStudents === 'function') fetchAllStudents(newYear);
+        });
+    }
+
+    // 4. Initial Fetch
     fetchDashboardStats(storedYear);
-    fetchRecruitmentData();
-    fetchAllStudents();
+    fetchRecruitmentData(storedYear);
+    fetchAllStudents(storedYear);
 });
 
-async function fetchAllStudents() {
+async function fetchAllStudents(year = "2025") {
     const tableBody = document.getElementById("fullStudentsTableBody");
     if (!tableBody) return;
 
@@ -731,8 +762,8 @@ async function fetchAllStudents() {
         const response = await fetch('http://127.0.0.1:5000/api/placements');
         let data = await response.json();
         
-        // FILTER FOR 2024 ONLY AS REQUESTED
-        data = data.filter(p => parseInt(p.year) === 2024);
+        // Filter by year
+        data = data.filter(p => parseInt(p.year) === parseInt(year));
 
         const isGuest = !localStorage.getItem("user");
 

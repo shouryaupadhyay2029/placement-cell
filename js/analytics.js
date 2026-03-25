@@ -56,6 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadRecruitmentChart(year);
             await loadBranchStats(year);
 
+            // 5. Internship Section Visibility (Only for 2025)
+            const internSection = document.getElementById('internshipSection');
+            if (internSection) {
+                internSection.style.display = (year === '2025') ? 'block' : 'none';
+            }
+
         } catch (err) {
             console.error('Error loading analytics:', err);
         }
