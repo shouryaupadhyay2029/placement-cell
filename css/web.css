@@ -3112,10 +3112,12 @@ body.dark-theme .pp-logo-path {
 .recruitment-scroll-wrapper::-webkit-scrollbar {
     width: 6px;
 }
+
 .recruitment-scroll-wrapper::-webkit-scrollbar-thumb {
     background: rgba(16, 185, 129, 0.2);
     border-radius: 10px;
 }
+
 .recruitment-scroll-wrapper::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }

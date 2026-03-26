@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadAnalytics(year = '') {
         try {
-            // 1. Fetch Main Stats
-            const response = await fetch(`http://127.0.0.1:5000/api/analytics${year ? '?batch_year=' + year : ''}`);
+            // 1. Fetch Main Stats from Node.js
+            const response = await fetch(`http://localhost:5000/companies/analytics${year ? '?batch_year=' + year : ''}`);
             if (!response.ok) throw new Error('Failed to fetch analytics');
             const data = await response.json();
 
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadRecruitmentChart(batchYear = '') {
         try {
-            const url = `http://127.0.0.1:5000/api/company-recruitment${batchYear ? '?batch_year=' + batchYear : ''}`;
+            const url = `http://localhost:5000/companies/recruitment${batchYear ? '?batch_year=' + batchYear : ''}`;
             const res = await fetch(url);
             if (!res.ok) throw new Error('Failed');
             const data = await res.json();
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadBranchStats(batchYear = '') {
         try {
-            const url = `http://127.0.0.1:5000/api/branch-stats${batchYear ? '?batch_year=' + batchYear : ''}`;
+            const url = `http://localhost:5000/companies/branch-stats${batchYear ? '?batch_year=' + batchYear : ''}`;
             const res = await fetch(url);
             const data = await res.json();
 

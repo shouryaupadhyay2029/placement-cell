@@ -12,6 +12,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/web.css">
+    <link rel="stylesheet" href="../css/toast.css">
 </head>
 
 <body>
@@ -155,7 +156,8 @@
                             </div>
                         </div>
                         <div class="guest-divider"></div>
-                        <p class="guest-support-text">Track your profile, placement data, and relevant updates in one place.</p>
+                        <p class="guest-support-text">Track your profile, placement data, and relevant updates in one
+                            place.</p>
                     </div>
 
                     <div class="dropdown-footer">
@@ -168,7 +170,8 @@
                         </div>
                         <button id="logoutBtn" class="logout-btn" style="display:none;">Logout Account</button>
                         <div id="guestActions" class="guest-actions">
-                            <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In Now</button>
+                            <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In
+                                Now</button>
                         </div>
                     </div>
                 </div>
@@ -233,65 +236,93 @@
                     <div class="flip-card__inner">
                         <div class="flip-card__front">
                             <div class="title">Log in</div>
-                            <form class="flip-card__form" id="loginForm" action="">
-                                <input class="flip-card__input" id="loginEmail" name="email" placeholder="Email"
+                            <form class="flip-card__form" id="loginForm">
+                                <input class="flip-card__input" name="email" id="loginEmail" placeholder="Email"
                                     type="email" required>
-                                <div class="pw-wrapper">
-                                    <input class="flip-card__input" id="loginPassword" name="password"
-                                        placeholder="Password" type="password" required>
-                                    <button type="button" class="pw-eye" data-for="loginPassword"
-                                        title="Hold to reveal">
-                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                            <circle cx="12" cy="12" r="3" />
-                                        </svg>
-                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            style="display:none">
-                                            <path
-                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                                            <path
-                                                d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                                            <line x1="1" y1="1" x2="23" y2="23" />
-                                        </svg>
-                                    </button>
-                                </div>
+                                <input class="flip-card__input" name="password" id="loginPassword"
+                                    placeholder="Password" type="password" required>
                                 <button type="submit" class="flip-card__btn">Let's go!</button>
+                                <style>
+                                    /* Custom Themed Google Button */
+                                    .google-btn {
+                                        width: 100%;
+                                        padding: 12px;
+                                        border-radius: 12px;
+                                        border: 1.5px solid rgba(16, 185, 129, 0.2);
+                                        background: rgba(16, 185, 129, 0.04);
+                                        color: var(--primary);
+                                        font-weight: 600;
+                                        font-size: 14.5px;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        gap: 12px;
+                                        cursor: pointer;
+                                        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                                        outline: none;
+                                        margin-top: 5px;
+                                        backdrop-filter: blur(8px);
+                                    }
+
+                                    .google-icon-wrapper {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        background: #fff;
+                                        width: 24px;
+                                        height: 24px;
+                                        border-radius: 6px;
+                                        padding: 3px;
+                                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                                    }
+
+                                    .google-btn:hover {
+                                        background: var(--primary);
+                                        color: #111;
+                                        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+                                        transform: translateY(-2.5px) scale(1.02);
+                                        border-color: var(--primary);
+                                    }
+
+                                    .google-btn:active {
+                                        transform: translateY(0) scale(1);
+                                    }
+                                </style>
+                                <div class="or-divider"
+                                    style="text-align: center; color: rgba(16, 185, 129, 0.4); margin: 15px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
+                                    OR</div>
+
+                                <button id="googleLoginBtn" class="google-btn" type="button">
+                                    <div class="google-icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px"
+                                            height="20px">
+                                            <path fill="#FFC107"
+                                                d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                                            <path fill="#FF3D00"
+                                                d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                                            <path fill="#4CAF50"
+                                                d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                                            <path fill="#1976D2"
+                                                d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571 c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                                        </svg>
+                                    </div>
+                                    <span>Continue with Google</span>
+                                </button>
                             </form>
                         </div>
                         <div class="flip-card__back">
                             <div class="title">Sign up</div>
-                            <form class="flip-card__form" id="signupForm" action="">
-                                <input class="flip-card__input" id="signupName" name="full_name" placeholder="Name"
+                            <form class="flip-card__form" id="registerForm">
+                                <input class="flip-card__input" name="name" id="registerName" placeholder="Name"
                                     type="text" required>
-                                <input class="flip-card__input" id="signupEmail" name="email" placeholder="Email"
+                                <input class="flip-card__input" name="email" id="registerEmail" placeholder="Email"
                                     type="email" required>
-                                <div class="pw-wrapper">
-                                    <input class="flip-card__input" id="signupPassword" name="password"
-                                        placeholder="Password" type="password" required>
-                                    <button type="button" class="pw-eye" data-for="signupPassword"
-                                        title="Hold to reveal">
-                                        <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                            <circle cx="12" cy="12" r="3" />
-                                        </svg>
-                                        <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            style="display:none">
-                                            <path
-                                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                                            <path
-                                                d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                                            <line x1="1" y1="1" x2="23" y2="23" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <input class="flip-card__input" id="signupBranch" name="branch" placeholder="Branch"
-                                    type="text" required>
-                                <input class="flip-card__input" id="signupYear" name="year" placeholder="Year"
-                                    type="text" required>
+                                <input class="flip-card__input" name="branch" id="registerBranch"
+                                    placeholder="Branch (e.g. AI-DS)" type="text" required>
+                                <input class="flip-card__input" name="year" id="registerYear"
+                                    placeholder="Year (e.g. 2026)" type="text" required>
+                                <input class="flip-card__input" name="password" id="registerPassword"
+                                    placeholder="Password" type="password" required>
                                 <button type="submit" class="flip-card__btn">Confirm!</button>
                             </form>
                         </div>
@@ -301,6 +332,12 @@
             <button class="modal-close" id="closeAuthModal">&times;</button>
         </div>
     </div>
+    <div id="g_id_onload"
+        data-client_id="533082182818-guuttt7mpaqfgp1595bjkkv31fnhk77c.apps.googleusercontent.com"
+        data-callback="handleGoogleLogin"
+        data-auto_prompt="false">
+    </div>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <!-- MAIN CONTAINER -->
     <div class="container">
@@ -457,7 +494,7 @@
                                 <td>14-18</td>
                                 <td>8</td>
                                 <td>Active</td>
-                                <td>
+                                <td class="admin-only">
                                     <button class="edit-btn">Edit</button>
                                     <button class="delete-btn">Remove</button>
                                 </td>
@@ -481,7 +518,7 @@
                         <option>Mechanical</option>
                         <option>Civil</option>
                     </select>
-                    <button class="primary-btn" id="addStudentBtn">Add Student</button>
+                    <button class="primary-btn admin-only" id="addStudentBtn">Add Student</button>
                 </div>
 
                 <div class="table-container">
@@ -492,7 +529,7 @@
                                 <th>Branch</th>
                                 <th>Company</th>
                                 <th>Package (LPA)</th>
-                                <th>Actions</th>
+                                <th class="admin-only">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -632,11 +669,14 @@
     </div>
 
     <footer class="footer-note">
-        Every data and report is taken from official college website 
+        Every data and report is taken from official college website
         <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a>
     </footer>
 
     <!-- JS -->
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
     <script src="../js/web.js"></script>
 </body>
 

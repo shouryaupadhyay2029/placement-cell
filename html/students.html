@@ -12,6 +12,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/web.css">
+    <link rel="stylesheet" href="../css/toast.css">
 </head>
 
 <body>
@@ -245,19 +246,19 @@
                     <div class="flip-card__inner">
                         <div class="flip-card__front">
                             <div class="title">Log in</div>
-                            <form class="flip-card__form" action="">
-                                <input class="flip-card__input" name="email" placeholder="Email" type="email">
-                                <input class="flip-card__input" name="password" placeholder="Password" type="password">
-                                <button class="flip-card__btn">Let's go!</button>
+                            <form class="flip-card__form" id="loginForm">
+                                <input class="flip-card__input" name="email" id="loginEmail" placeholder="Email" type="email" required>
+                                <input class="flip-card__input" name="password" id="loginPassword" placeholder="Password" type="password" required>
+                                <button type="submit" class="flip-card__btn">Let's go!</button>
                             </form>
                         </div>
                         <div class="flip-card__back">
                             <div class="title">Sign up</div>
-                            <form class="flip-card__form" action="">
-                                <input class="flip-card__input" placeholder="Name" type="name">
-                                <input class="flip-card__input" name="email" placeholder="Email" type="email">
-                                <input class="flip-card__input" name="password" placeholder="Password" type="password">
-                                <button class="flip-card__btn">Confirm!</button>
+                            <form class="flip-card__form" id="registerForm">
+                                <input class="flip-card__input" name="name" id="registerName" placeholder="Name" type="text" required>
+                                <input class="flip-card__input" name="email" id="registerEmail" placeholder="Email" type="email" required>
+                                <input class="flip-card__input" name="password" id="registerPassword" placeholder="Password" type="password" required>
+                                <button type="submit" class="flip-card__btn">Confirm!</button>
                             </form>
                         </div>
                     </div>
@@ -370,6 +371,7 @@
                                 <th>Company Name</th>
                                 <th>Total Students</th>
                                 <th>Recruitment Year</th>
+                                <th class="admin-only">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="recruitmentTableBody">
@@ -381,7 +383,7 @@
 
             <!-- TOP CONTROLS (Action Bar) -->
             <div class="top-controls">
-                <button class="primary-btn" id="addStudentBtn">+ Add Student</button>
+                <button class="primary-btn admin-only" id="addStudentBtn">+ Add Student</button>
                 <div class="control-group">
                     <input type="text" id="studentSearch" placeholder="Search student...">
                     <select id="branchFilter">
@@ -436,6 +438,9 @@
     </div>
 
     <!-- JS -->
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
     <script src="../js/web.js"></script>
 
     <script>

@@ -46,10 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">Loading companies...</td></tr>`;
 
-        // Fetch applied companies for this student first (so buttons render correctly)
+        // Fetch applied companies (Mocked for now in Node)
         if (isStudent) {
             try {
-                const appRes = await fetch("http://127.0.0.1:5000/my-applications", { credentials: "include" });
+                // Pointing to Node's consolidated routes
+                const appRes = await fetch("http://localhost:5000/companies/my-applications");
                 if (appRes.ok) {
                     const apps = await appRes.json();
                     appliedCompanyIds = new Set(apps.map(a => a.company_id));
@@ -57,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (_) { }
         }
 
-        let url = "http://127.0.0.1:5000/companies";
+        let url = "http://localhost:5000/companies";
         const header = document.getElementById("companiesHeader");
         const batchValue = batchFilter ? batchFilter.value : "all";
 
@@ -85,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             filterAndSearch();
         } catch (error) {
             console.error("Fetch error:", error);
-            tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #ff4d4d; padding: 20px;">Error loading companies. Please ensure backend is running at http://127.0.0.1:5000</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #ff4d4d; padding: 20px;">Error loading companies. Please ensure backend is running at http://localhost:5000</td></tr>`;
         }
     }
 
@@ -159,14 +160,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const btn = document.getElementById(`apply-btn-${companyId}`);
         if (btn) { btn.disabled = true; btn.textContent = 'Applying...'; }
         try {
-            const res = await fetch(`http://127.0.0.1:5000/apply/${companyId}`, {
-                method: "POST",
-                credentials: "include"
+            // Using placeholder POST endpoint in Node
+            const res = await fetch(`http://localhost:5000/companies/apply/${companyId}`, {
+                method: "POST"
             });
             const data = await res.json();
             if (res.ok) {
                 appliedCompanyIds.add(companyId);
-                showToast("Application submitted! ✓", "success");
+                showToast("Application submitted successfully!", "success");
                 if (btn) {
                     btn.textContent = '✓ Applied';
                     btn.disabled = true;
@@ -174,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     btn.style.filter = 'grayscale(0.5)';
                 }
             } else {
-                showToast(data.error || "Failed to apply", "error");
+                showToast(data.message || "Failed to apply", "error");
                 if (btn) { btn.disabled = false; btn.textContent = 'Apply'; }
             }
         } catch (_) {
@@ -183,20 +184,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Global delete function
     window.deleteCompany = async function (id) {
         if (!confirm("Are you sure you want to delete this company?")) return;
         try {
-            const response = await fetch(`http://127.0.0.1:5000/companies/${id}`, {
-                method: "DELETE",
-                credentials: "include"
+            const response = await fetch(`http://localhost:5000/companies/${id}`, {
+                method: "DELETE"
             });
             if (response.ok) {
-                showToast("Company deleted successfully", "success");
+                showToast("Company deleted safely", "success");
                 fetchCompanies();
             } else {
                 const err = await response.json();
-                showToast(err.error || "Failed to delete company", "error");
+                showToast(err.message || "Failed to delete company", "error");
             }
         } catch (error) {
             showToast("Network error. Please try again.", "error");
@@ -304,8 +303,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const url = editingCompanyId
-                    ? `http://127.0.0.1:5000/companies/${editingCompanyId}`
-                    : "http://127.0.0.1:5000/companies";
+                    ? `http://localhost:5000/companies/${editingCompanyId}`
+                    : "http://localhost:5000/companies";
 
                 const method = editingCompanyId ? "PUT" : "POST";
 
@@ -345,9 +344,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const formData = new FormData();
             formData.append("file", file);
 
-            try {
+        try {
                 showToast("Importing CSV...", "info");
-                const response = await fetch("http://127.0.0.1:5000/companies/import", {
+                const response = await fetch("http://localhost:5000/companies/import", {
                     method: "POST",
                     body: formData
                 });

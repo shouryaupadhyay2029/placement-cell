@@ -276,13 +276,13 @@ async function fetchDashboardStats(year = "2025") {
     document.querySelectorAll(".card").forEach(card => card.classList.add("stat-card-loading"));
 
     try {
-        // Fetch from unified analytics API
-        const response = await fetch(`http://127.0.0.1:5000/api/analytics${year ? '?batch_year=' + year : ''}`);
+        // Fetch from unified analytics API in Node.js
+        const response = await window.api.get(`/companies/analytics${year ? '?batch_year=' + year : ''}`);
         if (!response.ok) throw new Error("Fetch failed");
         const data = await response.json();
 
-        // Also fetch companies for highlights list
-        const compResponse = await fetch(`http://127.0.0.1:5000/companies${year ? '?batch_year=' + year : ''}`);
+        // Also fetch companies from Node.js
+        const compResponse = await window.api.get(`/companies${year ? '?batch_year=' + year : ''}`);
         const companies = compResponse.ok ? await compResponse.json() : [];
 
         // Ensure minimum 300ms for visual transition
@@ -558,9 +558,8 @@ async function fetchRecruitmentData(year = "2025") {
         }, 300);
         return;
     }
-
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/placements');
+        const response = await window.api.get('/students');
         if (!response.ok) throw new Error("Recruitment fetch failed");
         const data = await response.json();
 
@@ -759,7 +758,7 @@ async function fetchAllStudents(year = "2025") {
     if (!tableBody) return;
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/placements');
+        const response = await window.api.get('/students');
         let data = await response.json();
         
         // Filter by year
@@ -1072,307 +1071,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-//auth section
+// The auth logic has been moved to js/auth.js and js/api.js for better modularity and JWT support.
+// Please check those files for login, register, profile and logout handling.
 
-const loginForm = document.getElementById("loginForm");
-if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const email = document.getElementById("loginEmail").value;
-        const password = document.getElementById("loginPassword").value;
-
-        try {
-            const response = await fetch("http://127.0.0.1:5000/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Close the auth modal
-                const authModal = document.getElementById("authModal");
-                if (authModal) {
-                    authModal.classList.remove("show");
-                    setTimeout(() => { authModal.style.display = "none"; }, 400);
-                }
-                await loadProfile();
-            } else {
-                alert(data.error || "Login failed");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Something went wrong");
-        }
-    });
-}
-
-const signupForm = document.getElementById("signupForm");
-if (signupForm) {
-    signupForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const full_name = document.getElementById("signupName").value;
-        const email = document.getElementById("signupEmail").value;
-        const password = document.getElementById("signupPassword").value;
-        const branch = document.getElementById("signupBranch").value;
-        const year = document.getElementById("signupYear").value;
-
-        try {
-            const response = await fetch("http://127.0.0.1:5000/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({ full_name, email, password, branch, year })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Close the auth modal
-                const authModal = document.getElementById("authModal");
-                if (authModal) {
-                    authModal.classList.remove("show");
-                    setTimeout(() => { authModal.style.display = "none"; }, 400);
-                }
-                // Auto-login after signup
-                try {
-                    const loginResp = await fetch("http://127.0.0.1:5000/login", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify({ email, password })
-                    });
-                    if (loginResp.ok) {
-                        await loadProfile();
-                    } else {
-                        alert("Signup successful! Please log in.");
-                    }
-                } catch (_) {
-                    alert("Signup successful! Please log in.");
-                }
-            } else {
-                alert(data.error || "Signup failed");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Something went wrong");
-        }
-    });
-}
-
-async function loadProfile() {
-    try {
-        const response = await fetch("http://127.0.0.1:5000/profile", {
-            method: "GET",
-            credentials: "include"
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            // Save to localStorage so RBAC works across pages
-            localStorage.setItem("user", JSON.stringify(data));
-
-            // Toggle visibility
-            const loggedInContent = document.getElementById("loggedInContent");
-            const guestContent = document.getElementById("guestContent");
-            const guestActions = document.getElementById("guestActions");
-            if (loggedInContent) loggedInContent.style.display = "block";
-            if (guestContent) guestContent.style.display = "none";
-            if (guestActions) guestActions.style.display = "none";
-
-            // Populate profile dropdown fields
-            const nameEl = document.getElementById("profileName");
-            const emailEl = document.getElementById("profileEmail");
-            const branchEl = document.getElementById("profileBranch");
-            const yearEl = document.getElementById("profileYear");
-            const avatarEl = document.getElementById("profileAvatar");
-            const logoutBtn = document.getElementById("logoutBtn");
-
-            if (nameEl) {
-                nameEl.textContent = data.full_name || "—";
-            }
-            if (emailEl) {
-                emailEl.textContent = data.email || "—";
-                emailEl.title = data.email || ""; // Tooltip on hover
-            }
-            if (branchEl) branchEl.textContent = data.branch || "—";
-            if (yearEl) yearEl.textContent = data.year || "—";
-
-            // Set avatar letter WITHOUT wiping the child adminStar span
-            if (avatarEl && data.full_name) {
-                let textNode = null;
-                for (let node of avatarEl.childNodes) {
-                    if (node.nodeType === Node.TEXT_NODE) { textNode = node; break; }
-                }
-                const firstLetter = data.full_name.charAt(0).toUpperCase();
-                if (textNode) {
-                    textNode.textContent = firstLetter;
-                } else {
-                    avatarEl.insertBefore(document.createTextNode(firstLetter), avatarEl.firstChild);
-                }
-            }
-
-            // Handle Admin UI Badge & Star
-            const adminBadge = document.getElementById("adminBadge");
-            const adminStar = document.getElementById("adminStar");
-            if (data.role === 'admin' || data.role === 'tpo') {
-                if (adminBadge) adminBadge.style.display = 'inline-block';
-                if (adminStar) adminStar.style.display = 'flex';
-                if (avatarEl) {
-                    avatarEl.classList.add('admin-border');
-                }
-            } else {
-                if (adminBadge) adminBadge.style.display = 'none';
-                if (adminStar) adminStar.style.display = 'none';
-                if (avatarEl) avatarEl.classList.remove('admin-border');
-            }
-
-            // Show logout button
-            if (logoutBtn) logoutBtn.style.display = "block";
-
-            // Hide Login / Signup buttons in hamburger nav
-            const loginBtnNav = document.getElementById("loginBtn");
-            const signupBtnNav = document.getElementById("signupBtn");
-            if (loginBtnNav) loginBtnNav.style.display = "none";
-            if (signupBtnNav) signupBtnNav.style.display = "none";
-
-            // Load My Applications for students
-            if (data.role === 'student') {
-                loadMyApplications();
-            }
-        } else {
-            // Not logged in — reset to guest state
-            setGuestProfile();
-        }
-    } catch (error) {
-        console.error("Profile error:", error);
-        setGuestProfile();
-    }
-}
-
-function setGuestProfile() {
-    localStorage.removeItem("user");
-
-    // Toggle visibility
-    const loggedInContent = document.getElementById("loggedInContent");
-    const guestContent = document.getElementById("guestContent");
-    const guestActions = document.getElementById("guestActions");
-    if (loggedInContent) loggedInContent.style.display = "none";
-    if (guestContent) guestContent.style.display = "block";
-    if (guestActions) guestActions.style.display = "block";
-
-    const nameEl = document.getElementById("profileName");
-    const avatarEl = document.getElementById("profileAvatar");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    if (nameEl) nameEl.textContent = "Guest";
-    if (avatarEl) avatarEl.textContent = "?";
-    if (logoutBtn) logoutBtn.style.display = "none";
-
-    // Hide applications panel on logout
-    const panel = document.getElementById("myApplicationsPanel");
-    if (panel) panel.style.display = "none";
-
-    const adminBadge = document.getElementById("adminBadge");
-    const adminStar = document.getElementById("adminStar");
-    if (adminBadge) adminBadge.style.display = 'none';
-    if (adminStar) {
-        adminStar.style.display = 'none';
-    }
-    if (avatarEl) {
-        avatarEl.classList.remove('admin-border');
-        if (adminStar) avatarEl.appendChild(adminStar);
-    }
-
-    const loginBtnNav = document.getElementById("loginBtn");
-    const signupBtnNav = document.getElementById("signupBtn");
-    if (loginBtnNav) loginBtnNav.style.display = "";
-    if (signupBtnNav) signupBtnNav.style.display = "";
-}
-
-// Wire up Logout button
+// Re-wire session check (removed loadProfile call from DOMContentLoaded)
 document.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.getElementById("logoutBtn");
-    const signInTrigger = document.querySelector(".sign-in-trigger");
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
-            try {
-                await fetch("http://127.0.0.1:5000/logout", {
-                    method: "POST",
-                    credentials: "include"
-                });
-            } catch (_) { }
-            setGuestProfile();
-            // Close the dropdown
-            const profileDropdown = document.getElementById("profileDropdown");
-            if (profileDropdown) profileDropdown.classList.remove("show");
-        });
-    }
-
-    if (signInTrigger) {
-        signInTrigger.addEventListener("click", () => {
-            // Open auth modal
-            const authModal = document.getElementById("authModal");
-            const authToggle = document.getElementById("authToggle");
-            if (authModal && authToggle) {
-                authModal.style.display = "flex";
-                setTimeout(() => authModal.classList.add("show"), 10);
-                authToggle.checked = false; // Show login
-
-                // Close dropdown
-                const profileDropdown = document.getElementById("profileDropdown");
-                if (profileDropdown) profileDropdown.classList.remove("show");
-            }
-        });
-    }
-
-    // Restore session on page load
-    loadProfile();
+    // Other initializations can remain here
 });
 
-// ====== My Applications Fetch + Render ======
-async function loadMyApplications() {
-    const panel = document.getElementById("myApplicationsPanel");
-    const list = document.getElementById("myApplicationsList");
-    if (!panel || !list) return;
-
-    panel.style.display = "block";
-    list.innerHTML = '<p style="color: #888; font-size: 12px;">Loading...</p>';
-
-    try {
-        const res = await fetch("http://127.0.0.1:5000/my-applications", { credentials: "include" });
-        if (!res.ok) { list.innerHTML = '<p style="color:#888; font-size:12px;">Could not load applications.</p>'; return; }
-
-        const apps = await res.json();
-        if (apps.length === 0) {
-            list.innerHTML = '<p style="color:#888; font-size:12px;">No applications yet. Browse companies to apply!</p>';
-            return;
-        }
-
-        const statusColor = (s) => s === 'applied' ? '#10b981' : s === 'shortlisted' ? '#22c55e' : s === 'rejected' ? '#ef4444' : '#aaa';
-
-        list.innerHTML = apps.map(app => `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); border-radius:6px; padding:8px 10px; border: 1px solid rgba(255,255,255,0.07);">
-                <div>
-                    <div style="font-size:13px; font-weight:600; color:var(--text-main, #fff);">${app.company_name}</div>
-                    <div style="font-size:11px; color:#888; margin-top:2px;">${app.role} &bull; ${app.applied_at}</div>
-                </div>
-                <span style="font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; background:${statusColor(app.status)}22; color:${statusColor(app.status)}; border:1px solid ${statusColor(app.status)}44; text-transform:uppercase; letter-spacing:0.5px;">
-                    ${app.status}
-                </span>
-            </div>
-        `).join('');
-    } catch (_) {
-        list.innerHTML = '<p style="color:#888; font-size:12px;">Error loading applications.</p>';
-    }
-}
