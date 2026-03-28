@@ -11,7 +11,12 @@ const router = express.Router();
  */
 router.get("/", async (req, res) => {
     try {
-        const students = await Student.find({}).sort({ createdAt: -1 });
+        const college = req.college;
+        const { batch_year } = req.query;
+        const query = { college };
+        if (batch_year) query.year = batch_year; // Use query.year as that's the field in Student model
+
+        const students = await Student.find(query).sort({ createdAt: -1 });
         res.json(students);
     } catch (error) {
         console.error("Fetch Students Error:", error.message);
@@ -32,9 +37,11 @@ router.post("/", protect, admin, async (req, res) => {
     }
 
     try {
-        const studentExists = await Student.findOne({ email });
+        const college = req.college;
+        // Search by email within the SAME college (Isolation rule)
+        const studentExists = await Student.findOne({ email, college });
         if (studentExists) {
-            return res.status(400).json({ message: "Student already exists with this email" });
+            return res.status(400).json({ message: "Student already exists in this college with this email" });
         }
 
         const newStudent = await Student.create({
@@ -42,7 +49,8 @@ router.post("/", protect, admin, async (req, res) => {
             email,
             branch,
             year,
-            skills
+            skills,
+            college
         });
 
         res.status(201).json(newStudent);
@@ -59,13 +67,13 @@ router.post("/", protect, admin, async (req, res) => {
  */
 router.delete("/:id", protect, admin, async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
+        const college = req.college;
+        const student = await Student.findOneAndDelete({ _id: req.params.id, college });
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found" });
+            return res.status(404).json({ message: "Student not found in this college context" });
         }
 
-        await student.remove();
         res.json({ message: "Student removed successfully" });
     } catch (error) {
         console.error("Delete Student Error:", error.message);

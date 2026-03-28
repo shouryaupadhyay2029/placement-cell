@@ -62,6 +62,10 @@ const CompanySchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now,
+    },
+    college: {
+        type: String,
+        default: "USAR"
     }
 });
 

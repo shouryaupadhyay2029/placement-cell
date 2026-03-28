@@ -33,6 +33,11 @@ const StudentSchema = new mongoose.Schema({
     // Optional legacy data
     package: String,
     package_str: String,
+    college: {
+        type: String,
+        required: true,
+        default: "USAR"
+    }
 });
 
 module.exports = mongoose.model("Student", StudentSchema);

@@ -7,99 +7,289 @@ const router = express.Router();
 
 const parsePackage = (pkgStr) => {
     if (!pkgStr) return 0;
+    // Handle things like "15.25 LPA", "3 to 5 LPA", "5+", "25000/- PM"
+    if (typeof pkgStr === 'number') return pkgStr;
     const match = pkgStr.match(/(\d+(\.\d+)?)/);
-    return match ? parseFloat(match[1]) : 0;
-};
+    if (!match) return 0;
 
-// Official stats with final user revisions for batch distribution
-const BATCH_STATS_OFFICIAL = {
-    "2025": {
-        total_students: 501, actively_participated: 251, total_placed: 122, placement_rate: 48.6, overall_avg_package: 6.11, overall_highest_package: 27, companies_visited: 86, companies_offered: 26,
-        branch_details: { 
-            "AI & Data Science": { placed: 40, highest_package: 27, avg_package: 7.2, median_package: 6.5 }, 
-            "AI & Machine Learning": { placed: 32, highest_package: 22, avg_package: 6.8, median_package: 6.0 }, 
-            "IIOT": { placed: 34, highest_package: 18, avg_package: 5.5, median_package: 5.2 }, 
-            "Automation & Robotics": { placed: 16, highest_package: 15, avg_package: 5.2, median_package: 4.8 } 
-        },
-        sector_distribution: { "Software & IT": 47, "Sales & Consulting": 13, "Electronics & IOT": 11, "Data Science & AIML": 8, "Product Management": 7, "Technical Consultant": 6, "Cloud & Devops": 5, "Mechatronics & Robotics": 4 },
-        location_distribution: { "Bangalore": 38, "Delhi NCR": 22, "Pune": 15, "Remote": 15, "Mumbai": 10 }
-    },
-    "2024": {
-        total_students: 200, actively_participated: 150, total_placed: 88, placement_rate: 58.6, overall_avg_package: 7.0, overall_highest_package: 13.69, companies_visited: 50, companies_offered: 22,
-        branch_details: { 
-            "AI & Data Science": { placed: 28, highest_package: 13.69, avg_package: 7.5, median_package: 7.0 }, 
-            "AI & Machine Learning": { placed: 24, highest_package: 12.5, avg_package: 7.2, median_package: 6.8 }, 
-            "IIOT": { placed: 22, highest_package: 11.0, avg_package: 6.5, median_package: 6.2 }, 
-            "Automation & Robotics": { placed: 14, highest_package: 10.5, avg_package: 6.4, median_package: 6.0 } 
-        }
+    let val = parseFloat(match[1]);
+    // If it's a monthly stipend (like PM in the USICT matrix), convert to LPA equivalent for averaging
+    if (pkgStr.includes("PM") || pkgStr.includes("per month")) {
+        return (val * 12) / 100000;
     }
+    return val;
 };
 
-const RECRUITMENT_2025 = { "Capgemini": 28, "Infosys Ltd.": 14, "Internzvalley Pvt. Ltd.": 11, "Infogain Corporation India Ltd.": 7, "High-Technext Engineering & Telecom": 6, "Genpact Ltd.": 5, "RSM USI": 5, "Earth Crust": 5, "Cognizant": 4, "Terafac Technologies": 4, "RT Camp": 3, "McKinley & Rice": 3, "TVS Motor": 2, "Cloud Techner": 2, "TensorGo": 2, "GoDaddy Inc.": 1, "Amar Ujala Ltd.": 1, "AVL": 1, "RTDS Pvt. Ltd.": 1, "Publicis Sapient": 1, "Unthinkable Solutions": 1, "IndiaMart": 1, "Physics Wallah": 1, "Microsoft": 1 };
-const RECRUITMENT_2024 = { "Capgemini": 28, "Infosys": 16, "Genpact": 5, "McKinley Rice": 2, "RTDS": 2, "TensorGo Software": 2, "RSM USI": 5, "Infogain": 7, "AVL": 1, "Publicis Sapient": 1, "Unthinkable Solutions": 1, "Terafac": 3, "RT Camp": 3, "Lakshmikumaran Sridharan Attorneys": 1 };
+const BatchSummary = require("../models/BatchSummary");
 
+// @desc    Get dynamic analytics from Database (Unified for all colleges)
+// @route   GET /api/companies/analytics
 router.get("/analytics", async (req, res) => {
     try {
         const { batch_year } = req.query;
-        const yearKey = (!batch_year || batch_year === "all" || batch_year === "" || batch_year === "All") ? null : batch_year;
-        const stats = yearKey ? BATCH_STATS_OFFICIAL[yearKey] || {} : { 
-            total_students: 701, 
-            actively_participated: 401, 
-            total_placed: 210, 
-            placement_rate: 52.3, 
-            overall_avg_package: 6.5, 
-            overall_highest_package: 27, 
-            companies_visited: 136, 
-            companies_offered: 48,
-            branch_details: { 
-                "AI & Data Science": { placed: 68, highest_package: 27, avg_package: 7.3, median_package: 6.8 }, 
-                "AI & Machine Learning": { placed: 56, highest_package: 22, avg_package: 7.0, median_package: 6.4 }, 
-                "IIOT": { placed: 56, highest_package: 18, avg_package: 6.0, median_package: 5.7 }, 
-                "Automation & Robotics": { placed: 30, highest_package: 15, avg_package: 5.8, median_package: 5.4 } 
+        const college = req.college;
+        const query = { college };
+        if (batch_year && batch_year !== "all") query.batch_year = batch_year;
+
+        const companies = await Company.find(query);
+        const totalCompanies = companies.length;
+
+        // Fetch Official Summary once at the start if batch_year is provided
+        const officialSummary = (batch_year && batch_year !== "all") 
+            ? await BatchSummary.findOne({ college, batch_year }) 
+            : null;
+
+        // Sum of students_placed across all companies in the query
+        const calculatedPlaced = companies.reduce((acc, curr) => acc + (curr.students_placed || 0), 0);
+
+        // Packages Analysis
+        const packages = companies.map(c => parsePackage(c.package)).filter(p => p > 0);
+        const calculatedHighest = packages.length > 0 ? Math.max(...packages) : 0;
+        const calculatedAvg = packages.length > 0 ? (packages.reduce((a, b) => a + b, 0) / packages.length).toFixed(2) : 0;
+
+        // OFFICIAL STATS OVERRIDE
+        let finalPlaced = calculatedPlaced;
+        let finalHighest = calculatedHighest;
+        let finalAvg = calculatedAvg;
+        let finalRate = calculatedPlaced > 0 ? 100 : 0;
+        let finalTotalCompanies = totalCompanies;
+
+        if (officialSummary) {
+            finalPlaced = officialSummary.total_offers || calculatedPlaced;
+            finalHighest = officialSummary.highest_package || calculatedHighest;
+            finalAvg = officialSummary.average_package || calculatedAvg;
+            finalRate = officialSummary.placement_rate || 100;
+            finalTotalCompanies = officialSummary.total_companies || totalCompanies;
+        }
+
+        // Dynamic Distributions
+        const allCompaniesForCollege = await Company.find({ college });
+        const batchDistribution = {};
+        allCompaniesForCollege.forEach(c => {
+            batchDistribution[c.batch_year] = (batchDistribution[c.batch_year] || 0) + 1;
+        });
+
+        const typeDistribution = {};
+        companies.forEach(c => {
+            const type = c.company_type || "Software";
+            typeDistribution[type] = (typeDistribution[type] || 0) + 1;
+        });
+
+        const locationDistribution = {};
+        companies.forEach(c => {
+            const loc = c.location || "India";
+            locationDistribution[loc] = (locationDistribution[loc] || 0) + 1;
+        });
+
+        // OFFICIAL TYPE DISTRIBUTION OVERRIDE (Sector-wise)
+        let finalTypeDistribution = typeDistribution;
+        if (officialSummary && officialSummary.type_distribution && officialSummary.type_distribution.length > 0) {
+            finalTypeDistribution = {};
+            officialSummary.type_distribution.forEach(d => {
+                finalTypeDistribution[d.name] = d.value;
+            });
+        }
+
+        // Branch Details (from Student records)
+        const studentQuery = { college };
+        if (batch_year && batch_year !== "all") studentQuery.year = parseInt(batch_year);
+        const students = await Student.find(studentQuery);
+
+        const branchDetails = {};
+        students.forEach(s => {
+            if (!branchDetails[s.branch]) branchDetails[s.branch] = { placed: 0, highest_package: 0, avg_package: 0, total_val: 0 };
+            branchDetails[s.branch].placed++;
+            const pkg = parsePackage(s.package_str || s.package);
+            if (pkg > branchDetails[s.branch].highest_package) branchDetails[s.branch].highest_package = pkg;
+            branchDetails[s.branch].total_val += pkg;
+            branchDetails[s.branch].avg_package = (branchDetails[s.branch].total_val / branchDetails[s.branch].placed).toFixed(2);
+        });
+
+        // Top Companies (Sorted by Highest Package)
+        const topCompanies = companies
+            .map(c => ({
+                name: c.company_name,
+                role: c.role,
+                package_str: c.package,
+                package_num: parsePackage(c.package)
+            }))
+            .sort((a, b) => b.package_num - a.package_num)
+            .slice(0, 10);
+
+        // Merge Official Branch Details if available
+        console.log(`[API-DEBUG] Official Summary found for ${college}/${batch_year}:`, !!officialSummary);
+        if (officialSummary) {
+            // If we have an official summary, we should prioritize its metrics over live student data
+            // Clear existing branch data to avoid "Unknown" or dirty records from live database
+            Object.keys(branchDetails).forEach(key => delete branchDetails[key]);
+
+            console.log(`[API-DEBUG] Summary branch_average count:`, officialSummary.branch_average?.length);
+            if (officialSummary.branch_average && officialSummary.branch_average.length > 0) {
+                officialSummary.branch_average.forEach(b => {
+                    console.log(`[API-DEBUG] Merging ${b.name}: ${b.value}`);
+                    if (!branchDetails[b.name]) branchDetails[b.name] = { placed: 0, highest_package: 0, avg_package: 0, total_val: 0 };
+                    branchDetails[b.name].avg_package = b.value;
+                });
             }
-        };
+            if (officialSummary.branch_highest && officialSummary.branch_highest.length > 0) {
+                officialSummary.branch_highest.forEach(b => {
+                    if (!branchDetails[b.name]) branchDetails[b.name] = { placed: 0, highest_package: 0, avg_package: 0, total_val: 0 };
+                    branchDetails[b.name].highest_package = b.value;
+                });
+            }
+        }
+
+        console.log(`[API-DEBUG] Branch Details for ${college} ${batch_year}:`, JSON.stringify(branchDetails));
 
         res.json({
-            total_companies: stats.companies_visited,
-            active_companies: stats.companies_offered,
-            avg_package: stats.overall_avg_package,
-            highest_package: stats.overall_highest_package,
-            total_placed: stats.total_placed,
-            placement_rate: stats.placement_rate,
-            // Final Distribution: 2025 -> 30, 2024 -> 24
-            batch_distribution: { "2024": 24, "2025": 30 },
-            type_distribution: (yearKey === "2025") ? BATCH_STATS_OFFICIAL["2025"].sector_distribution : { "Software": 40, "Consulting": 20, "Electronics": 15, "Product": 15, "Others": 10 },
-            location_distribution: (yearKey === "2025") ? BATCH_STATS_OFFICIAL["2025"].location_distribution : { "Bangalore": 30, "Delhi NCR": 30, "Pune": 20, "Remote": 20 },
-            batch_stats: stats
+            total_companies: finalTotalCompanies,
+            active_companies: companies.filter(c => c.status === "Active").length,
+            avg_package: parseFloat(finalAvg),
+            highest_package: finalHighest,
+            total_placed: finalPlaced,
+            placement_rate: finalRate,
+            internship_offers: officialSummary?.internship_offers || 0,
+            batch_distribution: batchDistribution,
+            type_distribution: finalTypeDistribution,
+            location_distribution: locationDistribution,
+            top_companies: topCompanies,
+            batch_stats: {
+                total_placed: finalPlaced,
+                companies_visited: finalTotalCompanies,
+                branch_details: branchDetails,
+                overall_highest_package: finalHighest,
+                internship_offers: officialSummary?.internship_offers || 0,
+                branch_highest: officialSummary?.branch_highest || [],
+                branch_average: officialSummary?.branch_average || [],
+                total_students: officialSummary?.total_students || 0,
+                actively_participated: officialSummary?.actively_participated || 0,
+                companies_offered: officialSummary?.companies_offered || 0
+            }
         });
-    } catch (error) { res.status(500).json({ message: "Error" }); }
+    } catch (error) {
+        console.error("Analytics error:", error);
+        res.status(500).json({ message: "Error" });
+    }
 });
 
+// @desc    Get dynamic recruitment ranking
+// @route   GET /api/companies/recruitment
 router.get("/recruitment", async (req, res) => {
     try {
         const { batch_year } = req.query;
-        const yearKey = (!batch_year || batch_year === "all" || batch_year === "All") ? "2025" : batch_year;
-        let data = (yearKey === "2025") ? RECRUITMENT_2025 : (yearKey === "2024") ? RECRUITMENT_2024 : {};
-        const firms = Object.keys(data);
-        res.json({ companies: firms, students_placed: firms.map(f => data[f]), company_types: firms.map(() => "Services"), company_locations: firms.map(() => "India"), total_placed: Object.values(data).reduce((a,b)=>a+b, 0) });
-    } catch (error) { res.status(500).json({ message: "Error" }); }
+        const college = req.college;
+        const query = { college };
+        if (batch_year && batch_year !== "all") query.batch_year = batch_year;
+
+        // Sort by recruitment magnitude
+        const companies = await Company.find(query).sort({ students_placed: -1 });
+
+        res.json({
+            companies: companies.map(c => c.company_name),
+            students_placed: companies.map(c => c.students_placed || 0),
+            company_types: companies.map(c => c.company_type || "Services"),
+            company_locations: companies.map(c => c.location || "India"),
+            total_placed: companies.reduce((a, b) => a + (b.students_placed || 0), 0)
+        });
+    } catch (error) {
+        console.error("Recruitment error:", error);
+        res.status(500).json({ message: "Error" });
+    }
 });
 
+// @desc    Get branch-wise counts
+// @route   GET /api/companies/branch-stats
 router.get("/branch-stats", async (req, res) => {
     try {
         const { batch_year } = req.query;
-        const yearKey = (!batch_year || batch_year === "all" || batch_year === "All") ? "2025" : batch_year;
-        if (BATCH_STATS_OFFICIAL[yearKey]?.branch_details) {
-            const bd = BATCH_STATS_OFFICIAL[yearKey].branch_details;
-            return res.json({ labels: Object.keys(bd), counts: Object.values(bd).map(v => v.placed), total: BATCH_STATS_OFFICIAL[yearKey].total_placed });
+        const college = req.college;
+        const query = { college };
+        if (batch_year && batch_year !== "all") query.year = parseInt(batch_year);
+
+        const students = await Student.find(query);
+        const branchCounts = {};
+        students.forEach(s => {
+            branchCounts[s.branch] = (branchCounts[s.branch] || 0) + 1;
+        });
+
+        // Check for official overrides (like USICT 2022)
+        let officialRates = null;
+        if (batch_year && batch_year !== "all") {
+            const summary = await BatchSummary.findOne({ college, batch_year });
+            if (summary && summary.branch_rates && summary.branch_rates.length > 0) {
+                return res.json({
+                    official_rates: summary.branch_rates || [],
+                    overall_rate: summary.placement_rate || 0
+                });
+            }
         }
-        res.json({ labels: [], counts: [], total: 0 });
+
+        res.json({
+            labels: Object.keys(branchCounts),
+            counts: Object.values(branchCounts),
+            total: students.length,
+            official_rates: officialRates
+        });
+    } catch (error) {
+        console.error("Branch stats error:", error);
+        res.status(500).json({ message: "Error" });
+    }
+});
+
+// @desc    Get all unique batch years for a college
+// @route   GET /api/companies/batches
+router.get("/batches", async (req, res) => {
+    try {
+        const college = req.college;
+        console.log(`[API-DEBUG] Batches requested for college: ${college}`);
+        const batches = await Company.distinct("batch_year", { college });
+        console.log(`[API-DEBUG] Found batches: ${JSON.stringify(batches)}`);
+        // Sort descending: 2025, 2024...
+        res.json(batches.sort((a, b) => b - a));
     } catch (error) { res.status(500).json({ message: "Error" }); }
 });
 
 router.get("/", async (req, res) => {
-    const companies = await Company.find((req.query.batch_year && req.query.batch_year !== "all") ? { batch_year: req.query.batch_year } : {}).sort({ createdAt: -1 });
+    const college = req.college;
+    const filter = { college };
+    if (req.query.batch_year && req.query.batch_year !== "all") {
+        filter.batch_year = req.query.batch_year;
+    }
+    const companies = await Company.find(filter).sort({ createdAt: -1 });
     res.json(companies);
+});
+
+router.post("/", protect, admin, async (req, res) => {
+    try {
+        const college = req.college;
+        const company = await Company.create({ ...req.body, college });
+        res.status(201).json(company);
+    } catch (error) { res.status(500).json({ message: "Error" }); }
+});
+
+router.put("/:id", protect, admin, async (req, res) => {
+    try {
+        const college = req.college;
+        const company = await Company.findOneAndUpdate({ _id: req.params.id, college }, req.body, { new: true });
+        if (!company) return res.status(404).json({ message: "Company not found" });
+        res.json(company);
+    } catch (error) { res.status(500).json({ message: "Error" }); }
+});
+
+router.delete("/:id", protect, admin, async (req, res) => {
+    try {
+        const college = req.college;
+        const company = await Company.findOneAndDelete({ _id: req.params.id, college });
+        if (!company) return res.status(404).json({ message: "Company not found" });
+        res.json({ message: "Company removed" });
+    } catch (error) { res.status(500).json({ message: "Error" }); }
+});
+
+router.post("/apply/:id", protect, async (req, res) => {
+    try {
+        const college = req.college;
+        res.json({ success: true, message: "Application submitted for " + college });
+    } catch (error) { res.status(500).json({ message: "Error" }); }
 });
 
 module.exports = router;

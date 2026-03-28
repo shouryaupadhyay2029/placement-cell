@@ -20,6 +20,10 @@ const ApplicationSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    college: {
+        type: String,
+        default: "USAR"
+    }
 });
 
 module.exports = mongoose.model("Application", ApplicationSchema);

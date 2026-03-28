@@ -41,18 +41,21 @@ mongoose.connect(process.env.MONGO_URI)
 const authRoutes = require("./routes/auth");
 const studentRoutes = require("./routes/studentRoutes");
 const companyRoutes = require("./routes/companyRoutes");
+const placementRoutes = require("./routes/placementRoutes");
 const { protect, admin } = require("./middleware/authMiddleware");
+const { enforceCollege } = require("./middleware/collegeMiddleware");
 
 // API routes
-app.use("/auth", authRoutes);
-app.use("/students", studentRoutes);
-app.use("/companies", companyRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/students", enforceCollege, studentRoutes);
+app.use("/api/companies", enforceCollege, companyRoutes);
+app.use("/api/placements", enforceCollege, placementRoutes);
 
-app.get("/profile", protect, (req, res) => {
+app.get("/api/profile", protect, (req, res) => {
     res.json(req.user);
 });
 
-app.get("/admin", protect, admin, (req, res) => {
+app.get("/api/admin", protect, admin, (req, res) => {
     res.status(200).json({ message: "Admin authenticated access granted" });
 });
 
