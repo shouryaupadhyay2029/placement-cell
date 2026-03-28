@@ -1,22 +1,28 @@
 /**
  * collegeMiddleware.js - Enforce strict data isolation
- * Rejects any request that doesn't provide a college context.
  */
 
 const enforceCollege = (req, res, next) => {
-    // 1. Extract context from Header, Query, or Body
-    const college = req.headers["x-college-context"] || req.query.college || req.body.college;
+    // 1. Ensure body exists to avoid crashes
+    if (!req.body) req.body = {};
 
-    if (!college || !["USAR", "USICT"].includes(college.toUpperCase())) {
-        console.warn(`[SECURITY] Rejected request to ${req.originalUrl} - Missing/Invalid College Context`);
-        return res.status(403).json({
-            message: "Action Blocked: Valid College Context (USAR/USICT) is required for this operation."
+    // 2. Extract context from Header, Query, or Body
+    const college = req.headers["x-college"] 
+                 || req.headers["x-college-context"] 
+                 || req.query?.college 
+                 || req.body?.college;
+
+    // 3. Strict Validation
+    if (!college || !["USAR", "USICT"].includes(college.toString().toUpperCase())) {
+        console.warn(`[SECURITY] Context Rejected: ${req.originalUrl} | Detected: ${college}`);
+        return res.status(400).json({
+            success: false,
+            error: "Action Blocked: Valid College Context (USAR/USICT) is required."
         });
     }
 
-    // 2. Normalize and inject into request
-    req.college = college.toUpperCase();
-    console.log(`[CONTEXT] Request: ${req.method} ${req.originalUrl} | College: ${req.college}`);
+    // 4. Normalize and inject into request
+    req.college = college.toString().toUpperCase();
     next();
 };
 

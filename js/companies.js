@@ -41,6 +41,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const applyHeader = document.getElementById("applyHeader");
     if (!isStudent && applyHeader) applyHeader.style.display = 'none';
 
+    // DYNAMIC BATCH FILTER SYNC (Independent per College)
+    async function updateBatchFilterOptions() {
+        if (!batchFilter) return;
+        const college = localStorage.getItem("college") || "USAR";
+        
+        try {
+            const res = await window.api.get(`/companies/batches`);
+            const batches = res.ok ? await res.json() : [];
+            
+            // 1. CLEAR & RE-POPULATE
+            batchFilter.innerHTML = '<option value="all">All Batches</option>';
+            batches.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = `${y} Batch`;
+                batchFilter.appendChild(opt);
+            });
+
+            // 2. CONTEXT-AWARE RESTORATION
+            const currentBatch = localStorage.getItem("selectedBatchYear");
+            if (currentBatch && Array.from(batchFilter.options).some(o => o.value === currentBatch)) {
+                batchFilter.value = currentBatch;
+            } else {
+                batchFilter.value = "all";
+                localStorage.setItem("selectedBatchYear", "all");
+            }
+            
+            // Refresh list with correct context
+            fetchCompanies();
+
+        } catch (e) {
+            console.error("Batch sync failed:", e);
+            batchFilter.innerHTML = '<option value="all">All Batches</option>';
+            fetchCompanies();
+        }
+    }
+    updateBatchFilterOptions();
+
     async function fetchCompanies() {
         if (!tableBody) return;
 
@@ -49,8 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fetch applied companies (Mocked for now in Node)
         if (isStudent) {
             try {
-                // Pointing to Node's consolidated routes
-                const appRes = await fetch("http://localhost:5000/companies/my-applications");
+                // Using consolidated window.api utility
+                const appRes = await window.api.get("/companies/my-applications");
                 if (appRes.ok) {
                     const apps = await appRes.json();
                     appliedCompanyIds = new Set(apps.map(a => a.company_id));
@@ -58,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (_) { }
         }
 
-        let url = "http://localhost:5000/companies";
+        let url = "/companies";
         const header = document.getElementById("companiesHeader");
         const batchValue = batchFilter ? batchFilter.value : "all";
 
@@ -80,13 +118,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch(url);
+            const response = await window.api.get(url);
             if (!response.ok) throw new Error("Failed to fetch companies");
             allCompanies = await response.json();
             filterAndSearch();
         } catch (error) {
             console.error("Fetch error:", error);
-            tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #ff4d4d; padding: 20px;">Error loading companies. Please ensure backend is running at http://localhost:5000</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #ff4d4d; padding: 20px;">Error loading companies. Please ensure backend is running at http://localhost:5000</td></tr>`;
         }
     }
 
@@ -100,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         await new Promise(resolve => setTimeout(resolve, 300));
 
         if (companies.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">No companies available yet</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 20px;">No companies available yet</td></tr>`;
         } else {
             tableBody.innerHTML = companies.map(company => {
                 const alreadyApplied = appliedCompanyIds.has(company.id);
@@ -131,10 +169,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${company.company_name}</td>
                 <td style="color: rgba(255,255,255,0.6); font-size: 13px;">${company.batch_year || '—'}</td>
                 <td>${company.role}</td>
-                <td style="color: var(--primary); font-weight: 700;">${company.package.toString().includes('LPA') ? company.package : (company.package + ' LPA')}</td>
-                <td>${company.location}</td>
-                <td style="font-size: 13px; opacity: 0.8;">${company.eligibility}</td>
-                <td style="font-size: 13px; color: #888;">${company.deadline}</td>
+                <td style="color: var(--primary); font-weight: 700;">${company.package.toString().toLowerCase().includes('lpa') || company.package.toString().includes('—') || company.package.toString().includes('PM') ? company.package : (company.package + ' LPA')}</td>
+                <td style="font-weight: 500; opacity: 0.9;">${company.students_placed || (company.college === 'USICT' ? 0 : '—')}</td>
+                <td>${company.location || '—'}</td>
+                <td style="font-size: 13px; opacity: 0.8;">${company.eligibility || '—'}</td>
+                <td style="font-size: 13px; color: #888;">${company.deadline || '—'}</td>
                 <td>
                     <span class="status-pill ${statusClass}">
                         ${company.status || 'Active'}
@@ -160,10 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const btn = document.getElementById(`apply-btn-${companyId}`);
         if (btn) { btn.disabled = true; btn.textContent = 'Applying...'; }
         try {
-            // Using placeholder POST endpoint in Node
-            const res = await fetch(`http://localhost:5000/companies/apply/${companyId}`, {
-                method: "POST"
-            });
+            // Using consolidated window.api utility
+            const res = await window.api.post(`/companies/apply/${companyId}`, {});
             const data = await res.json();
             if (res.ok) {
                 appliedCompanyIds.add(companyId);
@@ -187,15 +224,15 @@ document.addEventListener("DOMContentLoaded", () => {
     window.deleteCompany = async function (id) {
         if (!confirm("Are you sure you want to delete this company?")) return;
         try {
-            const response = await fetch(`http://localhost:5000/companies/${id}`, {
+            const response = await window.api.fetch(`/companies/${id}`, {
                 method: "DELETE"
             });
             if (response.ok) {
-                showToast("Company deleted safely", "success");
+                showToast("Company removed from database", "success");
                 fetchCompanies();
             } else {
                 const err = await response.json();
-                showToast(err.message || "Failed to delete company", "error");
+                showToast(err.message || "Failed to remove company", "error");
             }
         } catch (error) {
             showToast("Network error. Please try again.", "error");
@@ -302,17 +339,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
-                const url = editingCompanyId
-                    ? `http://localhost:5000/companies/${editingCompanyId}`
-                    : "http://localhost:5000/companies";
+                const endpoint = editingCompanyId
+                    ? `/companies/${editingCompanyId}`
+                    : "/companies";
 
-                const method = editingCompanyId ? "PUT" : "POST";
-
-                const response = await fetch(url, {
-                    method: method,
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                });
+                let response;
+                if (editingCompanyId) {
+                    response = await window.api.fetch(endpoint, {
+                        method: "PUT",
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    response = await window.api.post(endpoint, data);
+                }
 
                 if (response.ok) {
                     showToast(editingCompanyId ? "Company updated successfully!" : "Company added successfully!", "success");
@@ -346,8 +385,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
                 showToast("Importing CSV...", "info");
-                const response = await fetch("http://localhost:5000/companies/import", {
+                // Use window.api.fetch for multipart if needed, or just standard fetch with X-College head
+                const response = await fetch("/api/companies/import", {
                     method: "POST",
+                    headers: {
+                        "X-College-Context": localStorage.getItem("college") || "USAR"
+                    },
                     body: formData
                 });
 

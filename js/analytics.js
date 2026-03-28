@@ -25,13 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let batchChart = null;
     let typeChart = null;
-    let locChart = null;
     let recruitmentChart = null;
 
     async function loadAnalytics(year = '') {
         try {
-            // 1. Fetch Main Stats from Node.js
-            const response = await fetch(`http://localhost:5000/companies/analytics${year ? '?batch_year=' + year : ''}`);
+            // 1. Fetch Main Stats from Consolidated API
+            const response = await window.api.get(`/companies/analytics${year ? '?batch_year=' + year : ''}`);
             if (!response.ok) throw new Error('Failed to fetch analytics');
             const data = await response.json();
 
@@ -48,8 +47,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // 3. Render Charts
             renderBatchChart(data.batch_distribution || {});
-            renderTypeChart(data.type_distribution || {});
-            renderLocationChart(data.location_distribution || {});
+            
+            // Conditional Company Type Chart (Hide for USICT)
+            const college = localStorage.getItem('college') || 'USAR';
+            const typeCtx = document.getElementById('companyTypeChart');
+            const typeCard = typeCtx ? typeCtx.closest('.chart-card') : null;
+            
+            if (typeCard) {
+                if (college === 'USICT') {
+                    typeCard.style.display = 'none';
+                } else {
+                    typeCard.style.display = 'block';
+                    renderTypeChart(data.type_distribution || {});
+                }
+            }
+
             populateTopCompanies(data.top_companies || []);
 
             // 4. Detail Data Refresh
@@ -115,7 +127,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 labels: keys,
                 datasets: [{
                     data: values,
-                    backgroundColor: [primaryColor, '#10b981', '#059669', '#064e3b', '#064e3b', surfaceColor],
+                    backgroundColor: [
+                        '#10b981', // Emerald
+                        '#059669', // Dark Emerald
+                        '#D4AF37', // Gold
+                        '#B8860B', // Dark Gold
+                        '#064e3b', // Deep Forest
+                        '#4ade80', // Light Green
+                        '#fcd34d', // Amber
+                        '#1f2937'  // Grey/Surface
+                    ],
                     borderWidth: 2,
                     borderColor: '#111'
                 }]
@@ -131,41 +152,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function renderLocationChart(locDist) {
-        const ctx = document.getElementById('locationChart');
-        if (!ctx) return;
-        if (locChart) locChart.destroy();
-
-        let keys = Object.keys(locDist);
-        keys.sort((a, b) => locDist[b] - locDist[a]);
-        let topKeys = keys.slice(0, 5);
-        let topValues = topKeys.map(k => locDist[k]);
-        if (topKeys.length === 0) { topKeys = ['No Data']; topValues = [0]; }
-
-        locChart = new Chart(ctx.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: topKeys,
-                datasets: [{
-                    label: 'Companies',
-                    data: topValues,
-                    backgroundColor: '#10b981',
-                    borderRadius: 4,
-                    barPercentage: 0.6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y',
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { beginAtZero: true, grid: { color: gridColor }, ticks: { stepSize: 1 } },
-                    y: { grid: { display: false } }
-                }
-            }
-        });
-    }
 
     function populateTopCompanies(topComps) {
         const tbody = document.getElementById('topCompaniesBody');
@@ -190,8 +176,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadRecruitmentChart(batchYear = '') {
         try {
-            const url = `http://localhost:5000/companies/recruitment${batchYear ? '?batch_year=' + batchYear : ''}`;
-            const res = await fetch(url);
+            const url = `/companies/recruitment${batchYear ? '?batch_year=' + batchYear : ''}`;
+            const res = await window.api.get(url);
             if (!res.ok) throw new Error('Failed');
             const data = await res.json();
 
@@ -200,18 +186,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             const allCompanies = filteredIndices.map(i => data.companies[i]);
             const allPlaced = filteredIndices.map(i => data.students_placed[i]);
             const allTypes = filteredIndices.map(i => data.company_types[i] || "—");
-            const allLocations = filteredIndices.map(i => data.company_locations[i] || "—");
             const total = data.total_placed || 0;
 
             const label = document.getElementById('totalPlacedLabel');
             if (label) label.textContent = `Total Placed: ${total}`;
 
             // Store data for view switching
-            window.recruitmentData = { 
-                companies: allCompanies, 
-                placed: allPlaced, 
+            window.recruitmentData = {
+                companies: allCompanies,
+                placed: allPlaced,
                 types: allTypes,
-                locations: allLocations,
                 total: total,
                 batchYear: batchYear
             };
@@ -222,14 +206,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rankingBody.innerHTML = allCompanies.map((name, i) => {
                     const count = allPlaced[i];
                     const type = allTypes[i];
-                    const loc = allLocations[i];
                     const share = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
                     return `
                         <tr>
                             <td><strong>#${i + 1}</strong></td>
                             <td style="font-weight:600;">${name}</td>
                             <td><span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">${type}</span></td>
-                            <td style="opacity:0.8;">${loc}</td>
+                            <td style="opacity:0.7;">NA</td>
                             <td style="color:var(--primary); font-weight:700;">${count}</td>
                             <td style="opacity:0.6;">${share}%</td>
                         </tr>
@@ -275,9 +258,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Dynamic Height Calculation: Ensure each bar gets enough vertical space
         const barStep = 34; // px per bar including gap
-        const basePadding = 50; 
+        const basePadding = 50;
         const targetHeight = Math.max(380, (displayCompanies.length * barStep) + basePadding);
-        
+
         container.style.height = targetHeight + 'px';
 
         if (recruitmentChart) recruitmentChart.destroy();
@@ -339,7 +322,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ticks: {
                             color: '#fff',
                             font: { size: 12, weight: '600' },
-                            callback: function(value) {
+                            callback: function (value) {
                                 let label = this.getLabelForValue(value);
                                 return label.length > 20 ? label.substr(0, 18) + '...' : label;
                             }
@@ -363,39 +346,214 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function loadBranchStats(batchYear = '') {
+        const college = localStorage.getItem("college") || "USAR";
+        const analyticsCard = document.querySelector('.analytics-card');
+
+        // SPECIAL CASE: USICT 2021 & 2022 - Focus on elite high-fidelity direct placement tables
+        if (college === "USICT" && (batchYear === "2021" || batchYear === "2022")) {
+            try {
+                // 1. Fetch Direct Placements (High Value Roles)
+                const res = await window.api.get(`/companies?batch_year=${batchYear}`);
+                const allCompanies = await res.json();
+                const directPlaced = allCompanies.filter(c => c.role === "Direct Placement");
+
+                // 2. Fetch Official Branch Rates (If available)
+                const brUrl = `/companies/branch-stats?batch_year=${batchYear}`;
+                const brRes = await window.api.get(brUrl);
+                const brData = await brRes.json();
+                const officialRates = brData.official_rates || [];
+
+                if (analyticsCard) {
+                    let html = `
+                        <div class="card-header" style="margin-bottom: 25px;">
+                            <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                                    <path d="M16 21v-2a4 0 0 0-4-4H5a4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <polyline points="17 11 19 13 23 9"></polyline>
+                                </svg>
+                                Directly Placed Students (${batchYear})
+                            </h3>
+                        </div>
+                        <div class="table-container mini-table" style="margin-bottom: 30px;">
+                            <table style="width: 100%; font-size: 13px;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 10px; text-align: left;">Company</th>
+                                        <th style="padding: 10px; text-align: center;">Selections</th>
+                                        <th style="padding: 10px; text-align: right;">Package (LPA)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${directPlaced.map((c, i) => `
+                                        <tr style="${i % 2 === 0 ? 'background: rgba(16, 185, 129, 0.03);' : ''}">
+                                            <td style="padding: 10px; font-weight: 600;">${c.company_name}</td>
+                                            <td style="padding: 10px; text-align: center; color: var(--primary); font-weight: 700;">${c.students_placed}</td>
+                                            <td style="padding: 10px; text-align: right; opacity: 0.8; font-weight: 600;">${c.package}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    // Add Branch Statistics Table if it's 2022
+                    if (officialRates.length > 0) {
+                        html += `
+                            <div class="card-header" style="margin-bottom: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                    </svg>
+                                    Official Branch-wise Statistics
+                                </h3>
+                            </div>
+                            <div class="table-container mini-table">
+                                <table style="width: 100%; font-size: 13px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 10px; text-align: left;">Branch</th>
+                                            <th style="padding: 10px; text-align: right;">Placement Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${officialRates.map((r, i) => `
+                                            <tr style="${i % 2 === 0 ? 'background: rgba(255,255,255,0.02);' : ''}">
+                                                <td style="padding: 10px; font-weight: 500;">${r.name}</td>
+                                                <td style="padding: 10px; text-align: right; color: var(--primary); font-weight: 700;">${r.rate.toFixed(2)}%</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background: rgba(16, 185, 129, 0.1); border-top: 2px solid var(--primary);">
+                                            <td style="padding:10px; font-weight: 800; font-size: 14px;">Total Institutional Average</td>
+                                            <td style="padding:10px; text-align: right; color: var(--primary); font-weight: 800; font-size: 14px;">${(brData.overall_rate || 0).toFixed(2)}%</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        `;
+                    }
+                    analyticsCard.innerHTML = html;
+                }
+                return; // Exit early for high-fidelity special cases
+            } catch (err) {
+                console.error("Failed to load institutional analytics:", err);
+            }
+        }
+
+        // DEFAULT CASE: Branch-wise Placement Statistics
         try {
-            const url = `http://localhost:5000/companies/branch-stats${batchYear ? '?batch_year=' + batchYear : ''}`;
-            const res = await fetch(url);
+            // Restore original UI if it was swapped (or if it's the first render)
+            if (analyticsCard) {
+                analyticsCard.innerHTML = `
+                    <div class="card-header" style="margin-bottom: 25px;">
+                        <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                                stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                            Branch-wise Placement Statistics
+                        </h3>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="branchBreakdownChart"></canvas>
+                        </div>
+                        <div>
+                            <div class="table-container mini-table">
+                                <table style="font-size: 13px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Branch</th>
+                                            <th>Students</th>
+                                            <th>Percent</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="branchStatsBody"></tbody>
+                                </table>
+                            </div>
+                            <p id="branchTotalLabel" style="margin-top: 15px; font-size: 13px; color: var(--text-muted); text-align: right;"></p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const url = `/companies/branch-stats${batchYear ? '?batch_year=' + batchYear : ''}`;
+            const res = await window.api.get(url);
             const data = await res.json();
 
-            const labels = data.labels || [];
-            const counts = data.counts || [];
-            const total = data.total || 0;
+            const isOfficial = data.official_rates && data.official_rates.length > 0;
+            const labels = isOfficial ? data.official_rates.map(r => r.name) : (data.labels || []);
+            const counts = isOfficial ? data.official_rates.map(r => r.rate) : (data.counts || []);
+            const total = isOfficial ? 100 : (data.total || 0);
 
-            const totalLabel = document.getElementById('branchTotalLabel');
-            if (totalLabel) totalLabel.innerText = `${total} Selected Students Mapped by Branch`;
+            // SPECIAL CASE: Official Rates Table Override (e.g. USICT 2022)
+            if (isOfficial) {
+                if (analyticsCard) {
+                    analyticsCard.innerHTML = `
+                        <div class="card-header" style="margin-bottom: 25px;">
+                            <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                </svg>
+                                Branch-wise Placement Statistics (Official)
+                            </h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div style="height: 220px; position: relative;">
+                                <canvas id="branchBreakdownChart"></canvas>
+                            </div>
+                            <div class="table-container mini-table">
+                                <table style="width: 100%; font-size: 14px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left;">Branch</th>
+                                            <th style="text-align: right;">Placed (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${data.official_rates.map(r => `
+                                            <tr>
+                                                <td style="font-weight: 600;">${r.name}</td>
+                                                <td style="text-align: right; color: var(--primary); font-weight: 700;">${r.rate.toFixed(2)}%</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background: rgba(16, 185, 129, 0.1); border-top: 2px solid var(--primary);">
+                                            <td style="padding:10px; font-weight: 800; font-size: 15px;">Overall Institutional Total</td>
+                                            <td style="padding:10px; text-align: right; color: var(--primary); font-weight: 800; font-size: 15px;">${(data.overall_rate || 0).toFixed(2)}%</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                const totalLabel = document.getElementById('branchTotalLabel');
+                if (totalLabel) totalLabel.innerText = `${total} Selected Students Mapped by Branch`;
 
-            // Populate Table
-            const body = document.getElementById('branchStatsBody');
-            if (body) {
-                body.innerHTML = labels.map((b, i) => {
-                    const c = counts[i];
-                    const p = total > 0 ? ((c/total)*100).toFixed(1) : 0;
-                    return `
+                const body = document.getElementById('branchStatsBody');
+                if (body) {
+                    body.innerHTML = labels.map((b, i) => {
+                        const c = counts[i];
+                        const p = total > 0 ? ((c / total) * 100).toFixed(1) : 0;
+                        return `
                         <tr>
                             <td style="font-weight:600;">${b}</td>
                             <td style="color:var(--primary); font-weight:700;">${c}</td>
                             <td style="opacity:0.6;">${p}%</td>
                         </tr>
-                    `;
-                }).join('');
+                        `;
+                    }).join('');
+                }
             }
 
-            // Render Donut Chart
             const canvas = document.getElementById('branchBreakdownChart');
             if (!canvas) return;
-
-            // Clear previous if any
             const existing = Chart.getChart(canvas);
             if (existing) existing.destroy();
 
@@ -407,10 +565,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     datasets: [{
                         data: counts,
                         backgroundColor: [
-                            'rgba(16, 185, 129, 0.9)', // AI-DS
-                            'rgba(16, 185, 129, 0.7)', // AI-ML
-                            'rgba(16, 185, 129, 0.5)', // IIOT
-                            'rgba(16, 185, 129, 0.3)'  // A&R
+                            'rgba(16, 185, 129, 0.95)',
+                            'rgba(16, 185, 129, 0.75)',
+                            'rgba(16, 185, 129, 0.55)',
+                            'rgba(16, 185, 129, 0.35)'
                         ],
                         hoverBackgroundColor: 'var(--primary)',
                         borderWidth: 0,
@@ -443,7 +601,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             callbacks: {
                                 label: (ctx) => {
                                     const val = ctx.raw;
-                                    const per = total > 0 ? ((val/total)*100).toFixed(1) : 0;
+                                    const per = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
                                     return ` ${val} Candidates (${per}%)`;
                                 }
                             }
@@ -464,30 +622,115 @@ document.addEventListener('DOMContentLoaded', async () => {
         toggleRankingBtn.addEventListener('click', () => {
             const isHidden = fullRankingPanel.style.display === 'none';
             fullRankingPanel.style.display = isHidden ? 'block' : 'none';
-            toggleRankingBtn.innerHTML = isHidden 
+            toggleRankingBtn.innerHTML = isHidden
                 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M18 15l-6-6-6 6"/></svg> Hide Ranking`
                 : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> View Full Ranking`;
         });
     }
 
-    // Global Filter Listener
+    // Global Filter Initialization (Independent per College)
     const globalFilter = document.getElementById('globalBatchYear');
-    if (globalFilter) {
-        // 1. Restore year from localStorage
-        const storedYear = localStorage.getItem("selectedBatchYear") || "";
-        globalFilter.value = storedYear;
+    
+    // Track the last college we synced for to avoid redundant API calls
+    let lastSyncedCollege = null;
 
+    async function syncBatchDropdown(forceYear = null) {
+        const currentCollege = localStorage.getItem("college") || "USAR";
+        if (!globalFilter) return;
+
+        try {
+            const res = await window.api.get(`/companies/batches`);
+            const batches = res.ok ? await res.json() : [];
+            
+            // 1. CLEAR & RE-POPULATE (Dynamic Generation)
+            globalFilter.innerHTML = batches.length > 0 ? '' : '<option value="">No Data</option>';
+            batches.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = `${y} Batch`;
+                globalFilter.appendChild(opt);
+            });
+
+            // 2. CONTEXT-AWARE DEFAULTING
+            // If we have a forced year (from a college switch), use it. 
+            // Otherwise, check localStorage but validate it exists in the NEW batch list.
+            let activeYear = forceYear || localStorage.getItem("selectedBatchYear");
+            
+            if (!activeYear || (activeYear !== "" && !batches.includes(activeYear))) {
+                activeYear = batches[0] || "";
+            }
+
+            localStorage.setItem("selectedBatchYear", activeYear);
+            globalFilter.value = activeYear;
+            lastSyncedCollege = currentCollege;
+
+            return activeYear;
+
+        } catch (e) {
+            console.error("Batch sync failed:", e);
+            return "";
+        }
+    }
+
+    async function loadAnalytics(year = null) {
+        // If year is null, it means we might be switching colleges or initializing
+        const currentCollege = localStorage.getItem("college") || "USAR";
+        
+        // Auto-sync dropdown if college changed
+        if (lastSyncedCollege !== currentCollege) {
+            const syncedYear = await syncBatchDropdown(year);
+            // Re-call if we successfully synced a new default year
+            if (year === null) year = syncedYear;
+        }
+
+        const activeYear = year !== null ? year : (globalFilter?.value || "");
+
+        try {
+            // 1. Fetch Main Stats from Consolidated API
+            const response = await window.api.get(`/companies/analytics${activeYear ? '?batch_year=' + activeYear : ''}`);
+            if (!response.ok) throw new Error('Failed to fetch analytics');
+            const data = await response.json();
+
+            // 2. Populate Cards
+            const placementElem = document.getElementById('placementRate');
+            const activeElem = document.getElementById('activeCompanies');
+            const highestElem = document.getElementById('highestPackage');
+            const avgElem = document.getElementById('avgPackage');
+
+            animateValue(placementElem, 0, data.placement_rate || 0, 1000);
+            animateValue(activeElem, 0, data.active_companies || 0, 1000);
+            animateValue(highestElem, 0, data.highest_package || 0, 1000);
+            animateValue(avgElem, 0, data.avg_package || 0, 1000);
+
+            // 3. Render Charts
+            renderBatchChart(data.batch_distribution || {});
+            renderTypeChart(data.type_distribution || {});
+            populateTopCompanies(data.top_companies || []);
+
+            // 4. Detail Data Refresh
+            await loadRecruitmentChart(activeYear);
+            await loadBranchStats(activeYear);
+
+            // 5. Internship Section Visibility (Only for 2025)
+            const internSection = document.getElementById('internshipSection');
+            if (internSection) {
+                internSection.style.display = (activeYear === '2025') ? 'block' : 'none';
+            }
+
+        } catch (err) {
+            console.error('Error loading analytics:', err);
+        }
+    }
+
+    if (globalFilter) {
         globalFilter.addEventListener('change', () => {
             const newYear = globalFilter.value;
             localStorage.setItem("selectedBatchYear", newYear);
             loadAnalytics(newYear);
         });
-
-        // 2. Initial Load with stored year
-        loadAnalytics(storedYear);
-    } else {
-        // Fallback or Initial Load if filter not present
-        loadAnalytics('');
     }
+
+    // Initial Load
+    loadAnalytics();
 });
 ;

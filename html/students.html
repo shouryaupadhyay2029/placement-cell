@@ -75,6 +75,13 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </li>
+            <li class="semi-item" id="collegeSelectorTrigger" data-label="Select College">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
+                </svg>
+            </li>
             <li class="semi-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="2" x2="12" y2="22"></line>
@@ -83,7 +90,16 @@
                 </svg>
             </li>
         </ul>
+
+        <!-- College Selector Hover Panel -->
+        <div class="college-selector-panel" id="collegeSelectorPanel">
+            <div class="panel-title">Select College</div>
+            <div class="college-option active" data-college="USAR">USAR</div>
+            <div class="college-option" data-college="USICT">USICT</div>
+        </div>
     </aside>
+
+    <div class="context-fade-overlay" id="contextOverlay"></div>
 
 
     <!-- CIRCULAR LOGO -->
@@ -110,6 +126,7 @@
             <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path"
                 stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)" />
         </svg>
+        <span class="college-display" id="navCollegeDisplay" style="margin-left: 15px;">USAR</span>
     </a>
 
     <!-- UNIFIED HEADER GROUP -->
@@ -247,17 +264,22 @@
                         <div class="flip-card__front">
                             <div class="title">Log in</div>
                             <form class="flip-card__form" id="loginForm">
-                                <input class="flip-card__input" name="email" id="loginEmail" placeholder="Email" type="email" required>
-                                <input class="flip-card__input" name="password" id="loginPassword" placeholder="Password" type="password" required>
+                                <input class="flip-card__input" name="email" id="loginEmail" placeholder="Email"
+                                    type="email" required>
+                                <input class="flip-card__input" name="password" id="loginPassword"
+                                    placeholder="Password" type="password" required>
                                 <button type="submit" class="flip-card__btn">Let's go!</button>
                             </form>
                         </div>
                         <div class="flip-card__back">
                             <div class="title">Sign up</div>
                             <form class="flip-card__form" id="registerForm">
-                                <input class="flip-card__input" name="name" id="registerName" placeholder="Name" type="text" required>
-                                <input class="flip-card__input" name="email" id="registerEmail" placeholder="Email" type="email" required>
-                                <input class="flip-card__input" name="password" id="registerPassword" placeholder="Password" type="password" required>
+                                <input class="flip-card__input" name="name" id="registerName" placeholder="Name"
+                                    type="text" required>
+                                <input class="flip-card__input" name="email" id="registerEmail" placeholder="Email"
+                                    type="email" required>
+                                <input class="flip-card__input" name="password" id="registerPassword"
+                                    placeholder="Password" type="password" required>
                                 <button type="submit" class="flip-card__btn">Confirm!</button>
                             </form>
                         </div>
@@ -316,6 +338,13 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </li>
+                <li class="semi-item" data-label="Select College">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
+                    </svg>
+                </li>
                 <li class="semi-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="2" x2="12" y2="22"></line>
@@ -327,7 +356,7 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <main class="main-content">
+        <main class="main-content students-page-layout">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
                 <h1 id="dashTitle" style="margin: 0;">Placed Students</h1>
                 <select id="batchYearSelector" class="batch-year-select">
@@ -404,10 +433,13 @@
     </div>
 
     <footer class="footer-note">
-        <p>Every data and report is taken from official college website 
-        <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a></p>
-        <p style="margin-top: 10px;">All students name shown here is taken from this link 
-        <a href="https://sites.google.com/view/ggsipuedc/students/training-placement" target="_blank">sites.google.com/view/ggsipuedc/students/training-placement</a></p>
+        <p>Every data and report is taken from official college website
+            <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a>
+        </p>
+        <p style="margin-top: 10px;">All students name shown here is taken from this link
+            <a href="https://sites.google.com/view/ggsipuedc/students/training-placement"
+                target="_blank">sites.google.com/view/ggsipuedc/students/training-placement</a>
+        </p>
     </footer>
 
     <div class="modal" id="studentModal">

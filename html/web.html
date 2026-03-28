@@ -79,6 +79,13 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </li>
+            <li class="semi-item" id="collegeSelectorTrigger" data-label="Select College">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
+                </svg>
+            </li>
             <li class="semi-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="2" x2="12" y2="22"></line>
@@ -86,8 +93,24 @@
                     <path d="M17 19c0-2.21-1.79-4-4-4s-4 1.79-4 4"></path>
                 </svg>
             </li>
+            <li class="semi-item" data-section="ingest" data-label="PDF Ingest" data-nav="ingest.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+            </li>
         </ul>
+
+        <!-- College Selector Hover Panel -->
+        <div class="college-selector-panel" id="collegeSelectorPanel">
+            <div class="panel-title">Select College</div>
+            <div class="college-option active" data-college="USAR">USAR</div>
+            <div class="college-option" data-college="USICT">USICT</div>
+        </div>
     </aside>
+
+    <div class="context-fade-overlay" id="contextOverlay"></div>
 
     <!-- NAVBAR -->
     <header class="navbar-wrapper">
@@ -97,6 +120,7 @@
                         class="box-bottom"></span><span class="box-right"></span></span><span class="pro-text">Pro<span
                         class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span
                         class="box-right"></span></span>
+                <span class="college-display" id="navCollegeDisplay">USAR</span>
                 <div class="logo-tagline">Powering Student Success</div>
             </div>
         </a>
@@ -332,10 +356,8 @@
             <button class="modal-close" id="closeAuthModal">&times;</button>
         </div>
     </div>
-    <div id="g_id_onload"
-        data-client_id="533082182818-guuttt7mpaqfgp1595bjkkv31fnhk77c.apps.googleusercontent.com"
-        data-callback="handleGoogleLogin"
-        data-auto_prompt="false">
+    <div id="g_id_onload" data-client_id="533082182818-guuttt7mpaqfgp1595bjkkv31fnhk77c.apps.googleusercontent.com"
+        data-callback="handleGoogleLogin" data-auto_prompt="false">
     </div>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -347,6 +369,18 @@
 
             <!-- DASHBOARD SECTION -->
             <section id="dashboard" class="section active">
+
+                <!-- HERO CAROUSEL (DYNAMICALY POPULATED) -->
+                <div class="hero-carousel" id="heroCarousel">
+                    <div class="carousel-inner" id="heroCarouselInner">
+                        <!-- Dynamic slides will be injected here -->
+                    </div>
+                    <!-- Navigation dots -->
+                    <div class="carousel-dots" id="carouselDots">
+                        <!-- Dynamic dots will be injected here -->
+                    </div>
+                </div>
+
                 <div class="dashboard-header">
                     <div class="title-group">
                         <h1 id="dashTitle">Placement Overview</h1>
@@ -360,10 +394,15 @@
                             <span>Batch-wise institutional placement records</span>
                         </div>
                     </div>
-                    <div class="batch-switch-tabs" id="batchSwitchTabs">
-                        <button class="batch-tab active" data-year="2025">2025 Batch</button>
-                        <button class="batch-tab" data-year="2024">2024 Batch</button>
-                        <button class="batch-tab" data-year="">Overall</button>
+                    <div class="batch-dropdown-container">
+                        <select class="batch-select-input" id="batchSwitchDropdown">
+                            <!-- Dynamic Batches Injected Here -->
+                        </select>
+                        <div class="batch-select-icon">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
                     </div>
                 </div>
                 <p class="sub-text" id="dashSubText">
@@ -398,42 +437,12 @@
 
                 </div>
 
-                <!-- HIGHLIGHTS SECTION -->
-                <style>
-                    .placement-highlights {
-                        margin-top: 40px;
-                        background: rgba(20, 20, 20, 0.6);
-                        border: 1px solid rgba(16, 185, 129, 0.2);
-                        padding: 25px;
-                        border-radius: 12px;
-                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-                        backdrop-filter: blur(5px);
-                    }
-
-                    .highlights-list {
-                        list-style: none;
-                        padding: 0;
-                        margin: 0;
-                        color: #ddd;
-                        line-height: 1.8;
-                    }
-
-                    .highlights-list li {
-                        margin-bottom: 12px;
-                        font-size: 15px;
-                    }
-
-                    .highlights-list li strong {
-                        color: #fff;
-                        font-weight: 500;
-                    }
-                </style>
+                <!-- DYNAMIC PLACEMENT INSIGHTS -->
                 <div class="placement-highlights">
-                    <h3 style="color: var(--primary); margin: 0 0 15px 0; font-weight: 600; letter-spacing: 0.5px;">Top
-                        Placement Highlights</h3>
-                    <ul id="dashHighlightsList" class="highlights-list">
-                        <li>Loading official highlights...</li>
-                    </ul>
+                    <h3 class="insights-heading">📊 Institutional Placement Insights</h3>
+                    <div id="dashHighlightsList" class="insights-grid">
+                        <div class="insight-placeholder">Analyzing current batch trends...</div>
+                    </div>
                 </div>
             </section>
 
@@ -465,40 +474,8 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>ABC Corporation</td>
-                                <td>Technology</td>
-                                <td>12-15</td>
-                                <td>5</td>
-                                <td>Active</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Remove</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>XYZ Finance Ltd</td>
-                                <td>Finance</td>
-                                <td>10-14</td>
-                                <td>3</td>
-                                <td>Active</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Remove</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Tech Solutions Inc</td>
-                                <td>Technology</td>
-                                <td>14-18</td>
-                                <td>8</td>
-                                <td>Active</td>
-                                <td class="admin-only">
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Remove</button>
-                                </td>
-                            </tr>
+                        <tbody id="companiesBriefTableBody">
+                            <tr><td colspan="6" style="text-align: center; padding: 20px; opacity: 0.5;">Fetching recruitment data...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -532,37 +509,8 @@
                                 <th class="admin-only">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Rajesh Kumar</td>
-                                <td>CSE</td>
-                                <td>ABC Corporation</td>
-                                <td>14</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Priya Singh</td>
-                                <td>ECE</td>
-                                <td>Tech Solutions Inc</td>
-                                <td>16</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Amit Patel</td>
-                                <td>Mechanical</td>
-                                <td>XYZ Finance Ltd</td>
-                                <td>12</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Delete</button>
-                                </td>
-                            </tr>
+                        <tbody id="fullStudentsTableBody">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; opacity: 0.5;">Syncing student records...</td></tr>
                         </tbody>
                     </table>
                 </div>

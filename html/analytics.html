@@ -75,6 +75,13 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </li>
+            <li class="semi-item" id="collegeSelectorTrigger" data-label="Select College">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
+                </svg>
+            </li>
             <li class="semi-item active" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="2" x2="12" y2="22"></line>
@@ -83,7 +90,16 @@
                 </svg>
             </li>
         </ul>
+
+        <!-- College Selector Hover Panel -->
+        <div class="college-selector-panel" id="collegeSelectorPanel">
+            <div class="panel-title">Select College</div>
+            <div class="college-option active" data-college="USAR">USAR</div>
+            <div class="college-option" data-college="USICT">USICT</div>
+        </div>
     </aside>
+
+    <div class="context-fade-overlay" id="contextOverlay"></div>
 
     <!-- NAVBAR -->
     <header class="navbar-wrapper">
@@ -116,6 +132,7 @@
                     <path d="M25 10 V75 M25 10 H50 C65 10 70 22 70 35 C70 48 65 60 50 60 H25" class="pp-logo-path"
                         stroke-width="12" stroke-linecap="round" stroke-linejoin="round" mask="url(#patch-mask)" />
                 </svg>
+                <span class="college-display" id="navCollegeDisplay" style="margin-left: 15px;">USAR</span>
             </div>
         </a>
         <div class="navbar-right-group">
@@ -174,7 +191,8 @@
                             </div>
                         </div>
                         <div class="guest-divider"></div>
-                        <p class="guest-support-text">Track your profile, placement data, and relevant updates in one place.</p>
+                        <p class="guest-support-text">Track your profile, placement data, and relevant updates in one
+                            place.</p>
                     </div>
 
                     <div class="dropdown-footer">
@@ -187,7 +205,8 @@
                         </div>
                         <button id="logoutBtn" class="logout-btn" style="display:none;">Logout Account</button>
                         <div id="guestActions" class="guest-actions">
-                            <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In Now</button>
+                            <button class="primary-btn sign-in-trigger" style="width: 100%; margin: 0;">Sign In
+                                Now</button>
                         </div>
                     </div>
                 </div>
@@ -242,7 +261,7 @@
     </header>
 
     <div class="container">
-        <main class="main-content">
+        <main class="main-content analytics-page-layout">
             <div
                 style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
                 <div>
@@ -252,8 +271,7 @@
                 <div class="filter-group"
                     style="display: flex; align-items: center; gap: 10px; background: rgba(20, 20, 20, 0.6); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
                     <span style="color: var(--text-theme-main); font-size: 14px; font-weight: 500;">Batch Year:</span>
-                    <select id="globalBatchYear"
-                        style="padding: 6px 12px; border: 1px solid rgba(16, 185, 129,0.3); border-radius: 8px; background: rgba(10,10,10,0.8); color: var(--primary); font-size: 14px; cursor: pointer; outline: none; min-width: 120px;">
+                    <select id="globalBatchYear">
                         <option value="">All Batches</option>
                         <option value="2025">2025 Batch</option>
                         <option value="2024">2024 Batch</option>
@@ -306,26 +324,24 @@
                     </div>
                 </div>
 
-                <div class="chart-card"
-                    style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
-                    <h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Locations</h3>
-                    <div style="height: 250px; position: relative;">
-                        <canvas id="locationChart"></canvas>
-                    </div>
-                </div>
             </div>
 
             <!-- Company Recruitment Chart -->
-            <h2 id="recruitmentChartTitle" style="color: var(--primary); margin-top: 50px; margin-bottom: 20px; font-weight: 700;">
+            <h2 id="recruitmentChartTitle"
+                style="color: var(--primary); margin-top: 50px; margin-bottom: 20px; font-weight: 700;">
                 Company-wise Recruitment</h2>
             <div class="chart-card"
                 style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); margin-bottom: 40px;">
-                <div class="chart-header-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                <div class="chart-header-row"
+                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
                     <div class="chart-title-group">
-                        <h3 style="color: var(--primary); font-weight: 700; margin: 0; font-size: 1.1rem; letter-spacing: 0.5px;">Recruitment Statistics</h3>
-                        <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.4);">Individual student placement counts</p>
+                        <h3
+                            style="color: var(--primary); font-weight: 700; margin: 0; font-size: 1.1rem; letter-spacing: 0.5px;">
+                            Recruitment Statistics</h3>
+                        <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.4);">Individual student
+                            placement counts</p>
                     </div>
-                    
+
                     <div class="chart-view-mode" id="chartViewMode">
                         <button class="chart-pill active" data-view="10">Top 10</button>
                         <button class="chart-pill" data-view="20">Top 20</button>
@@ -333,24 +349,30 @@
                     </div>
                 </div>
 
-                <div class="recruitment-scroll-wrapper" style="max-height: 500px; overflow-y: auto; overflow-x: hidden; position: relative; padding-right: 5px;">
-                    <div id="chartResizableContainer" style="height: 380px; position: relative; transition: height 0.4s ease;">
+                <div class="recruitment-scroll-wrapper"
+                    style="max-height: 500px; overflow-y: auto; overflow-x: hidden; position: relative; padding-right: 5px;">
+                    <div id="chartResizableContainer"
+                        style="height: 380px; position: relative; transition: height 0.4s ease;">
                         <canvas id="companyRecruitmentChart"></canvas>
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 25px; border-top: 1px solid rgba(16, 185, 129, 0.1); padding-top: 20px;">
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; margin-top: 25px; border-top: 1px solid rgba(16, 185, 129, 0.1); padding-top: 20px;">
                     <button class="glass-btn secondary" id="toggleRankingBtn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="margin-right: 8px;">
                             <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                         </svg>
                         View Full Ranking
                     </button>
-                    <p id="totalPlacedLabel" style="color: var(--primary); font-size: 14px; font-weight: 600; margin: 0;"></p>
+                    <p id="totalPlacedLabel"
+                        style="color: var(--primary); font-size: 14px; font-weight: 600; margin: 0;"></p>
                 </div>
 
                 <!-- Hidden Full Ranking Table -->
-                <div id="fullRankingPanel" style="display: none; margin-top: 25px; animation: slideDown 0.4s ease forwards;">
+                <div id="fullRankingPanel"
+                    style="display: none; margin-top: 25px; animation: slideDown 0.4s ease forwards;">
                     <div class="table-container mini-table">
                         <table style="font-size: 13px;">
                             <thead>
@@ -369,155 +391,188 @@
                         </table>
                     </div>
                 </div>
-            <!-- Branch-wise Stats Section -->
-            <div class="analytics-card" style="margin-top: 30px;">
-                <div class="card-header" style="margin-bottom: 25px;">
-                    <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
-                        Branch-wise Placement Statistics
-                    </h3>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
-                    <!-- Branch Chart -->
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="branchBreakdownChart"></canvas>
+                <!-- Branch-wise Stats Section -->
+                <div class="analytics-card" style="margin-top: 30px;">
+                    <div class="card-header" style="margin-bottom: 25px;">
+                        <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                                stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                            Branch-wise Placement Statistics
+                        </h3>
                     </div>
 
-                    <!-- Branch Table Info -->
-                    <div>
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+                        <!-- Branch Chart -->
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="branchBreakdownChart"></canvas>
+                        </div>
+
+                        <!-- Branch Table Info -->
+                        <div>
+                            <div class="table-container mini-table">
+                                <table style="font-size: 13px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Branch</th>
+                                            <th>Students</th>
+                                            <th>Percent</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="branchStatsBody">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p id="branchTotalLabel"
+                                style="margin-top: 15px; font-size: 13px; color: var(--text-muted); text-align: right;">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </section>
+
+                <!-- INTERNSHIP OFFERS SECTION (2025 ONLY) -->
+                <section id="internshipSection" style="margin-top: 60px; margin-bottom: 50px; display: none;">
+                    <h2 style="color: var(--primary); margin-bottom: 25px; font-weight: 700;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                            stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                            <circle cx="12" cy="8" r="7" />
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                        </svg>
+                        Internship Success Report (Class of 2025)
+                    </h2>
+
+                    <div class="chart-card"
+                        style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
+                        <div class="chart-header-row" style="margin-bottom: 25px;">
+                            <div class="chart-title-group">
+                                <h3
+                                    style="color: var(--primary); font-weight: 700; margin: 0; font-size: 1.1rem; letter-spacing: 0.5px;">
+                                    Table 5: Internship Offers Details</h3>
+                                <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.4);">Company, Role, and
+                                    Branch-wise Selection Map</p>
+                            </div>
+                        </div>
+
                         <div class="table-container mini-table">
-                            <table style="font-size: 13px;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                                 <thead>
                                     <tr>
-                                        <th>Branch</th>
-                                        <th>Students</th>
-                                        <th>Percent</th>
+                                        <th rowspan="2" style="width: 50px;">Sr.</th>
+                                        <th rowspan="2">Company</th>
+                                        <th rowspan="2">Stipend</th>
+                                        <th rowspan="2">Role Offered</th>
+                                        <th rowspan="2">Total</th>
+                                        <th colspan="4"
+                                            style="text-align: center; background: rgba(16, 185, 129, 0.05);">Branch
+                                            Wise Selections</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-size: 11px; padding: 8px;">AI-DS</th>
+                                        <th style="font-size: 11px; padding: 8px;">AI-ML</th>
+                                        <th style="font-size: 11px; padding: 8px;">IIOT</th>
+                                        <th style="font-size: 11px; padding: 8px;">A&R</th>
                                     </tr>
                                 </thead>
-                                <tbody id="branchStatsBody">
-                                    <!-- Dynamic -->
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: center; opacity: 0.6;">01</td>
+                                        <td><strong>Terafac Technologies Pvt. Ltd.</strong></td>
+                                        <td>₹ 30K / Mo</td>
+                                        <td>AIML & Vision Intern</td>
+                                        <td style="color: var(--primary); font-weight: 700;">1</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="text-align: center;"><span class="branch-pill"
+                                                style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span>
+                                        </td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; opacity: 0.6;">02</td>
+                                        <td><strong>Amar Ujala Ltd.</strong></td>
+                                        <td>₹ 25K / Mo</td>
+                                        <td>Product Management Intern</td>
+                                        <td style="color: var(--primary); font-weight: 700;">1</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="text-align: center;"><span class="branch-pill"
+                                                style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; opacity: 0.6;">03</td>
+                                        <td rowspan="2"><strong>Atlanta Systems Pvt. Ltd.</strong></td>
+                                        <td style="border-bottom: 1px solid rgba(16, 185, 129, 0.1);">₹ 20K / Mo</td>
+                                        <td style="border-bottom: 1px solid rgba(16, 185, 129, 0.1);">Embedded Testing
+                                            Engineer</td>
+                                        <td
+                                            style="color: var(--primary); font-weight: 700; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                            1</td>
+                                        <td
+                                            style="opacity: 0.3; text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                            —</td>
+                                        <td
+                                            style="opacity: 0.3; text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                            —</td>
+                                        <td
+                                            style="text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                            <span class="branch-pill"
+                                                style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span>
+                                        </td>
+                                        <td
+                                            style="opacity: 0.3; text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                            —</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; opacity: 0.6;">04</td>
+                                        <td>₹ 10K / Mo</td>
+                                        <td>AI-ML Intern</td>
+                                        <td style="color: var(--primary); font-weight: 700;">1</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="text-align: center;"><span class="branch-pill"
+                                                style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span>
+                                        </td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center; opacity: 0.6;">05</td>
+                                        <td><strong>The Economic Times (TOI Group)</strong></td>
+                                        <td>₹ 10K / Mo</td>
+                                        <td>Delegate Acquisition Intern</td>
+                                        <td style="color: var(--primary); font-weight: 700;">1</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                        <td style="text-align: center;"><span class="branch-pill"
+                                                style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span>
+                                        </td>
+                                        <td style="opacity: 0.3; text-align: center;">—</td>
+                                    </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr style="background: rgba(16, 185, 129, 0.1); font-weight: 700;">
+                                        <td colspan="4" style="text-align: right; padding-right: 20px;">Total Internship
+                                            Offers</td>
+                                        <td style="color: var(--primary); font-size: 1.1rem; text-align: center;">5</td>
+                                        <td style="text-align: center; opacity: 0.3;">0</td>
+                                        <td style="text-align: center; color: var(--primary);">2</td>
+                                        <td style="text-align: center; color: var(--primary);">2</td>
+                                        <td style="text-align: center; color: var(--primary);">1</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
-                        <p id="branchTotalLabel" style="margin-top: 15px; font-size: 13px; color: var(--text-muted); text-align: right;"></p>
                     </div>
-                </div>
-            </div>
-            </section>
-
-            <!-- INTERNSHIP OFFERS SECTION (2025 ONLY) -->
-            <section id="internshipSection" style="margin-top: 60px; margin-bottom: 50px; display: none;">
-                <h2 style="color: var(--primary); margin-bottom: 25px; font-weight: 700;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
-                        <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-                    </svg>
-                    Internship Success Report (Class of 2025)
-                </h2>
-                
-                <div class="chart-card" style="background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px);">
-                    <div class="chart-header-row" style="margin-bottom: 25px;">
-                        <div class="chart-title-group">
-                            <h3 style="color: var(--primary); font-weight: 700; margin: 0; font-size: 1.1rem; letter-spacing: 0.5px;">Table 5: Internship Offers Details</h3>
-                            <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.4);">Company, Role, and Branch-wise Selection Map</p>
-                        </div>
-                    </div>
-
-                    <div class="table-container mini-table">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" style="width: 50px;">Sr.</th>
-                                    <th rowspan="2">Company</th>
-                                    <th rowspan="2">Stipend</th>
-                                    <th rowspan="2">Role Offered</th>
-                                    <th rowspan="2">Total</th>
-                                    <th colspan="4" style="text-align: center; background: rgba(16, 185, 129, 0.05);">Branch Wise Selections</th>
-                                </tr>
-                                <tr>
-                                    <th style="font-size: 11px; padding: 8px;">AI-DS</th>
-                                    <th style="font-size: 11px; padding: 8px;">AI-ML</th>
-                                    <th style="font-size: 11px; padding: 8px;">IIOT</th>
-                                    <th style="font-size: 11px; padding: 8px;">A&R</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="text-align: center; opacity: 0.6;">01</td>
-                                    <td><strong>Terafac Technologies Pvt. Ltd.</strong></td>
-                                    <td>₹ 30K / Mo</td>
-                                    <td>AIML & Vision Intern</td>
-                                    <td style="color: var(--primary); font-weight: 700;">1</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="text-align: center;"><span class="branch-pill" style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span></td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center; opacity: 0.6;">02</td>
-                                    <td><strong>Amar Ujala Ltd.</strong></td>
-                                    <td>₹ 25K / Mo</td>
-                                    <td>Product Management Intern</td>
-                                    <td style="color: var(--primary); font-weight: 700;">1</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="text-align: center;"><span class="branch-pill" style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span></td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center; opacity: 0.6;">03</td>
-                                    <td rowspan="2"><strong>Atlanta Systems Pvt. Ltd.</strong></td>
-                                    <td style="border-bottom: 1px solid rgba(16, 185, 129, 0.1);">₹ 20K / Mo</td>
-                                    <td style="border-bottom: 1px solid rgba(16, 185, 129, 0.1);">Embedded Testing Engineer</td>
-                                    <td style="color: var(--primary); font-weight: 700; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">1</td>
-                                    <td style="opacity: 0.3; text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">—</td>
-                                    <td style="opacity: 0.3; text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">—</td>
-                                    <td style="text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);"><span class="branch-pill" style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span></td>
-                                    <td style="opacity: 0.3; text-align: center; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">—</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center; opacity: 0.6;">04</td>
-                                    <td>₹ 19K / Mo</td>
-                                    <td>AI-ML Intern</td>
-                                    <td style="color: var(--primary); font-weight: 700;">1</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="text-align: center;"><span class="branch-pill" style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span></td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center; opacity: 0.6;">05</td>
-                                    <td><strong>The Economic Times (TOI Group)</strong></td>
-                                    <td>₹ 10K / Mo</td>
-                                    <td>Delegate Acquisition Intern</td>
-                                    <td style="color: var(--primary); font-weight: 700;">1</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                    <td style="text-align: center;"><span class="branch-pill" style="background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--primary);">1</span></td>
-                                    <td style="opacity: 0.3; text-align: center;">—</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr style="background: rgba(16, 185, 129, 0.1); font-weight: 700;">
-                                    <td colspan="4" style="text-align: right; padding-right: 20px;">Total Internship Offers</td>
-                                    <td style="color: var(--primary); font-size: 1.1rem; text-align: center;">5</td>
-                                    <td style="text-align: center; opacity: 0.3;">0</td>
-                                    <td style="text-align: center; color: var(--primary);">2</td>
-                                    <td style="text-align: center; color: var(--primary);">2</td>
-                                    <td style="text-align: center; color: var(--primary);">1</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </section>
+                </section>
         </main>
     </div>
 
     <footer class="footer-note">
-        Every data and report is taken from official college website 
+        Every data and report is taken from official college website
         <a href="http://www.ipu.ac.in/usar/placement.php" target="_blank">www.ipu.ac.in/usar/placement.php</a>
     </footer>
 

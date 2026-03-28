@@ -13,7 +13,10 @@ require("dotenv").config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:5501", "http://localhost:5500", "http://localhost:5000"],
+    credentials: true
+}));
 app.use(express.json()); // Body parser for JSON
 
 /** 
@@ -42,6 +45,7 @@ const authRoutes = require("./routes/auth");
 const studentRoutes = require("./routes/studentRoutes");
 const companyRoutes = require("./routes/companyRoutes");
 const placementRoutes = require("./routes/placementRoutes");
+const pdfRoutes = require("./routes/pdfRoutes");
 const { protect, admin } = require("./middleware/authMiddleware");
 const { enforceCollege } = require("./middleware/collegeMiddleware");
 
@@ -50,6 +54,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/students", enforceCollege, studentRoutes);
 app.use("/api/companies", enforceCollege, companyRoutes);
 app.use("/api/placements", enforceCollege, placementRoutes);
+app.use("/api/ingest", enforceCollege, pdfRoutes);
 
 app.get("/api/profile", protect, (req, res) => {
     res.json(req.user);

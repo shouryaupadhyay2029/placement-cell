@@ -5,8 +5,8 @@
 
 // Smart API base URL detection
 const API_BASE_URL = (window.location.port !== '5000') 
-    ? "http://localhost:5000" 
-    : "";
+    ? "http://localhost:5000/api" 
+    : "/api";
 
 const api = {
     /**
@@ -15,20 +15,29 @@ const api = {
      * @param {object} options - Fetch options (method, headers, body)
      */
     async fetch(endpoint, options = {}) {
+        // 1. EXTRACT LOCAL STATE
         const token = localStorage.getItem("token");
+        const college = localStorage.getItem("college") || "USAR"; // Default to USAR if missing
 
-        // Set default headers
+        console.log(`[API-DEBUG] Fetching for: ${college} | Endpoint: ${endpoint}`);
+
+        // 2. SET HEADERS (X-College-Context + Auth)
         const headers = {
             "Content-Type": "application/json",
+            "X-College-Context": college,
+            "x-college": college, // Broad compatibility
             ...options.headers
         };
+        if (token) headers["Authorization"] = `Bearer ${token}`;
 
-        // 3. AUTH TOKEN HANDLING - Attach Bearer Token automatically
-        if (token) {
-            headers["Authorization"] = `Bearer ${token}`;
+        // 3. MULTI-COLLEGE CONTEXT - Automatically inject college to query string
+        let finalEndpoint = endpoint;
+        if (!finalEndpoint.includes("college=")) {
+            const separator = finalEndpoint.includes("?") ? "&" : "?";
+            finalEndpoint = `${finalEndpoint}${separator}college=${college}`;
         }
 
-        const url = `${API_BASE_URL}${endpoint}`;
+        const url = `${API_BASE_URL}${finalEndpoint}`;
 
         try {
             const response = await fetch(url, {
