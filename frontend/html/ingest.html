@@ -117,6 +117,14 @@
             border-radius: 10px;
         }
     </style>
+    <script>
+        // Security check: Only admins can access this page
+        const userData = localStorage.getItem('user');
+        const user = userData ? JSON.parse(userData) : null;
+        if (!user || user.role !== 'admin') {
+            window.location.href = 'web.html';
+        }
+    </script>
 </head>
 <body class="dark-theme">
     <div class="cursor-glow"></div>
@@ -124,7 +132,7 @@
     <div class="semi-sidebar visible">
         <ul class="semi-list">
             <li class="semi-item" data-nav="web.html"><i class="fas fa-th-large"></i></li>
-            <li class="semi-item active"><i class="fas fa-file-upload"></i></li>
+            <li class="semi-item active admin-only"><i class="fas fa-file-upload"></i></li>
         </ul>
     </div>
 
@@ -192,8 +200,12 @@
         <div class="loader-spinner"></div>
     </div>
 
+    <script src="../js/toast.js"></script>
     <script src="../js/api.js"></script>
     <script>
+        // Ensure legacy support for older calls if necessary
+        const showError = (msg) => showToast(msg, "error");
+        
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const previewContainer = document.getElementById('previewContainer');
@@ -219,7 +231,7 @@
             const batch = batchInput.value;
             const college = localStorage.getItem('college') || 'USAR';
             
-            if (!batch) return alert("Please specify the batch year first.");
+            if (!batch) return showToast("Please specify the batch year first.", "error");
 
             loader.classList.remove('hidden');
             const formData = new FormData();
@@ -246,16 +258,17 @@
 
                 if (result.success) {
                     renderPreview(result.data);
+                    showToast(`Successfully extracted ${result.data.length} records.`, "success");
                 } else {
                     // Show specific error from backend
                     const errorMsg = result.error || "Parsing failed. Is this a text-based PDF?";
-                    alert(`❌ PROCESING ERROR: ${errorMsg}`);
+                    showToast(`❌ PROCESING ERROR: ${errorMsg}`, "error");
                     renderPreview([]);
                 }
             } catch (err) {
                 loader.classList.add('hidden');
                 console.error("[DEBUG] Network/Fatal Error:", err);
-                alert("CRITICAL ERROR: Could not connect to the ingestion server. Please ensure the backend is active on port 5000.");
+                showToast("CRITICAL ERROR: Connection to server failed. Check your network.", "error");
                 renderPreview([]);
             }
         }
@@ -323,7 +336,7 @@
             for (let i = 0; i < currentData.length; i++) {
                 const row = currentData[i];
                 if (!row.company_name.trim()) {
-                    alert(`Row ${i+1}: Company name is required.`);
+                    showToast(`Row ${i+1}: Company name is required.`, "error");
                     return false;
                 }
                 if (!row.package || !row.package.toLowerCase().includes('lpa')) {
@@ -332,7 +345,7 @@
                     }
                 }
                 if (row.students_placed < 0) {
-                    alert(`Row ${i+1}: Offers cannot be negative.`);
+                    showToast(`Row ${i+1}: Offers cannot be negative.`, "error");
                     return false;
                 }
             }
@@ -340,7 +353,7 @@
         }
 
         document.getElementById('saveBtn').onclick = async () => {
-            if (currentData.length === 0) return alert("Please add at least one record before saving.");
+            if (currentData.length === 0) return showToast("Please add at least one record before saving.", "error");
             
             if (!validateData()) return;
 
@@ -351,14 +364,14 @@
                 loader.classList.add('hidden');
 
                 if (result.success) {
-                    alert(`✅ MISSION SUCCESS: ${result.message}`);
-                    window.location.href = 'web.html'; // Go back to dashboard to see results
+                    showToast(`✅ MISSION SUCCESS: ${result.message}`, "success");
+                    setTimeout(() => window.location.href = 'web.html', 1500); // Go back to dashboard to see results
                 } else {
-                    alert(`❌ FAILED: ${result.message}`);
+                    showToast(`❌ FAILED: ${result.error || result.message}`, "error");
                 }
             } catch (err) {
                 loader.classList.add('hidden');
-                alert("Critical server error while saving data.");
+                showToast("Critical server error while saving data.", "error");
             }
         };
 

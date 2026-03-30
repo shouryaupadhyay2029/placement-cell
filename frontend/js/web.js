@@ -5,12 +5,94 @@ if (!localStorage.getItem("college")) {
 }
 
 // Initialize when DOM is ready
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-        initSemiSidebar();
+document.addEventListener("DOMContentLoaded", initUI);
+
+function initUI() {
+    console.log("Initializing PlacePro UI Layout...");
+    initDynamicSidebar();
+    initAboutModal();
+    initMobileDrawer(); // New mobile logic
+}
+
+function initAboutModal() {
+    const aboutBtn = document.getElementById("aboutBtn");
+    if (!aboutBtn) return;
+    
+    aboutBtn.addEventListener("click", () => {
+        const glassPopup = document.getElementById("glassPopup");
+        const glassPopupTitle = document.getElementById("glassPopupTitle");
+        const glassPopupBody = document.getElementById("glassPopupBody");
+        
+        if (!glassPopup || !glassPopupTitle || !glassPopupBody) return;
+        
+        glassPopupTitle.textContent = "About PlacePro";
+        glassPopupBody.innerHTML = `
+            <div class="about-scroll-body" style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); max-width: 600px; padding-right: 12px; max-height: 68vh; overflow-y: auto;">
+                <p style="margin-bottom: 12px;"><strong>PlacePro</strong> is a modern placement intelligence platform built to transform how educational institutions manage and analyze placement data.</p>
+                <p style="margin-bottom: 25px;">In an ecosystem where placement information is often scattered, inconsistent, and difficult to interpret, PlacePro introduces a structured, scalable, and data-driven solution. It empowers institutions to move beyond static reports and adopt real-time analytics for smarter decision-making.</p>
+                
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;"></div>
+                
+                <h3 style="color: var(--primary); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">🚀 What We Do</h3>
+                <ul style="list-style-type: none; padding-left: 0; margin-bottom: 25px;">
+                    <li style="margin-bottom: 8px;"><strong>•</strong> Centralize placement data across batches and departments</li>
+                    <li style="margin-bottom: 8px;"><strong>•</strong> Provide real-time insights into company visits, offers, and salary trends</li>
+                    <li style="margin-bottom: 8px;"><strong>•</strong> Enable powerful filtering, search, and analytics</li>
+                    <li style="margin-bottom: 8px;"><strong>•</strong> Simplify administrative workflows with structured data management</li>
+                </ul>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;"></div>
+
+                <h3 style="color: var(--primary); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">💡 Why PlacePro</h3>
+                <p style="margin-bottom: 15px;">Traditional placement tracking methods are manual, fragmented, and inefficient. PlacePro replaces them with:</p>
+                <ul style="list-style-type: none; padding-left: 0; margin-bottom: 25px;">
+                    <li style="margin-bottom: 8px;"><strong>• Clarity</strong> — Clean, structured dashboards</li>
+                    <li style="margin-bottom: 8px;"><strong>• Speed</strong> — Instant access to insights</li>
+                    <li style="margin-bottom: 8px;"><strong>• Scalability</strong> — Built to grow with institutions</li>
+                    <li style="margin-bottom: 8px;"><strong>• Reliability</strong> — Consistent and validated data flow</li>
+                </ul>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;"></div>
+
+                <h3 style="color: var(--primary); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">🛠 Tech Stack</h3>
+                <p style="margin-bottom: 15px;">PlacePro is built using a modern full-stack architecture:</p>
+                <ul style="list-style-type: none; padding-left: 0; margin-bottom: 25px;">
+                    <li style="margin-bottom: 8px;"><strong>• Frontend:</strong> HTML, CSS, JavaScript (Vanilla + modular architecture)</li>
+                    <li style="margin-bottom: 8px;"><strong>• Backend:</strong> Node.js, Express.js</li>
+                    <li style="margin-bottom: 8px;"><strong>• Database:</strong> MongoDB (Atlas)</li>
+                    <li style="margin-bottom: 8px;"><strong>• Authentication:</strong> JWT-based secure auth</li>
+                    <li style="margin-bottom: 8px;"><strong>• PDF Processing:</strong> pdf-parse + OCR (Tesseract.js)</li>
+                    <li style="margin-bottom: 8px;"><strong>• Deployment Ready:</strong> Environment-based configuration with ".env"</li>
+                </ul>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;"></div>
+
+                <h3 style="color: var(--primary); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">👨‍💻 Developer</h3>
+                <p style="margin-bottom: 10px;">Developed and maintained by <strong>Shourya Upadhyay</strong></p>
+                <p style="margin-bottom: 25px; opacity: 0.8;">Focused on building scalable, real-world solutions with clean architecture, performance optimization, and production-grade reliability.</p>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;"></div>
+
+                <h3 style="color: var(--primary); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">🎯 Vision</h3>
+                <p style="margin-bottom: 25px;">To redefine placement data management by creating a platform that is not just functional, but intelligent — enabling institutions to make faster, smarter, and more informed decisions.</p>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;"></div>
+
+                <p style="font-style: italic; color: var(--primary); text-align: center; margin-top: 10px; font-weight: 500;">PlacePro — Turning placement data into actionable intelligence.</p>
+            </div>
+        `;
+        
+        glassPopup.style.display = 'flex';
+        setTimeout(() => glassPopup.classList.add("show"), 10);
+        
+        const closeBtn = document.getElementById("closeGlassPopup");
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                glassPopup.classList.remove("show");
+                setTimeout(() => glassPopup.style.display = 'none', 400);
+            };
+        }
     });
-} else {
-    initSemiSidebar();
 }
 
 window.addEventListener("load", () => {
@@ -19,17 +101,18 @@ window.addEventListener("load", () => {
         // Add a small delay for premium feel
         setTimeout(() => {
             loader.classList.add("hidden");
+            document.body.classList.add("page-ready");
         }, 800);
     }
 });
 
 // semicircle sidebar positioning
-function initSemiSidebar() {
-    const items = document.querySelectorAll('.semi-item');
+function initDynamicSidebar() {
+    const items = document.querySelectorAll('.dynamic-item');
     const sections = document.querySelectorAll('.section');
-    const semiSidebar = document.querySelector('.semi-sidebar');
+    const dynamicSidebar = document.getElementById('dynamicSidebar');
 
-    if (items.length === 0 || !semiSidebar) return;
+    if (items.length === 0 || !dynamicSidebar) return;
 
     // College Selector Logic
     const collegeTrigger = document.getElementById('collegeSelectorTrigger');
@@ -81,7 +164,7 @@ function initSemiSidebar() {
                 // Perform smooth transition
                 if (contextOverlay && mainContent) {
                     contextOverlay.innerHTML = `<div class="switching-indicator">Switching to ${selectedCollege}...</div>`;
-                    
+
                     contextOverlay.classList.add('visible');
                     mainContent.classList.add('context-switching');
 
@@ -102,7 +185,7 @@ function initSemiSidebar() {
 
                         // 2. RE-INITIALIZE UI CONTEXT
                         document.body.setAttribute('data-college-context', selectedCollege);
-                        
+
                         // Update Context Header
                         updateContextIndicator(selectedCollege, localStorage.getItem('selectedBatchYear'));
 
@@ -110,17 +193,17 @@ function initSemiSidebar() {
                             // 3. FETCH BATCHES for specific college (Injectively handled via api.js)
                             const bRes = await window.api.get(`/companies/batches`);
                             const batches = bRes.ok ? await bRes.json() : [];
-                            
+
                             // Dynamically update dropdowns and tabs
                             updateBatchUI(batches, selectedCollege);
 
-                             // 5. TRIGGER DATA REFRESH
-                             const finalYear = batches.length > 0 ? batches[0] : "all";
-                             localStorage.setItem("selectedBatchYear", finalYear);
-                             await triggerPageRefresh(finalYear);
+                            // 5. TRIGGER DATA REFRESH
+                            const finalYear = batches.length > 0 ? batches[0] : "all";
+                            localStorage.setItem("selectedBatchYear", finalYear);
+                            await triggerPageRefresh(finalYear);
 
-                        } catch (e) { 
-                            console.error("Batch synchronization error:", e); 
+                        } catch (e) {
+                            console.error("Batch synchronization error:", e);
                         }
 
                         setTimeout(() => {
@@ -141,16 +224,19 @@ function initSemiSidebar() {
         const storedCollege = localStorage.getItem('college') || 'USAR';
         if (navCollegeDisplay) updateContextIndicator(storedCollege, localStorage.getItem('selectedBatchYear'));
         document.body.setAttribute('data-college-context', storedCollege);
-        
+
         collegeOptions.forEach(o => {
             o.classList.toggle('active', o.getAttribute('data-college') === storedCollege);
         });
     }
 
-    // Click logic
+    // Click logic (for persistence and links)
     items.forEach((it) => {
         it.addEventListener('click', e => {
             if (it === collegeTrigger) {
+                if (window.innerWidth <= 768) {
+                    collegePanel.classList.toggle('show');
+                }
                 e.preventDefault();
                 return;
             }
@@ -160,9 +246,12 @@ function initSemiSidebar() {
             // 1. PHYSICAL PAGE NAVIGATION
             if (nav) {
                 document.body.classList.add('fade-out');
+                const globalLoader = document.getElementById('loader');
+                if (globalLoader) globalLoader.classList.remove('hidden');
+                
                 setTimeout(() => {
                     window.location.href = nav;
-                }, 300);
+                }, 500);
                 return;
             }
 
@@ -173,6 +262,11 @@ function initSemiSidebar() {
 
             const target = document.getElementById(id);
             if (target) target.classList.add('active');
+
+            // Close mobile drawer after selection
+            if (window.innerWidth <= 768) {
+                closeMobileDrawer();
+            }
         });
     });
 
@@ -186,68 +280,75 @@ function initSemiSidebar() {
         }
     });
 
-    // Proximity Reveal Logic
+    // Proximity Reveal Logic (Dynamic Island - DESKTOP ONLY)
     let hideTimeout;
-    const revealRadius = 180; // semicircular trigger distance in px
+    const expandSidebar = () => {
+        if (window.innerWidth > 768) {
+            clearTimeout(hideTimeout);
+            dynamicSidebar.classList.add('expanded');
+        }
+    };
 
-    let isThrottled = false;
-    document.addEventListener('mousemove', (e) => {
-        if (isThrottled) return;
-        isThrottled = true;
-        requestAnimationFrame(() => {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-
-            // Get sidebar rect center
-            const rect = semiSidebar.getBoundingClientRect();
-            const centerY = rect.top + rect.height / 2;
-            const distanceToCenterY = Math.abs(mouseY - centerY);
-
-            // Calculate semicircular physical distance from (0, centerY)
-            const distanceToCenter = Math.sqrt(mouseX * mouseX + distanceToCenterY * distanceToCenterY);
-
-            // Reveal if inside the semicircle radius or directly hovering the navigation items
-            if (distanceToCenter < revealRadius || semiSidebar.matches(':hover') || (collegePanel && collegePanel.matches(':hover'))) {
-                if (hideTimeout) {
-                    clearTimeout(hideTimeout);
-                    hideTimeout = null;
+    const collapseSidebar = () => {
+        if (window.innerWidth > 768) {
+            hideTimeout = setTimeout(() => {
+                if (collegePanel && collegePanel.classList.contains('show')) {
+                    collapseSidebar();
+                    return;
                 }
-                semiSidebar.classList.add('visible');
-                document.body.classList.add('sidebar-open');
-            } else {
-                // Delay disappearing safely without overlapping timer issues
-                if (!hideTimeout && semiSidebar.classList.contains('visible')) {
-                    hideTimeout = setTimeout(() => {
-                        if (collegePanel && collegePanel.classList.contains('show')) return;
-                        semiSidebar.classList.remove('visible');
-                        document.body.classList.remove('sidebar-open');
-                        hideTimeout = null;
-                    }, 500);
-                }
-            }
-            isThrottled = false;
-        });
-    });
+                dynamicSidebar.classList.remove('expanded');
+            }, 2000);
+        }
+    };
 
-    // Hover Persistence
-    semiSidebar.addEventListener('mouseenter', () => {
-        clearTimeout(hideTimeout);
-        hideTimeout = null;
-        semiSidebar.classList.add('visible');
-        document.body.classList.add('sidebar-open');
-    });
+    dynamicSidebar.addEventListener('mouseenter', expandSidebar);
+    dynamicSidebar.addEventListener('mouseleave', collapseSidebar);
+    
+    if (collegePanel) {
+        collegePanel.addEventListener('mouseenter', expandSidebar);
+        collegePanel.addEventListener('mouseleave', collapseSidebar);
+    }
+}
 
-    semiSidebar.addEventListener('mouseleave', () => {
-        hideTimeout = setTimeout(() => {
-            if (collegePanel && collegePanel.classList.contains('show')) return;
-            semiSidebar.classList.remove('visible');
-            document.body.classList.remove('sidebar-open');
-            hideTimeout = null;
-        }, 300);
-    });
+// NEW MOBILE DRAWER LOGIC
+function initMobileDrawer() {
+    const hamburger = document.getElementById('hamburgerToggle');
+    const dynamicSidebar = document.getElementById('dynamicSidebar');
+    
+    if (!hamburger || !dynamicSidebar) return;
 
-    // make first active
-    items[0]?.classList.add('active');
+    // Create overlay if not exists
+    let overlay = document.querySelector('.mobile-sidebar-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'mobile-sidebar-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    const toggleDrawer = () => {
+        const isOpen = hamburger.checked;
+        dynamicSidebar.classList.toggle('mobile-active', isOpen);
+        overlay.classList.toggle('active', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    };
+
+    hamburger.addEventListener('change', toggleDrawer);
+    overlay.addEventListener('click', () => {
+        hamburger.checked = false;
+        toggleDrawer();
+    });
+}
+
+function closeMobileDrawer() {
+    const hamburger = document.getElementById('hamburgerToggle');
+    if (hamburger && hamburger.checked) {
+        hamburger.checked = false;
+        const dynamicSidebar = document.getElementById('dynamicSidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+        if (dynamicSidebar) dynamicSidebar.classList.remove('mobile-active');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 // STUDENT PAGE FUNCTIONALITY
@@ -390,7 +491,7 @@ function runCounters() {
         const target = parseFloat(counter.getAttribute("data-target") || 0);
         const suffix = counter.getAttribute("data-suffix") || "";
         const current = parseFloat(counter.innerHTML.replace(suffix, "")) || 0;
-        
+
         if (target !== current) {
             animateValue(counter, 0, target, 800, suffix);
         }
@@ -402,7 +503,7 @@ function updateContextIndicator(college, year) {
     if (navCollegeDisplay) {
         navCollegeDisplay.innerHTML = `${college} <span style="opacity: 0.4; margin: 0 5px;">|</span> ${year || 'Overall'}`;
     }
-    
+
     // Update dashboard title area context if exists
     const dashSubText = document.getElementById('dashSubText');
     if (dashSubText && year) {
@@ -443,9 +544,9 @@ async function fetchDashboardStats(year = "2025") {
 
     try {
         const college = localStorage.getItem("college") || "USAR";
-        
+
         console.log(`[DATA-ISOLATION] Fetching Dashboard Stats | College: ${college} | Year: ${year}`);
-        
+
         // CENTRALIZED DATA FLOW: Always use the dynamic Analytics API (Single Source of Truth)
         const response = await window.api.get(`/companies/analytics?batch_year=${year}`);
         if (!response.ok) throw new Error("Fetch failed");
@@ -466,6 +567,10 @@ async function fetchDashboardStats(year = "2025") {
         const avgPackage = data.avg_package || 0;
         const highestPackage = data.highest_package || 0;
         const totalPlaced = data.total_placed || 0;
+        const ppoOffers = bs.ppo_offers || data.ppo_offers || 0;
+        const internshipOffers = bs.internship_offers || data.internship_offers || 0;
+        const medianPackage = bs.median_package || data.median_package || 0;
+        const branchFull = bs.branch_full || [];
         const activelyParticipated = bs.actively_participated || data.total_enrolled || 0;
         const totalStudents = bs.total_students || activelyParticipated;
 
@@ -510,12 +615,20 @@ async function fetchDashboardStats(year = "2025") {
 
         // Update subtexts & captions
         if (elSubText) {
-            elSubText.innerHTML = `${totalPlaced} Offers • ${companiesVisited}+ Companies Visited • ${data.placement_rate || 0}% Placement Rate`;
+            if (college === 'USAR' && year === '2025') {
+                elSubText.innerHTML = `${totalPlaced} Offers &bull; ${ppoOffers} PPO &bull; ${internshipOffers} Internship &bull; ${companiesVisited}+ Companies &bull; Median ${medianPackage} LPA`;
+            } else {
+                elSubText.innerHTML = `${totalPlaced} Offers &bull; ${companiesVisited}+ Companies Visited &bull; ${data.placement_rate || 0}% Placement Rate`;
+            }
         }
 
         if (elHighestCap) {
-            const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : college;
-            elHighestCap.textContent = `Offered by ${topComp}`;
+            if (college === 'USAR' && year === '2025') {
+                elHighestCap.textContent = 'Industrial Internet of Things';
+            } else {
+                const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : college;
+                elHighestCap.textContent = `Offered by ${topComp}`;
+            }
         }
 
         // Trigger counters to animate new values
@@ -528,7 +641,7 @@ async function fetchDashboardStats(year = "2025") {
         // --- DYNAMIC PLACEMENT INSIGHTS ---
         if (highlightsList) {
             let insights = [];
-            
+
             // 1. Highest Package Insight
             if (highestPackage > 0) {
                 const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : "Elite Recruitment";
@@ -544,7 +657,7 @@ async function fetchDashboardStats(year = "2025") {
                 // Find company with most students (from recruitment API data)
                 const recRes = await window.api.get(`/companies/recruitment?batch_year=${year}`);
                 const recData = recRes.ok ? await recRes.json() : { companies: [], students_placed: [] };
-                
+
                 let maxPlaced = 0;
                 let topRecruiter = "";
                 recData.companies.forEach((name, i) => {
@@ -564,10 +677,10 @@ async function fetchDashboardStats(year = "2025") {
 
                 // 3. Industry Dominance
                 const industries = companies.map(c => c.type || c.category || "Technology");
-                const mostCommon = industries.sort((a,b) =>
-                    industries.filter(v => v===a).length - industries.filter(v => v===b).length
+                const mostCommon = industries.sort((a, b) =>
+                    industries.filter(v => v === a).length - industries.filter(v => v === b).length
                 ).pop();
-                
+
                 if (mostCommon) {
                     insights.push({
                         icon: "📈",
@@ -588,7 +701,7 @@ async function fetchDashboardStats(year = "2025") {
             }
 
             // Render as cards if possible, otherwise list
-            highlightsList.innerHTML = insights.length > 0 
+            highlightsList.innerHTML = insights.length > 0
                 ? insights.map(ins => `
                     <div class="insight-card-mini">
                         <div class="insight-icon-box">${ins.icon}</div>
@@ -648,113 +761,129 @@ async function fetchDashboardStats(year = "2025") {
             };
         }
 
-        // cardHighest Click Handler (ENHANCED for Official Data)
+        // cardHighest Click Handler — rich branch table for USAR 2025
         const cardHighest = document.getElementById("card-highest") || document.getElementById("card-highest-students");
         if (cardHighest) {
             cardHighest.onclick = () => {
                 const overallHighest = bs.overall_highest_package || highestPackage;
-                let bodyHtml = `<div style="text-align:center; padding:10px 0 25px 0; border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom:20px;">
-                    <p style="opacity:0.6; font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Institutional Peak</p>
-                    <strong style="color:var(--primary); font-size:32px; letter-spacing:-1px;">₹${overallHighest} LPA</strong>
+                let bodyHtml = `<div style="text-align:center; padding:10px 0 20px 0; border-bottom:1px solid rgba(255,255,255,0.07); margin-bottom:18px;">
+                    <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Institutional Peak</p>
+                    <strong style="color:var(--primary); font-size:34px; letter-spacing:-1px;">₹${overallHighest} LPA</strong>
+                    <p style="opacity:0.5; font-size:12px; margin-top:4px;">On Campus CTC</p>
                 </div>`;
 
-                // Prioritize Official Branch Metrics (e.g. USICT 2022)
-                const officialHighest = bs.branch_highest || [];
-                const branchDetails = bs.branch_details || {};
-
-                if (officialHighest.length > 0) {
-                    bodyHtml += `<h4 style="color:var(--primary); margin:0 0 15px 0; font-size:15px; font-weight:600;">Departmental Performance (Official)</h4>`;
-                    bodyHtml += `<div style="display:flex; flex-direction:column; gap:12px;">`;
-                    officialHighest.forEach(r => {
-                        const pct = (r.value / overallHighest) * 100;
-                        bodyHtml += `
-                        <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:12px; border:1px solid rgba(212, 175, 55, 0.1);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                <span style="font-weight:600; font-size:14px; color:rgba(255,255,255,0.9);">${r.name}</span>
-                                <strong style="color:var(--primary); font-size:16px;">${r.value} LPA</strong>
-                            </div>
-                            <div style="background:rgba(255,255,255,0.05); border-radius:10px; height:8px; overflow:hidden; position:relative;">
-                                <div style="background:linear-gradient(90deg, var(--primary-dark), var(--primary)); height:100%; width:${pct}%; border-radius:10px; box-shadow: 0 0 10px var(--pro-glow-wide);"></div>
-                            </div>
-                        </div>`;
+                if (branchFull.length > 0) {
+                    bodyHtml += `<div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:rgba(212,175,55,0.12); color:var(--primary);">
+                                <th style="padding:10px 8px; text-align:left; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Branch</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Placed</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Rate</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Avg</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Highest</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                    branchFull.forEach((b, i) => {
+                        const bg = i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)';
+                        const isTop = b.highest_package === overallHighest;
+                        bodyHtml += `<tr style="background:${bg};">
+                            <td style="padding:10px 8px; color:${isTop ? 'var(--primary)' : 'rgba(255,255,255,0.85)'}; font-weight:${isTop ? '700' : '500'}; border-bottom:1px solid rgba(255,255,255,0.04);">${b.name}</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04);">${b.placed}</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.7);">${b.rate}%</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.7);">${b.avg_package} LPA</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:${isTop ? 'var(--primary)' : 'rgba(255,255,255,0.9)'}; font-weight:700;">${b.highest_package} LPA</td>
+                        </tr>`;
                     });
-                    bodyHtml += `</div>`;
-                } else if (Object.keys(branchDetails).length > 0) {
-                    // Fallback to calculated samples
-                    bodyHtml += `<h4 style="color:var(--primary); margin:0 0 15px 0;">Branch-wise Analysis (Calculated)</h4>`;
-                    bodyHtml += `<div style="display:flex; flex-direction:column; gap:8px;">`;
-                    for (const [branch, info] of Object.entries(branchDetails)) {
-                        const pct = (info.highest_package / overallHighest) * 100;
-                        bodyHtml += `
-                        <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:10px; border-left:4px solid var(--primary);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                                <span style="font-weight:600;">${branch}</span>
-                                <strong style="color:var(--primary);">${info.highest_package} LPA</strong>
-                            </div>
-                            <div style="background:rgba(255,255,255,0.08); border-radius:4px; height:6px; overflow:hidden;">
-                                <div style="background:var(--primary); height:100%; width:${pct}%; border-radius:4px;"></div>
-                            </div>
-                        </div>`;
+                    // Totals row
+                    bodyHtml += `<tr style="background:rgba(212,175,55,0.08); font-weight:700;">
+                        <td style="padding:10px 8px; color:var(--primary);">Total / Avg</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${totalPlaced}</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${data.placement_rate}%</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${avgPackage} LPA</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${overallHighest} LPA</td>
+                    </tr></tbody></table></div>`;
+                } else {
+                    // Fallback bar chart
+                    const officialHighest = bs.branch_highest || [];
+                    if (officialHighest.length > 0) {
+                        bodyHtml += `<div style="display:flex; flex-direction:column; gap:12px;">`;
+                        officialHighest.forEach(r => {
+                            const pct = (r.value / overallHighest) * 100;
+                            bodyHtml += `<div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid rgba(212,175,55,0.1);">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="font-weight:600;">${r.name}</span><strong style="color:var(--primary);">${r.value} LPA</strong></div>
+                                <div style="background:rgba(255,255,255,0.05); border-radius:10px; height:7px;"><div style="background:linear-gradient(90deg,var(--primary-dark),var(--primary)); height:100%; width:${pct}%; border-radius:10px;"></div></div>
+                            </div>`;
+                        });
+                        bodyHtml += `</div>`;
                     }
-                    bodyHtml += `</div>`;
                 }
-                showPopup("Highest Package Distribution", bodyHtml);
+                showPopup("Highest Package — Branch Breakdown", bodyHtml);
             };
         }
 
-        // cardAverage Click Handler (ENHANCED for Official Data)
+        // cardAverage Click Handler — rich branch table for USAR 2025
         const cardAverage = document.getElementById("card-average");
         if (cardAverage) {
             cardAverage.onclick = () => {
                 const overallAvg = bs.overall_avg_package || avgPackage;
-                let bodyHtml = `<div style="text-align:center; padding:10px 0 25px 0; border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom:20px;">
-                    <p style="opacity:0.6; font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Institutional Average</p>
-                    <strong style="color:var(--primary); font-size:32px; letter-spacing:-1px;">₹${overallAvg} LPA</strong>
-                </div>`;
+                let bodyHtml = `<div style="text-align:center; padding:10px 0 20px 0; border-bottom:1px solid rgba(255,255,255,0.07); margin-bottom:18px;">
+                    <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Institutional Average CTC</p>
+                    <strong style="color:var(--primary); font-size:34px; letter-spacing:-1px;">₹${overallAvg} LPA</strong>`;
+                if (medianPackage > 0) bodyHtml += `<p style="opacity:0.55; font-size:13px; margin-top:5px;">Median: <strong style="color:var(--primary);">${medianPackage} LPA</strong></p>`;
+                bodyHtml += `</div>`;
 
-                // Prioritize Official Branch Averages (e.g. USICT 2022)
-                const officialAverage = bs.branch_average || [];
-                const branchDetails = bs.branch_details || {};
-
-                if (officialAverage.length > 0) {
-                    bodyHtml += `<h4 style="color:var(--primary); margin:0 0 15px 0; font-size:15px; font-weight:600;">Departmental Average (Official)</h4>`;
-                    bodyHtml += `<div style="display:flex; flex-direction:column; gap:12px;">`;
-                    
-                    const maxAvg = Math.max(...officialAverage.map(r => r.value));
-                    officialAverage.forEach(r => {
-                        const pct = (r.value / maxAvg) * 100;
-                        bodyHtml += `
-                        <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:12px; border:1px solid rgba(212, 175, 55, 0.1);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                <span style="font-weight:600; font-size:14px; color:rgba(255,255,255,0.9);">${r.name}</span>
-                                <strong style="color:var(--primary); font-size:16px;">${r.value} LPA</strong>
-                            </div>
-                            <div style="background:rgba(255,255,100,0.05); border-radius:10px; height:8px; overflow:hidden; position:relative;">
-                                <div style="background:linear-gradient(90deg, #B8860B, var(--primary)); height:100%; width:${pct}%; border-radius:10px; box-shadow: 0 0 10px var(--pro-glow-wide);"></div>
-                            </div>
-                        </div>`;
+                if (branchFull.length > 0) {
+                    bodyHtml += `<div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:rgba(212,175,55,0.12); color:var(--primary);">
+                                <th style="padding:10px 8px; text-align:left; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Branch</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Total</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Part.</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Placed</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Avg</th>
+                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Median</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                    branchFull.forEach((b, i) => {
+                        const bg = i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)';
+                        bodyHtml += `<tr style="background:${bg};">
+                            <td style="padding:10px 8px; color:rgba(255,255,255,0.85); font-weight:500; border-bottom:1px solid rgba(255,255,255,0.04);">${b.name}</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); opacity:0.6;">${b.total}</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); opacity:0.6;">${b.participated}</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.9); font-weight:600;">${b.placed}</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--primary); font-weight:700;">${b.avg_package} LPA</td>
+                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.7);">${b.median_package} LPA</td>
+                        </tr>`;
                     });
-                    bodyHtml += `</div>`;
-                } else if (Object.keys(branchDetails).length > 0) {
-                    bodyHtml += `<h4 style="color:var(--primary); margin:20px 0 10px 0;">Branch-wise Insights (Calculated)</h4>`;
-                    bodyHtml += `<div style="display:flex; flex-direction:column; gap:8px;">`;
-                    const maxAvg = Math.max(...Object.values(branchDetails).map(b => b.avg_package || 0));
-                    for (const [branch, info] of Object.entries(branchDetails)) {
-                        const pct = maxAvg > 0 ? (info.avg_package / maxAvg) * 100 : 0;
-                        bodyHtml += `
-                        <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:10px; border-left:4px solid var(--primary);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                                <span style="font-weight:600;">${branch}</span>
-                                <strong style="color:var(--primary);">${info.avg_package} LPA</strong>
-                            </div>
-                            <div style="background:rgba(255,255,255,0.08); border-radius:4px; height:6px; overflow:hidden;">
-                                <div style="background:var(--primary); height:100%; width:${pct}%; border-radius:4px;"></div>
-                            </div>
-                        </div>`;
+                    bodyHtml += `<tr style="background:rgba(212,175,55,0.08); font-weight:700;">
+                        <td style="padding:10px 8px; color:var(--primary);">Total</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">501</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">251</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${totalPlaced}</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${overallAvg} LPA</td>
+                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${medianPackage} LPA</td>
+                    </tr></tbody></table></div>`;
+                } else {
+                    // Fallback bar chart
+                    const officialAverage = bs.branch_average || [];
+                    if (officialAverage.length > 0) {
+                        const maxAvg = Math.max(...officialAverage.map(r => r.value));
+                        bodyHtml += `<div style="display:flex; flex-direction:column; gap:12px;">`;
+                        officialAverage.forEach(r => {
+                            const pct = (r.value / maxAvg) * 100;
+                            bodyHtml += `<div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid rgba(212,175,55,0.1);">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="font-weight:600;">${r.name}</span><strong style="color:var(--primary);">${r.value} LPA</strong></div>
+                                <div style="background:rgba(255,255,100,0.05); border-radius:10px; height:7px;"><div style="background:linear-gradient(90deg,#B8860B,var(--primary)); height:100%; width:${pct}%; border-radius:10px;"></div></div>
+                            </div>`;
+                        });
+                        bodyHtml += `</div>`;
                     }
-                    bodyHtml += `</div>`;
                 }
-                showPopup("Average Package Analysis", bodyHtml);
+                showPopup("Average Package — Branch Breakdown", bodyHtml);
             };
         }
 
@@ -1236,7 +1365,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* HERO CAROUSEL LOGIC - ENHANCED AUTOPLAY */
 document.addEventListener('DOMContentLoaded', () => { initHeroCarousel(); });
-// 🌟 DYNAMIC HERO CAROUSEL ENGINE (DATA-DRIVEN)
+// ≡ƒîƒ DYNAMIC HERO CAROUSEL ENGINE (DATA-DRIVEN)
 let carouselAutoTimer;
 
 function updateHeroCarousel(data, yearLabel) {
@@ -1448,13 +1577,6 @@ function initHeroCarousel() {
     startBehavior();
 }
 
-function triggerPageRefresh(year) {
-    if (typeof fetchDashboardStats === 'function') fetchDashboardStats(year);
-    if (typeof fetchRecruitmentData === 'function') fetchRecruitmentData(year);
-    if (typeof fetchAllStudents === 'function') fetchAllStudents(year);
-    if (typeof loadAnalytics === 'function') loadAnalytics(year);
-    if (typeof fetchCompanies === 'function') fetchCompanies();
-}
 
 // Call on load
 document.addEventListener("DOMContentLoaded", async () => {
@@ -1462,16 +1584,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         const bRes = await window.api.get(`/companies/batches`); // College handled by api.js
         const batches = bRes.ok ? await bRes.json() : [];
-        
+
         const batchSelector = document.getElementById("batchSwitchDropdown");
         const globalFilter = document.getElementById('globalBatchYear') || document.getElementById('batchFilter');
 
         // Setup Dropdown (NEW - Dropdown Style)
         if (batchSelector) {
-            batchSelector.innerHTML = batches.length > 0 
-                ? batches.map(y => `<option value="${y}">${y} Batch</option>`).join('') 
+            batchSelector.innerHTML = batches.length > 0
+                ? batches.map(y => `<option value="${y}">${y} Batch</option>`).join('')
                 : `<option value="">No Batches Found</option>`;
-            
+
             batchSelector.addEventListener("change", (e) => {
                 const y = e.target.value;
                 localStorage.setItem("selectedBatchYear", y);
@@ -1481,7 +1603,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Setup Dropdowns
         if (globalFilter) {
-            globalFilter.innerHTML = batches.length > 0 
+            globalFilter.innerHTML = batches.length > 0
                 ? batches.map(y => `<option value="${y}">${y} Batch</option>`).join('')
                 : `<option value="">No Data</option>`;
         }
@@ -1567,7 +1689,17 @@ function initCustomDropdowns() {
                 const wasActive = optionsList.classList.contains('active');
                 // Close all other instances
                 document.querySelectorAll('.custom-dropdown-options').forEach(o => o.classList.remove('active'));
-                if (!wasActive) optionsList.classList.add('active');
+                
+                if (!wasActive) {
+                    optionsList.classList.add('active');
+                    // Scroll selected pill into center for alarm effect
+                    setTimeout(() => {
+                        const selectedPill = optionsList.querySelector('.dropdown-pill-option.selected');
+                        if (selectedPill) {
+                            selectedPill.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 50); // delay allows CSS display block to take over
+                }
             };
         } else {
             optionsList = container.querySelector('.custom-dropdown-options');
@@ -1578,20 +1710,20 @@ function initCustomDropdowns() {
         const syncOptions = () => {
             optionsList.innerHTML = '';
             selectedText.textContent = sel.options[sel.selectedIndex]?.text || 'SELECT';
-            
+
             Array.from(sel.options).forEach(opt => {
                 const pill = document.createElement('div');
                 pill.className = 'dropdown-pill-option';
                 if (opt.selected) pill.classList.add('selected');
                 pill.textContent = opt.text;
-                
+
                 pill.onclick = (e) => {
                     e.stopPropagation();
                     sel.value = opt.value;
                     sel.dispatchEvent(new Event('change'));
                     selectedText.textContent = opt.text;
                     optionsList.classList.remove('active');
-                    
+
                     // Visual feedback
                     optionsList.querySelectorAll('.dropdown-pill-option').forEach(p => p.classList.remove('selected'));
                     pill.classList.add('selected');
@@ -1618,10 +1750,10 @@ document.addEventListener('click', (e) => {
 function updateBatchUI(batches, college) {
     const batchTabs = document.getElementById("batchSwitchTabs");
     if (batchTabs) {
-        batchTabs.innerHTML = batches.length > 0 
+        batchTabs.innerHTML = batches.length > 0
             ? batches.map((y, index) => `<button class="batch-tab ${index === 0 ? 'active' : ''}" data-year="${y}">${y} Batch</button>`).join('')
             : `<div style="padding:10px; opacity:0.5;">No Batches Found for ${college}</div>`;
-        
+
         if (batches.length > 0) {
             batchTabs.querySelectorAll(".batch-tab").forEach(tab => {
                 tab.addEventListener("click", () => {
@@ -1637,15 +1769,15 @@ function updateBatchUI(batches, college) {
 
     const globalFilter = document.getElementById('globalBatchYear') || document.getElementById('batchFilter') || document.getElementById('batchSwitchDropdown');
     if (globalFilter) {
-        globalFilter.innerHTML = batches.length > 0 
+        globalFilter.innerHTML = batches.length > 0
             ? batches.map(y => `<option value="${y}">${y} Batch</option>`).join('')
             : `<option value="">No Data</option>`;
-        
+
         if (batches.length > 0) {
             globalFilter.value = localStorage.getItem("selectedBatchYear") || batches[0];
             localStorage.setItem("selectedBatchYear", globalFilter.value);
         }
-        
+
         // Trigger select event to sync custom dropdowns
         globalFilter.dispatchEvent(new Event('change'));
     }
@@ -1653,21 +1785,32 @@ function updateBatchUI(batches, college) {
 
 async function triggerPageRefresh(year) {
     const mainContent = document.querySelector('.main-content');
+    const loader = document.getElementById('loader');
+    
     if (mainContent) mainContent.classList.add('context-switching');
+    if (loader) loader.classList.remove('hidden');
 
     try {
-        await Promise.all([
-            fetchDashboardStats(year),
-            fetchRecruitmentData(year)
-        ]);
+        const promises = [];
+        if (typeof fetchDashboardStats === 'function') promises.push(fetchDashboardStats(year));
+        if (typeof fetchRecruitmentData === 'function') promises.push(fetchRecruitmentData(year));
+        if (typeof fetchAllStudents === 'function') promises.push(fetchAllStudents(year));
+        if (typeof loadAnalytics === 'function') promises.push(loadAnalytics(year));
+        if (typeof fetchCompanies === 'function') promises.push(fetchCompanies());
+        
+        await Promise.allSettled(promises);
+        
+        if (typeof updateContextIndicator === 'function') {
+            const currentCollege = document.body.getAttribute('data-college-context') || localStorage.getItem('college') || 'USAR';
+            updateContextIndicator(currentCollege, year);
+        }
     } catch (e) {
         console.error("Refresh failed:", e);
     } finally {
-        if (mainContent) {
-            setTimeout(() => {
-                mainContent.classList.remove('context-switching');
-            }, 300);
-        }
+        setTimeout(() => {
+            if (mainContent) mainContent.classList.remove('context-switching');
+            if (loader) loader.classList.add('hidden');
+        }, 500); // smooth professional delay for transitions
     }
 }
 
@@ -1675,17 +1818,17 @@ async function triggerPageRefresh(year) {
 document.addEventListener("DOMContentLoaded", async () => {
     const savedCollege = localStorage.getItem("college") || "USAR";
     const savedYear = localStorage.getItem("selectedBatchYear");
-    
+
     // Set initial context before fetching
     if (typeof updateContextIndicator === 'function') {
         updateContextIndicator(savedCollege, savedYear);
     }
-    
+
     // Fetch batches first to know what's available
     try {
         const bRes = await window.api.get(`/companies/batches`);
         const batches = bRes.ok ? await bRes.json() : [];
-        
+
         if (batches.length > 0) {
             const year = savedYear || batches[0];
             localStorage.setItem("selectedBatchYear", year);

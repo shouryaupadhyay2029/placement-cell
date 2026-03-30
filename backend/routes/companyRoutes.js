@@ -35,8 +35,8 @@ router.get("/analytics", async (req, res) => {
         const totalCompanies = companies.length;
 
         // Fetch Official Summary once at the start if batch_year is provided
-        const officialSummary = (batch_year && batch_year !== "all") 
-            ? await BatchSummary.findOne({ college, batch_year }) 
+        const officialSummary = (batch_year && batch_year !== "all")
+            ? await BatchSummary.findOne({ college, batch_year })
             : null;
 
         // Sum of students_placed across all companies in the query
@@ -143,12 +143,14 @@ router.get("/analytics", async (req, res) => {
 
         res.json({
             total_companies: finalTotalCompanies,
-            active_companies: companies.filter(c => c.status === "Active").length,
+            active_companies: 0,
             avg_package: parseFloat(finalAvg),
             highest_package: finalHighest,
             total_placed: finalPlaced,
             placement_rate: finalRate,
             internship_offers: officialSummary?.internship_offers || 0,
+            ppo_offers: officialSummary?.ppo_offers || 0,
+            median_package: officialSummary?.median_package || 0,
             batch_distribution: batchDistribution,
             type_distribution: finalTypeDistribution,
             location_distribution: locationDistribution,
@@ -158,9 +160,14 @@ router.get("/analytics", async (req, res) => {
                 companies_visited: finalTotalCompanies,
                 branch_details: branchDetails,
                 overall_highest_package: finalHighest,
+                overall_avg_package: parseFloat(finalAvg),
                 internship_offers: officialSummary?.internship_offers || 0,
+                ppo_offers: officialSummary?.ppo_offers || 0,
+                median_package: officialSummary?.median_package || 0,
                 branch_highest: officialSummary?.branch_highest || [],
                 branch_average: officialSummary?.branch_average || [],
+                branch_median:  officialSummary?.branch_median  || [],
+                branch_full:    officialSummary?.branch_full    || [],
                 total_students: officialSummary?.total_students || 0,
                 actively_participated: officialSummary?.actively_participated || 0,
                 companies_offered: officialSummary?.companies_offered || 0
@@ -206,16 +213,25 @@ router.get("/branch-stats", async (req, res) => {
         const query = { college };
         if (batch_year && batch_year !== "all") query.year = parseInt(batch_year);
 
-        const students = await Student.find(query);
-        const branchCounts = {};
-        students.forEach(s => {
-            branchCounts[s.branch] = (branchCounts[s.branch] || 0) + 1;
-        });
-
-        // Check for official overrides (like USICT 2022)
-        let officialRates = null;
+        // SPECIAL CASE: USAR 2025 — use official branch_full data
         if (batch_year && batch_year !== "all") {
             const summary = await BatchSummary.findOne({ college, batch_year });
+
+            if (summary && summary.branch_full && summary.branch_full.length > 0) {
+                // Return placed students per branch from official data
+                const labels = summary.branch_full.map(b => b.name);
+                const counts = summary.branch_full.map(b => b.placed);
+                const total = counts.reduce((s, v) => s + v, 0);
+                return res.json({
+                    labels,
+                    counts,
+                    total,
+                    official_rates: null,
+                    is_branch_full: true
+                });
+            }
+
+            // Fallback: check for branch_rates (USICT style)
             if (summary && summary.branch_rates && summary.branch_rates.length > 0) {
                 return res.json({
                     official_rates: summary.branch_rates || [],
@@ -224,11 +240,17 @@ router.get("/branch-stats", async (req, res) => {
             }
         }
 
+        const students = await Student.find(query);
+        const branchCounts = {};
+        students.forEach(s => {
+            branchCounts[s.branch] = (branchCounts[s.branch] || 0) + 1;
+        });
+
         res.json({
             labels: Object.keys(branchCounts),
             counts: Object.values(branchCounts),
             total: students.length,
-            official_rates: officialRates
+            official_rates: null
         });
     } catch (error) {
         console.error("Branch stats error:", error);
@@ -270,6 +292,7 @@ router.post("/", protect, admin, async (req, res) => {
 router.put("/:id", protect, admin, async (req, res) => {
     try {
         const college = req.college;
+        delete req.body.college; // FORCE ISOLATION: Prevent frontend from overwriting college
         const company = await Company.findOneAndUpdate({ _id: req.params.id, college }, req.body, { new: true });
         if (!company) return res.status(404).json({ message: "Company not found" });
         res.json(company);

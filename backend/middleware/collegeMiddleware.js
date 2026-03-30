@@ -12,17 +12,17 @@ const enforceCollege = (req, res, next) => {
                  || req.query?.college 
                  || req.body?.college;
 
-    // 3. Strict Validation
-    if (!college || !["USAR", "USICT"].includes(college.toString().toUpperCase())) {
-        console.warn(`[SECURITY] Context Rejected: ${req.originalUrl} | Detected: ${college}`);
-        return res.status(400).json({
-            success: false,
-            error: "Action Blocked: Valid College Context (USAR/USICT) is required."
-        });
+    // 3. SAFE DEFAULT (Step 2)
+    // If college context is missing or invalid, default to "USAR" to prevent breaking the flow
+    let finalCollege = "USAR";
+    if (college && ["USAR", "USICT"].includes(college.toString().toUpperCase())) {
+        finalCollege = college.toString().toUpperCase();
+    } else if (college) {
+        console.warn(`[CONTEXT] Invalid college "${college}" detected. Defaulting to USAR.`);
     }
 
     // 4. Normalize and inject into request
-    req.college = college.toString().toUpperCase();
+    req.college = finalCollege;
     next();
 };
 

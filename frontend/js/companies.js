@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchInput");
-    const ctcFilter = document.getElementById("ctcFilter");
+    const minPackage = document.getElementById("minPackage");
+    const minPackageVal = document.getElementById("minPackageVal");
+    const sortFilter = document.getElementById("sortFilter");
     const batchFilter = document.getElementById("batchFilter");
     const tableBody = document.getElementById("companiesTableBody");
 
@@ -82,6 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchCompanies() {
         if (!tableBody) return;
 
+        const loader = document.getElementById("loader");
+        if (loader) loader.classList.remove("hidden");
+
         tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">Loading companies...</td></tr>`;
 
         // Fetch applied companies (Mocked for now in Node)
@@ -120,11 +125,18 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await window.api.get(url);
             if (!response.ok) throw new Error("Failed to fetch companies");
-            allCompanies = await response.json();
+            const result = await response.json();
+            
+            // Handle both legacy array and new standardized object format
+            allCompanies = result.data || result;
+            if (!Array.isArray(allCompanies)) allCompanies = [];
+            
             filterAndSearch();
         } catch (error) {
             console.error("Fetch error:", error);
             tableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #ff4d4d; padding: 20px;">Error loading companies. Please ensure backend is running at http://localhost:5000</td></tr>`;
+            const loader = document.getElementById("loader");
+            if (loader) loader.classList.add("hidden");
         }
     }
 
@@ -191,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setTimeout(() => {
             if (tableBody) tableBody.classList.remove("fade-in");
+            if (loader) loader.classList.add("hidden");
         }, 300);
     }
 
@@ -278,22 +291,46 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function filterAndSearch() {
-        const searchValue = searchInput ? searchInput.value.toLowerCase() : "";
-        const filterValue = ctcFilter ? ctcFilter.value : "all";
+        if (!allCompanies) return;
 
-        const filtered = allCompanies.filter(company => {
+        const searchValue = searchInput ? searchInput.value.toLowerCase() : "";
+        const minPkgValue = minPackage ? parseFloat(minPackage.value) : 0;
+        const sortBy = sortFilter ? sortFilter.value : "default";
+
+        // 1. FILTERING
+        let filtered = allCompanies.filter(company => {
             const name = (company.company_name || "").toLowerCase();
             const role = (company.role || "").toLowerCase();
             const matchesSearch = name.includes(searchValue) || role.includes(searchValue);
 
-            const ctc = parseFloat(company.package);
-            let matchesFilter = true;
-            if (filterValue === "high") matchesFilter = ctc > 15;
-            else if (filterValue === "mid") matchesFilter = ctc >= 5 && ctc <= 15;
-            else if (filterValue === "low") matchesFilter = ctc < 5;
+            // Extract numeric package (handling "12 LPA" -> 12)
+            const pkgStr = company.package ? company.package.toString() : "0";
+            const pkgValue = parseFloat(pkgStr.replace(/[^\d.]/g, '')) || 0;
+            const matchesPackage = pkgValue >= minPkgValue;
 
-            return matchesSearch && matchesFilter;
+            return matchesSearch && matchesPackage;
         });
+
+        // 2. SORTING
+        if (sortBy === "high-pkg") {
+            filtered.sort((a, b) => {
+                const valA = parseFloat(a.package.toString().replace(/[^\d.]/g, '')) || 0;
+                const valB = parseFloat(b.package.toString().replace(/[^\d.]/g, '')) || 0;
+                return valB - valA;
+            });
+        } else if (sortBy === "low-pkg") {
+            filtered.sort((a, b) => {
+                const valA = parseFloat(a.package.toString().replace(/[^\d.]/g, '')) || 0;
+                const valB = parseFloat(b.package.toString().replace(/[^\d.]/g, '')) || 0;
+                return valA - valB;
+            });
+        } else if (sortBy === "most-offers") {
+            filtered.sort((a, b) => {
+                const valA = parseInt(a.students_placed) || 0;
+                const valB = parseInt(b.students_placed) || 0;
+                return valB - valA;
+            });
+        }
 
         renderCompanies(filtered);
     }
@@ -408,47 +445,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Toast Notification System
-    function showToast(message, type = "info") {
-        const container = document.getElementById("toastContainer");
-        if (!container) return;
-
-        const toast = document.createElement("div");
-        toast.className = `toast toast-${type}`;
-        toast.style.cssText = `
-            padding: 12px 20px;
-            border-radius: 8px;
-            background: #111;
-            color: #fff;
-            border-left: 5px solid ${type === "success" ? "#22c55e" : type === "error" ? "#ef4444" : "#10b981"};
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            font-size: 14px;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateX(20px);
-            transition: all 0.3s ease;
-            min-width: 250px;
-        `;
-        toast.textContent = message;
-
-        container.appendChild(toast);
-
-        // Appear
-        requestAnimationFrame(() => {
-            toast.style.opacity = "1";
-            toast.style.transform = "translateX(0)";
+    if (searchInput) searchInput.addEventListener("input", filterAndSearch);
+    if (minPackage) {
+        minPackage.addEventListener("input", () => {
+            if (minPackageVal) minPackageVal.textContent = minPackage.value;
+            filterAndSearch();
         });
-
-        // Disappear after 4s
-        setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform = "translateX(20px)";
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
     }
-
-    if (searchInput) searchInput.addEventListener("keyup", filterAndSearch);
-    if (ctcFilter) ctcFilter.addEventListener("change", filterAndSearch);
+    if (sortFilter) sortFilter.addEventListener("change", filterAndSearch);
     if (batchFilter) batchFilter.addEventListener("change", fetchCompanies);
 
     fetchCompanies();

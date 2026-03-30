@@ -7,12 +7,13 @@ const router = express.Router();
 // @route   GET /api/placements
 router.get("/", async (req, res) => {
     try {
-        const { year } = req.query;
-        const college = req.college;
-        console.log("Placement Data Request - College:", college, "Year:", year || "Overall");
-        let query = { college };
+        const college = req.college || "USAR";
+        const yearValue = req.query.batch_year || req.query.year || "2024";
         
-        if (year) query.year = parseInt(year);
+        let query = { college };
+        if (yearValue && yearValue !== "all") {
+            query.year = parseInt(yearValue);
+        }
 
         const stats = await PlacementStats.find(query).sort({ year: -1 });
         
@@ -38,7 +39,11 @@ router.get("/", async (req, res) => {
         res.json({ data: [], summary: { total_offers: 0, total_companies: 0, highest_package: 0, avg_package: 0 } });
     } catch (error) {
         console.error("Fetch placements error:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to fetch placement analytics", 
+            error: error.message 
+        });
     }
 });
 

@@ -13,6 +13,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../css/web.css">
     <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/mobile.css">
 </head>
 
 <body>
@@ -26,7 +27,7 @@
                 <div class="face"></div>
                 <div class="face"></div>
             </div>
-            <div class="loader-text">Loading</div>
+            <div class="loader-text">Placing</div>
         </div>
     </div>
     <div class="particles"></div>
@@ -48,11 +49,13 @@
         </div>
     </div>
 
-    <!-- SEMICIRCULAR SIDEBAR -->
-    <aside class="semi-sidebar">
-        <div class="semi-base"></div>
-        <ul class="semi-icons">
-            <li class="semi-item" data-section="dashboard" data-label="Dashboard" data-nav="web.html">
+        <!-- DYNAMIC ISLAND SIDEBAR -->
+        <!-- DYNAMIC ISLAND SIDEBAR -->
+        <!-- DYNAMIC ISLAND SIDEBAR -->
+    <aside class="dynamic-island-sidebar" id="dynamicSidebar">
+        <div class="dynamic-island-text" id="dynamicIslandText">EXPLORE</div>
+        <ul class="dynamic-icons">
+            <li class="dynamic-item" data-section="dashboard" data-label="Dashboard" data-nav="web.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -60,14 +63,21 @@
                     <rect x="3" y="14" width="7" height="7"></rect>
                 </svg>
             </li>
-            <li class="semi-item" data-section="companies" data-label="Companies" data-nav="companies.html">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z">
-                    </path>
+            <li class="dynamic-item" data-section="companies" data-label="Companies" data-nav="companies.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="1"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    <line x1="6" y1="11" x2="8" y2="11"/><line x1="6" y1="15" x2="8" y2="15"/>
+                    <line x1="16" y1="11" x2="18" y2="11"/><line x1="16" y1="15" x2="18" y2="15"/>
                 </svg>
             </li>
-            <li class="semi-item" data-section="students" data-label="Students" data-nav="students.html">
+            <li class="dynamic-item" id="collegeSelectorTrigger" data-label="Select College">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
+                </svg>
+            </li>
+            <li class="dynamic-item" data-section="students" data-label="Students" data-nav="students.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -75,18 +85,12 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </li>
-            <li class="semi-item" id="collegeSelectorTrigger" data-label="Select College">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                    <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
-                </svg>
-            </li>
-            <li class="semi-item active" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="2" x2="12" y2="22"></line>
-                    <path d="M17 5c0 2.21-1.79 4-4 4s-4-1.79-4-4"></path>
-                    <path d="M17 19c0-2.21-1.79-4-4-4s-4 1.79-4 4"></path>
+            <li class="dynamic-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                    <line x1="2" y1="20" x2="22" y2="20"/>
                 </svg>
             </li>
         </ul>
@@ -227,6 +231,18 @@
                     <button id="loginBtn" class="neon-btn neon-btn--login">Login</button>
                     <button id="signupBtn" class="neon-btn neon-btn--signup">Sign Up</button>
 
+                    <!-- Mobile User Info (Populated by auth.js) -->
+                    <div id="mobileUserInfo" style="display:none; padding: 15px; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 10px; background: rgba(212,175,55,0.03); border-radius: 12px;">
+                        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                            <div id="mobileAvatar" class="profile-avatar" style="width:40px; height:40px; font-size:14px; background: var(--navbar-bg); border: 1.5px solid var(--primary); display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--primary);">?</div>
+                            <div style="min-width:0;">
+                                <div id="mobileName" style="color:var(--primary); font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">User</div>
+                                <div id="mobileEmail" style="color:rgba(255,255,255,0.5); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">email@example.com</div>
+                            </div>
+                        </div>
+                        <button id="mobileLogoutBtn" class="logout-btn" style="width:100%; padding:10px; font-size:13px; border-radius:8px; background: rgba(255,50,50,0.1); border: 1px solid rgba(255,50,50,0.2); color: #ff5555;">Logout</button>
+                    </div>
+
                     <div
                         style="display: flex; gap: 15px; align-items: center; justify-content: space-between; margin: 10px 0; padding: 0 10px;">
                         <div class="theme-switch-container" style="margin: 0; flex-shrink: 0;">
@@ -235,7 +251,7 @@
                                 <span class="slider-switch"></span>
                             </label>
                         </div>
-                        <button class="neon-btn"
+                        <button id="aboutBtn" class="neon-btn"
                             style="flex: 1; margin: 0; min-height: 40px; font-size: 14px; display: flex; align-items: center; justify-content: center;">About</button>
                     </div>
 
@@ -578,6 +594,7 @@
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="../js/toast.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>

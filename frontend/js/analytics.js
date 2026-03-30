@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     Chart.defaults.color = textColor;
     Chart.defaults.font.family = "'Poppins', sans-serif";
 
+    // Unregister datalabels globally — only apply per-chart via plugins:[]
+    if (window.ChartDataLabels) {
+        Chart.unregister(ChartDataLabels);
+    }
+
     function animateValue(obj, start, end, duration) {
         if (!obj) return;
         let startTimestamp = null;
@@ -28,6 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let recruitmentChart = null;
 
     async function loadAnalytics(year = '') {
+        const loader = document.getElementById("loader");
+        if (loader) loader.classList.remove("hidden");
+
         try {
             // 1. Fetch Main Stats from Consolidated API
             const response = await window.api.get(`/companies/analytics${year ? '?batch_year=' + year : ''}`);
@@ -117,36 +125,79 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!ctx) return;
         if (typeChart) typeChart.destroy();
 
-        let keys = Object.keys(typeDist);
-        let values = keys.map(k => typeDist[k]);
+        // Handle both array [{name,value}] and plain object {key: val} formats
+        let keys, values;
+        if (Array.isArray(typeDist)) {
+            keys   = typeDist.map(d => d.name);
+            values = typeDist.map(d => d.value);
+        } else {
+            keys   = Object.keys(typeDist);
+            values = keys.map(k => typeDist[k]);
+        }
         if (keys.length === 0) { keys = ['No Data']; values = [1]; }
 
+        // Compute percentages for labels
+        const total = values.reduce((s, v) => s + v, 0);
+
         typeChart = new Chart(ctx.getContext('2d'), {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: keys,
                 datasets: [{
                     data: values,
                     backgroundColor: [
-                        '#10b981', // Emerald
-                        '#059669', // Dark Emerald
-                        '#D4AF37', // Gold
-                        '#B8860B', // Dark Gold
-                        '#064e3b', // Deep Forest
-                        '#4ade80', // Light Green
-                        '#fcd34d', // Amber
-                        '#1f2937'  // Grey/Surface
+                        '#1565C0', // Software & IT — deep blue
+                        '#4CAF50', // Sales & Consulting — green
+                        '#FFA726', // Data Science/AIML — amber
+                        '#26C6DA', // Cloud & DevOps — teal
+                        '#EF5350', // Electronics & IoT — red
+                        '#AB47BC', // Mechatronics — purple
+                        '#78909C', // Technical Consultant — slate
+                        '#66BB6A', // Product Management — light green
                     ],
                     borderWidth: 2,
-                    borderColor: '#111'
+                    borderColor: '#111',
+                    hoverOffset: 14
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '65%',
                 plugins: {
-                    legend: { position: 'right', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' } }
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#D4AF37',          // Golden theme
+                            padding: 16,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: { size: 12, weight: '600' },
+                            generateLabels: (chart) => {
+                                const ds = chart.data.datasets[0];
+                                return chart.data.labels.map((label, i) => {
+                                    const val = ds.data[i];
+                                    const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                    return {
+                                        text: `${label} ${pct}%`,
+                                        fillStyle: ds.backgroundColor[i],
+                                        strokeStyle: ds.backgroundColor[i],
+                                        lineWidth: 0,
+                                        fontColor: '#D4AF37',
+                                        index: i
+                                    };
+                                });
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const val = ctx.raw;
+                                const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                return ` ${ctx.label}: ${pct}%`;
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -558,52 +609,73 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (existing) existing.destroy();
 
             const ctx = canvas.getContext('2d');
+
+            // Short labels for branch chart (matching reference image)
+            const shortLabels = labels.map(l => {
+                if (l.includes('Data Science'))       return 'AI & DS';
+                if (l.includes('Machine Learning'))   return 'AI & ML';
+                if (l.includes('Internet of Things')) return 'IIOT';
+                if (l.includes('Automation'))          return 'A & R';
+                return l;
+            });
+
+            // Compute total for percentage labels
+            const totalPlaced = counts.reduce((s, v) => s + v, 0);
+
             new Chart(ctx, {
-                type: 'doughnut',
+                type: 'pie',
+                plugins: [ChartDataLabels],
                 data: {
-                    labels: labels,
+                    labels: shortLabels,
                     datasets: [{
                         data: counts,
+                        // Order: AI & ML (hot pink), AI & DS (dark purple), IIOT (light purple), A & R (light pink)
+                        // The branch_full order from DB: AI&DS, AI&ML, IIOT, A&R
+                        // Remap colors to match image 2: DS=dark purple, ML=hot pink, IIOT=lt purple, AR=lt pink
                         backgroundColor: [
-                            'rgba(16, 185, 129, 0.95)',
-                            'rgba(16, 185, 129, 0.75)',
-                            'rgba(16, 185, 129, 0.55)',
-                            'rgba(16, 185, 129, 0.35)'
+                            '#7B1FA2', // AI & DS — dark purple
+                            '#E91E8C', // AI & ML — hot pink
+                            '#9C59B6', // IIOT — medium purple
+                            '#F06292', // A & R — light pink
                         ],
-                        hoverBackgroundColor: 'var(--primary)',
-                        borderWidth: 0,
-                        hoverOffset: 12,
-                        borderRadius: 4,
-                        spacing: 2
+                        borderWidth: 2,
+                        borderColor: '#111',
+                        hoverOffset: 14
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#94a3b8',
-                                padding: 25,
-                                font: { size: 12, weight: '500' },
-                                usePointStyle: true,
-                                pointStyle: 'circle'
-                            }
-                        },
+                        legend: { display: false },   // Labels shown in-slice via datalabels
                         tooltip: {
                             padding: 12,
                             backgroundColor: 'rgba(0,0,0,0.95)',
-                            borderColor: 'rgba(16,185,129,0.2)',
+                            borderColor: 'rgba(255,255,255,0.1)',
                             borderWidth: 1,
-                            displayColors: false,
+                            displayColors: true,
                             callbacks: {
                                 label: (ctx) => {
                                     const val = ctx.raw;
-                                    const per = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                                    return ` ${val} Candidates (${per}%)`;
+                                    const pct = totalPlaced > 0 ? Math.round((val / totalPlaced) * 100) : 0;
+                                    return ` ${ctx.label}: ${val} Placed (${pct}%)`;
                                 }
+                            }
+                        },
+                        datalabels: {
+                            color: '#ffffff',
+                            font: { size: 14, weight: 'bold' },
+                            textAlign: 'center',
+                            formatter: (value, ctx) => {
+                                const label = ctx.chart.data.labels[ctx.dataIndex];
+                                const pct = totalPlaced > 0 ? Math.round((value / totalPlaced) * 100) : 0;
+                                return `${label}\n${pct}%`;
+                            },
+                            // Only show label if slice is big enough
+                            display: (ctx) => {
+                                const value = ctx.dataset.data[ctx.dataIndex];
+                                const pct = totalPlaced > 0 ? (value / totalPlaced) * 100 : 0;
+                                return pct >= 8;
                             }
                         }
                     }
@@ -685,13 +757,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const activeYear = year !== null ? year : (globalFilter?.value || "");
 
+        const loader = document.getElementById("loader");
+        if (loader) loader.classList.remove("hidden");
+
         try {
-            // 1. Fetch Main Stats from Consolidated API
+            // ... API call and population ...
             const response = await window.api.get(`/companies/analytics${activeYear ? '?batch_year=' + activeYear : ''}`);
             if (!response.ok) throw new Error('Failed to fetch analytics');
             const data = await response.json();
 
-            // 2. Populate Cards
+            // Populate Cards
             const placementElem = document.getElementById('placementRate');
             const activeElem = document.getElementById('activeCompanies');
             const highestElem = document.getElementById('highestPackage');
@@ -702,16 +777,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             animateValue(highestElem, 0, data.highest_package || 0, 1000);
             animateValue(avgElem, 0, data.avg_package || 0, 1000);
 
-            // 3. Render Charts
+            // Render Charts
             renderBatchChart(data.batch_distribution || {});
             renderTypeChart(data.type_distribution || {});
             populateTopCompanies(data.top_companies || []);
 
-            // 4. Detail Data Refresh
+            // Detail Data Refresh
             await loadRecruitmentChart(activeYear);
             await loadBranchStats(activeYear);
 
-            // 5. Internship Section Visibility (Only for 2025)
+            // Internship Section Visibility
             const internSection = document.getElementById('internshipSection');
             if (internSection) {
                 internSection.style.display = (activeYear === '2025') ? 'block' : 'none';
@@ -719,6 +794,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (err) {
             console.error('Error loading analytics:', err);
+        } finally {
+            if (loader) {
+                setTimeout(() => {
+                    loader.classList.add("hidden");
+                }, 500);
+            }
         }
     }
 

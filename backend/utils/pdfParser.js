@@ -1,11 +1,4 @@
 const pdfParse = require('pdf-parse');
-
-console.log("TYPE OF pdfParse:", typeof pdfParse);
-
-if (typeof pdfParse !== "function") {
-  throw new Error("pdfParse import failed: Not a function");
-}
-
 const fs = require('fs');
 const path = require('path');
 const Tesseract = require('tesseract.js');
@@ -15,28 +8,20 @@ const { fromPath } = require('pdf2pic');
  * Robust Text Extraction with OCR Fallback
  */
 async function extractRawText(buffer) {
+    if (!buffer) throw new Error("No PDF buffer provided");
+
     try {
-        console.log("Buffer size:", buffer?.length);
-
-        if (!buffer) {
-            throw new Error("No PDF buffer");
-        }
-
         // Try standard extraction first
         const data = await pdfParse(buffer);
         const extractedText = data?.text?.trim();
 
         if (extractedText && extractedText.length > 50) {
-            console.log("[PDF-INGEST] Standard extraction successful");
             return extractedText;
         }
-
-        throw new Error("Standard extraction too sparse - OCR Fallback triggered");
+        throw new Error("Standard extraction too sparse");
 
     } catch (err) {
-        console.warn("[PDF-INGEST] Switching to OCR mode...");
-        
-        // Persistence for OCR processing (pdf2pic requires a path)
+        // Persistence for OCR processing
         const tmpPath = path.join(__dirname, `ocr_${Date.now()}.pdf`);
         fs.writeFileSync(tmpPath, buffer);
 
@@ -45,24 +30,21 @@ async function extractRawText(buffer) {
                 density: 150,
                 format: "png",
                 savePath: __dirname,
-                saveFilename: "ocr_page"
+                saveFilename: `ocr_temp_${Date.now()}`
             };
 
             const convert = fromPath(tmpPath, options);
             const page = await convert(1);
             
-            console.log("[OCR] Recognizing text from first page...");
             const result = await Tesseract.recognize(page.path, 'eng');
             
             // CLEANUP
             if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
             if (fs.existsSync(page.path)) fs.unlinkSync(page.path);
 
-            console.log("[OCR] Successful extraction");
             return result.data.text;
 
         } catch (ocrErr) {
-            console.error("[OCR-ERROR] Fatal:", ocrErr.message);
             if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
             throw new Error(`OCR Processing Failed: ${ocrErr.message}`);
         }
@@ -73,55 +55,60 @@ async function extractRawText(buffer) {
  * Extracts structured data from raw PDF text buffer
  */
 async function parsePlacementPDF(buffer, college, year) {
-    console.log("[PDF-PARSER] Starting process for", college, year);
-    
-    // Step 1: Stable Extraction
+    // Step 1: Extract Raw Text
     const rawText = await extractRawText(buffer);
+    if (!rawText) throw new Error("Could not extract any text from the PDF.");
 
-    // Step 2: Structured Parsing (Multi-line Grouping)
-    const lines = rawText.split('\n')
-        .map(l => l.trim())
-        .filter(l => {
-            // Filter out empty lines and headers
-            const noise = ["PACKAGE", "LPA", "Job Offers", "S.No", "S. NO.", "PLACEMENT", "BATCH"];
-            return l.length > 0 && !noise.some(n => l.toUpperCase().includes(n));
-        });
+    const cleanedLines = rawText
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 3);
 
-    console.log(`[PDF-PARSER] Filtered down to ${lines.length} potential data lines.`);
+    // Filter Logic
+    function isValidLine(line) {
+        return /\d/.test(line) && /lpa/i.test(line);
+    }
+
     const results = [];
+    cleanedLines.forEach(line => {
+        if (!isValidLine(line)) return;
 
-    // Grouping Algorithm: Look for [Name] [Package] [Offers] pattern in sliding window
-    for (let i = 0; i < lines.length - 2; i++) {
-        const name = lines[i];
-        const pkgStr = lines[i + 1].replace(/[^\d.]/g, ''); // Extract numeric part
-        const offersStr = lines[i + 2].replace(/[^\d+]/g, ''); // Extract numeric and '+' 
+        // Pattern: [Company] [Value] LPA [Offers?]
+        const match = line.match(/([A-Za-z &.]+)\s+(\d+(\.\d+)?)\s*LPA\s*(\d+)?/i);
 
-        const pkgVal = parseFloat(pkgStr);
-        const offersVal = parseInt(offersStr.replace('+', ''));
-
-        // Validation: Middle line MUST be a valid numeric package
-        if (!isNaN(pkgVal) && pkgVal > 0) {
+        if (match) {
             results.push({
-                company_name: name,
-                package: pkgVal + " LPA",
-                students_placed: isNaN(offersVal) ? 1 : offersVal,
+                company_name: match[1].trim(),
+                package: match[2] + " LPA",
+                students_placed: match[4] ? parseInt(match[4]) : 1,
                 batch_year: year,
                 college: college,
-                role: "Software Engineering / Associate", // Default fallback
+                role: "Software Engineering / Associate",
                 company_type: "Technology"
             });
-
-            i += 2; // Success: Consume this group of 3 and move forward
         }
+    });
+
+    const blacklist = ["university", "school", "report", "analysis", "overall", "total", "summary"];
+    const filteredResults = results.filter(r => {
+        return !blacklist.some(word => r.company_name.toLowerCase().includes(word));
+    });
+
+    // FALLBACK FOR BAD OCR
+    if (filteredResults.length < 3) {
+        return cleanedLines.slice(0, 10).map(line => ({
+            company_name: "RAW: " + line,
+            package: "0 LPA",
+            students_placed: 0,
+            batch_year: year,
+            college: college,
+            role: "N/A",
+            company_type: "N/A",
+            isFallback: true
+        }));
     }
 
-    console.log("Total extracted rows:", results.length);
-
-    if (results.length === 0) {
-        throw new Error("Could not parse placement data - unsupported vertical format or missing numeric records.");
-    }
-
-    return results;
+    return filteredResults;
 }
 
 module.exports = { parsePlacementPDF };

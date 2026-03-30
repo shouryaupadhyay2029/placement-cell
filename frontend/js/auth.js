@@ -79,74 +79,46 @@ function startGoogleInitPolling() {
             initGoogleAuth();
         } else if (attempts >= maxAttempts) {
             clearInterval(poll);
-            console.error("Google SDK load timeout");
         }
     }, 100);
 }
 
 function initGoogleAuth() {
-    console.log("Initializing Google UI for Origin:", window.location.origin);
-    
     // Safety check: Google GIS does not work with file:// protocol
     if (window.location.protocol === 'file:') {
-        const errorMsg = "CRITICAL: Google Auth requires a web server (http). Open via http://localhost:5000/html/web.html";
         showToast("Error: Please open the app via the server URL, not the file system.", "error");
         return;
     }
 
     try {
-        // Redundant initialize removed as it's handled by <div id="g_id_onload"> in web.html
-        // But we still need to hook the custom button
         const customBtn = document.getElementById("googleLoginBtn");
         if (customBtn) {
             customBtn.onclick = (e) => {
                 e.preventDefault();
-                console.log("Google Button Clicked. Current Client ID:", GOOGLE_CLIENT_ID);
                 
-                // Show a mini-loader or change button text
                 const originalText = customBtn.innerHTML;
                 customBtn.innerHTML = "<span>Connecting...</span>";
                 customBtn.disabled = true;
 
-                // Trigger the native Google account picker
                 google.accounts.id.prompt((notification) => {
-                    console.log("--- Google Prompt Status Update ---");
-                    console.log("Moment Type:", notification.getMomentType());
-                    
                     if (notification.isNotDisplayed()) {
                         const reason = notification.getNotDisplayedReason();
-                        console.warn("Prompt suppressed. Reason:", reason);
-                        
-                        // Handle suppression reasons
                         if (reason === 'skipped_by_user') {
-                            showToast("You closed the Google prompt. Click again to reopen.", "info");
+                            showToast("Login prompt closed. Click to retry.", "info");
                         } else if (reason === 'opt_out_or_no_session') {
-                            showToast("Please ensure you are signed in to Google in this browser.", "warning");
-                        } else if (reason === 'suppressed_by_user') {
-                            showToast("Google Login is suppressed. Try refreshing the page.", "error");
-                        } else {
-                            showToast("Google login could not be displayed: " + reason, "error");
+                            showToast("Please ensure you are signed in to Google.", "warning");
                         }
                         
-                        // Reset button
                         customBtn.innerHTML = originalText;
                         customBtn.disabled = false;
                     } 
                     
-                    if (notification.isSkippedMoment()) {
-                        console.warn("Prompt skipped. Reason:", notification.getSkippedReason());
-                        customBtn.innerHTML = originalText;
-                        customBtn.disabled = false;
-                    }
-
-                    if (notification.isDismissedMoment()) {
-                        console.log("Prompt dismissed by user.");
+                    if (notification.isSkippedMoment() || notification.isDismissedMoment()) {
                         customBtn.innerHTML = originalText;
                         customBtn.disabled = false;
                     }
                 });
 
-                // Fail-safe to reset button after 5 seconds if no response
                 setTimeout(() => {
                     if (customBtn.disabled) {
                         customBtn.innerHTML = originalText;
@@ -156,19 +128,14 @@ function initGoogleAuth() {
             };
         }
     } catch (err) {
-        console.error("Google SDK Initialization Error:", err);
-        showToast("Google Auth error. Please try again later.", "error");
+        showToast("Google Auth initialization error.", "error");
     }
 }
 
-/**
- * --- 4. GOOGLE CALLBACK ---
- */
 async function handleGoogleLogin(response) {
     if (!response.credential) return;
 
     try {
-        console.log("Sending Google credential to backend...");
         const res = await window.api.post("/auth/google-login", {
             credential: response.credential
         });
@@ -180,31 +147,22 @@ async function handleGoogleLogin(response) {
             showToast("Google Login Failed: " + (data.message || "Unauthorized"), "error");
         }
     } catch (error) {
-        console.error("Fetch error:", error);
         showToast("Google connection error.", "error");
     }
 }
 
 window.handleGoogleLogin = handleGoogleLogin;
 
-/**
- * Shared Success Handler
- */
 function processLoginSuccess(data) {
     const user = data.user || data;
 
-    if (!data.token) {
-        console.error("Auth Success but NO TOKEN received.");
-        return;
-    }
+    if (!data.token) return;
 
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify({
         email: user.email,
         name: user.name,
         role: user.role,
-        branch: user.branch || "",
-        year: user.year || "",
         picture: user.picture || ""
     }));
 
@@ -212,7 +170,6 @@ function processLoginSuccess(data) {
     if (authModal) authModal.classList.remove("show");
 
     showToast("Login Successful! Welcome, " + (user.name || "User"), "success");
-
     initAuthAndProfile();
 }
 
@@ -233,10 +190,14 @@ async function initAuthAndProfile() {
 
     try {
         const response = await window.api.get("/auth/profile");
-        const user = await response.json();
-        if (response.ok) updateUIForUser(user);
-        else if (response.status === 401) handleLogout("Session expired. Please log in again.");
-        else updateUIForGuest();
+        const data = await response.json();
+        if (response.ok && data.success) {
+            updateUIForUser(data.user);
+        } else if (response.status === 401) {
+            handleLogout("Session expired. Please log in again.");
+        } else {
+            updateUIForGuest();
+        }
     } catch (error) {
         updateUIForGuest();
     }
@@ -264,20 +225,52 @@ function updateUIForUser(user) {
     if (branchEl) branchEl.textContent = user.branch || "-";
     if (yearEl) yearEl.textContent = user.year || "-";
 
-    if (avatarEl && user.picture) {
-        avatarEl.innerHTML = `<img src="${user.picture}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+    const adminElements = document.querySelectorAll(".admin-only");
+    const isAdmin = (user.role === "admin" || user.isAdmin);
+
+    if (avatarEl) {
+        if (user.picture) {
+            avatarEl.innerHTML = `<img src="${user.picture}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">${isAdmin ? '<span id="adminStar" class="admin-star">★</span>' : ''}`;
+        } else {
+            avatarEl.innerText = (user.name || "U")[0].toUpperCase();
+            if (isAdmin) {
+                const star = document.createElement('span');
+                star.className = "admin-star";
+                star.innerText = "★";
+                avatarEl.appendChild(star);
+            }
+        }
     }
 
-    const adminBadge = document.getElementById("adminBadge");
-    const adminElements = document.querySelectorAll(".admin-only");
-
-    if (user.role === "admin") {
-        if (adminBadge) adminBadge.style.display = "inline-block";
-        adminElements.forEach(el => el.style.display = "table-cell");
-        adminElements.forEach(el => { if (el.tagName !== "TH" && el.tagName !== "TD") el.style.display = "block"; });
+    // --- RE-SYNC ADMIN ELEMENTS ---
+    if (isAdmin) {
+        adminElements.forEach(el => el.style.display = "flex");
     } else {
-        if (adminBadge) adminBadge.style.display = "none";
         adminElements.forEach(el => el.style.display = "none");
+    }
+
+    // --- MOBILE UI SYNC (HAMBURGER DRAWER) ---
+    const mobileUserInfo = document.getElementById("mobileUserInfo");
+    const mobileName = document.getElementById("mobileName");
+    const mobileEmail = document.getElementById("mobileEmail");
+    const mobileAvatar = document.getElementById("mobileAvatar");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+
+    if (mobileUserInfo) {
+        mobileUserInfo.style.display = "block";
+        if (mobileName) mobileName.textContent = user.name || "User";
+        if (mobileEmail) mobileEmail.textContent = user.email || "-";
+        if (loginBtn) loginBtn.style.display = "none";
+        if (signupBtn) signupBtn.style.display = "none";
+        
+        if (mobileAvatar) {
+            if (user.picture) {
+                mobileAvatar.innerHTML = `<img src="${user.picture}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                mobileAvatar.innerText = (user.name || "U")[0].toUpperCase();
+            }
+        }
     }
 }
 
@@ -292,23 +285,23 @@ function updateUIForGuest() {
     if (guestActions) guestActions.style.display = "block";
     if (logoutBtn) logoutBtn.style.display = "none";
     document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");
+
+    const mobileUserInfo = document.getElementById("mobileUserInfo");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+    if (mobileUserInfo) mobileUserInfo.style.display = "none";
+    if (loginBtn) loginBtn.style.display = "block";
+    if (signupBtn) signupBtn.style.display = "block";
 }
 
 function handleLogout(message = null) {
     if (message) showToast(message, "info");
-    else showToast("You have been logged out successfully.", "success");
+    else showToast("Logged out successfully.", "success");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("role");
-    localStorage.removeItem("name");
-    const protectedPages = ["students.html", "companies.html"];
-    const isProtected = protectedPages.some(page => window.location.pathname.includes(page));
-    setTimeout(() => {
-        if (isProtected) window.location.href = "web.html";
-        else updateUIForGuest();
-    }, 1200);
+    setTimeout(() => { window.location.href = "web.html"; }, 1000);
 }
 
 window.addEventListener("click", (e) => {
-    if (e.target.id === "logoutBtn") handleLogout();
+    if (e.target.id === "logoutBtn" || e.target.id === "mobileLogoutBtn") handleLogout();
 });
