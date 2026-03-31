@@ -67,7 +67,7 @@ const api = {
                 console.log(`✅ ${endpoint} Data:`, data);
             }
 
-            if (response.status === 401 && (window.location.pathname.includes('students.html') || window.location.pathname.includes('admin'))) {
+            if (response.status === 401 && (window.location.pathname.includes('eligibility.html') || window.location.pathname.includes('admin'))) {
                 if (typeof handleLogout === 'function') handleLogout("Your session has expired.");
             }
 

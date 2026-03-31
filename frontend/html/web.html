@@ -33,26 +33,10 @@
 
     <div class="particles"></div>
 
-    <div class="sidebar-3d-indicator">
-        <div class="indicator-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </div>
-    </div>
-
     <div class="separation-line"></div>
     <div class="lower-region-layer"></div>
 
+        <!-- DYNAMIC ISLAND SIDEBAR -->
         <!-- DYNAMIC ISLAND SIDEBAR -->
         <!-- DYNAMIC ISLAND SIDEBAR -->
         <!-- DYNAMIC ISLAND SIDEBAR -->
@@ -81,12 +65,11 @@
                     <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
                 </svg>
             </li>
-            <li class="dynamic-item" data-section="students" data-label="Students" data-nav="students.html">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <li class="dynamic-item" data-section="eligibility" data-label="Eligibility" data-nav="eligibility.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M9 14l2 2 4-4"></path>
                 </svg>
             </li>
             <li class="dynamic-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
@@ -490,60 +473,7 @@
                 </div>
             </section>
 
-            <!-- STUDENTS SECTION -->
-            <section id="students" class="section">
-                <h1>Students</h1>
-                <p class="sub-text">Manage and view student information</p>
 
-                <div class="top-controls">
-                    <input type="text" placeholder="Search students...">
-                    <select>
-                        <option>All Branches</option>
-                        <option>CSE</option>
-                        <option>ECE</option>
-                        <option>Mechanical</option>
-                        <option>Civil</option>
-                    </select>
-                    <button class="primary-btn admin-only" id="addStudentBtn">Add Student</button>
-                </div>
-
-                <div class="table-container">
-                    <table id="studentTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Branch</th>
-                                <th>Company</th>
-                                <th>Package (LPA)</th>
-                                <th class="admin-only">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="fullStudentsTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; opacity: 0.5;">Syncing student records...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Modal -->
-                <div id="studentModal" class="modal">
-                    <div class="modal-content">
-                        <h2 style="color: var(--primary); margin-bottom: 15px;">Add Student</h2>
-                        <label>Name</label>
-                        <input type="text" id="nameInput" placeholder="Enter name">
-                        <label>Branch</label>
-                        <input type="text" id="branchInput" placeholder="Enter branch">
-                        <label>Company</label>
-                        <input type="text" id="companyInput" placeholder="Enter company">
-                        <label>Package (LPA)</label>
-                        <input type="text" id="packageInput" placeholder="Enter package">
-                        <div class="modal-buttons">
-                            <button id="closeModal" class="primary-btn"
-                                style="background-color: rgba(239, 68, 68, 0.8);">Cancel</button>
-                            <button id="saveStudent" class="primary-btn">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
 
 

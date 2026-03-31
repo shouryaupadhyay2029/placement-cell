@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Data Ingestion | PlacePro</title>
     <link rel="stylesheet" href="../css/web.css">
+    <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .ingest-container {
@@ -127,14 +129,95 @@
     </script>
 </head>
 <body class="dark-theme">
-    <div class="cursor-glow"></div>
-
-    <div class="semi-sidebar visible">
-        <ul class="semi-list">
-            <li class="semi-item" data-nav="web.html"><i class="fas fa-th-large"></i></li>
-            <li class="semi-item active admin-only"><i class="fas fa-file-upload"></i></li>
-        </ul>
+    <div class="loader-overlay" id="loader">
+        <div class="loader">
+            <div class="cube">
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+                <div class="face"></div>
+            </div>
+            <div class="loader-text">Placing</div>
+        </div>
     </div>
+
+    <div class="particles"></div>
+
+        <!-- DYNAMIC ISLAND SIDEBAR -->
+    <aside class="dynamic-island-sidebar" id="dynamicSidebar">
+        <div class="dynamic-island-text" id="dynamicIslandText">EXPLORE</div>
+        <ul class="dynamic-icons">
+            <li class="dynamic-item" data-section="dashboard" data-label="Dashboard" data-nav="web.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </li>
+            <li class="dynamic-item" data-section="companies" data-label="Companies" data-nav="companies.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="1"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    <line x1="6" y1="11" x2="8" y2="11"/><line x1="6" y1="15" x2="8" y2="15"/>
+                    <line x1="16" y1="11" x2="18" y2="11"/><line x1="16" y1="15" x2="18" y2="15"/>
+                </svg>
+            </li>
+            <li class="dynamic-item" id="collegeSelectorTrigger" data-label="Select College">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
+                </svg>
+            </li>
+            <li class="dynamic-item" data-section="eligibility" data-label="Eligibility" data-nav="eligibility.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M9 14l2 2 4-4"></path>
+                </svg>
+            </li>
+            <li class="dynamic-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                    <line x1="2" y1="20" x2="22" y2="20"/>
+                </svg>
+            </li>
+        </ul>
+
+        <!-- College Selector Hover Panel -->
+        <div class="college-selector-panel" id="collegeSelectorPanel">
+            <div class="panel-title">Select College</div>
+            <div class="college-option active" data-college="USAR">USAR</div>
+            <div class="college-option" data-college="USICT">USICT</div>
+        </div>
+    </aside>
+
+    <div class="context-fade-overlay" id="contextOverlay"></div>
+
+    <header class="navbar-wrapper">
+        <a href="web.html" style="text-decoration: none;">
+            <div class="logo">
+                <span class="place-text">Place<span class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span class="box-right"></span></span><span class="pro-text">Pro<span class="box-top"></span><span class="box-left"></span><span class="box-bottom"></span><span class="box-right"></span></span>
+                <span class="college-display" id="navCollegeDisplay">USAR</span>
+            </div>
+        </a>
+        <div class="navbar-right-group">
+            <div class="hamburger-container">
+                <label class="hamburger">
+                    <input type="checkbox" id="hamburgerToggle">
+                    <svg viewBox="0 0 32 32">
+                        <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L7 26"></path>
+                        <path class="line" d="M7 16 27 16"></path>
+                        <path class="line line-top-bottom" d="M27 22 13 22C10.8 22 9 23.8 9 26 9 28.5 10.8 30 13 30 15.2 30 17 28.2 17 26L7 6"></path>
+                    </svg>
+                </label>
+            </div>
+        </div>
+    </header>
 
     <div class="main-content">
         <div class="ingest-container">
@@ -196,12 +279,12 @@
         </div>
     </div>
 
-    <div id="loader" class="hidden">
-        <div class="loader-spinner"></div>
-    </div>
+
 
     <script src="../js/toast.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/web.js"></script>
     <script>
         // Ensure legacy support for older calls if necessary
         const showError = (msg) => showToast(msg, "error");

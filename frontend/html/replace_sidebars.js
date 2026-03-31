@@ -29,12 +29,11 @@ const newSidebar = `    <!-- DYNAMIC ISLAND SIDEBAR -->
                     <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5"></path>
                 </svg>
             </li>
-            <li class="dynamic-item" data-section="students" data-label="Students" data-nav="students.html">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <li class="dynamic-item" data-section="eligibility" data-label="Eligibility" data-nav="eligibility.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M9 14l2 2 4-4"></path>
                 </svg>
             </li>
             <li class="dynamic-item" data-section="analytics" data-label="Analytics" data-nav="analytics.html">

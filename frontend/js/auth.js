@@ -175,7 +175,7 @@ function processLoginSuccess(data) {
 
 async function initAuthAndProfile() {
     const token = localStorage.getItem("token");
-    const protectedPages = ["students.html", "companies.html"];
+    const protectedPages = ["eligibility.html", "companies.html"];
     const isProtected = protectedPages.some(page => window.location.pathname.includes(page));
 
     if (!token) {
