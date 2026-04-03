@@ -7,7 +7,7 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 // Use Memory Storage for faster, disk-less processing
 const storage = multer.memoryStorage();
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
@@ -22,18 +22,18 @@ router.post('/upload', protect, admin, upload.single('pdf'), async (req, res, ne
         const college = req.college;
 
         if (!req.file) {
-            return res.status(400).json({ 
-                success: false, 
+            return res.status(400).json({
+                success: false,
                 message: "Validation Error",
-                error: "No PDF file provided." 
+                error: "No PDF file provided."
             });
         }
 
         if (!batch_year) {
-            return res.status(400).json({ 
-                success: false, 
+            return res.status(400).json({
+                success: false,
                 message: "Validation Error",
-                error: "Batch year is required." 
+                error: "Batch year is required."
             });
         }
 
@@ -48,10 +48,10 @@ router.post('/upload', protect, admin, upload.single('pdf'), async (req, res, ne
             });
         }
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             message: `Extracted ${results.length} companies successfully.`,
-            data: results 
+            data: results
         });
 
     } catch (err) {
@@ -68,10 +68,10 @@ router.post('/save', protect, admin, async (req, res, next) => {
     const college = req.college;
 
     if (!data || !Array.isArray(data)) {
-        return res.status(400).json({ 
-            success: false, 
+        return res.status(400).json({
+            success: false,
             message: "Validation Error",
-            error: "Invalid data format received." 
+            error: "Invalid data format received."
         });
     }
 
@@ -79,14 +79,14 @@ router.post('/save', protect, admin, async (req, res, next) => {
         // Enforce STRICT ISOLATION
         const finalizedRecords = data.map(record => ({
             ...record,
-            college: college 
+            college: college
         }));
 
         const result = await Company.insertMany(finalizedRecords);
-        
-        res.json({ 
-            success: true, 
-            message: `Synchronization successful. ${result.length} records added for ${college}.` 
+
+        res.json({
+            success: true,
+            message: `Synchronization successful. ${result.length} records added for ${college}.`
         });
 
     } catch (err) {

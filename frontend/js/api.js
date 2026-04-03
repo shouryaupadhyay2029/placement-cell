@@ -5,8 +5,8 @@
 
 // Centralized API Base URL Configuration
 const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-  ? "http://localhost:5000"
-  : ""; // Production: Use relative paths for same-origin
+    ? "http://localhost:5000"
+    : ""; // Production: Use relative paths for same-origin
 
 const API_BASE_URL = `${API_BASE}/api`;
 
@@ -55,7 +55,7 @@ const api = {
             if (!response.ok || data.success === false) {
                 const errorMsg = data.error || data.message || "An unknown operational failure occurred";
                 console.error(`❌ API ERROR in ${endpoint}:`, errorMsg);
-                
+
                 // Show floating message if the utility exists
                 if (typeof showMessage === 'function') {
                     showMessage(errorMsg, "error");

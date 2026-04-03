@@ -1,0 +1,3409 @@
+{
+  "2015": {
+    "summary": {
+      "companiesVisited": 22,
+      "studentsPlaced": 208,
+      "totalOffers": 208,
+      "highestPackage": 35,
+      "averagePackage": 5.04,
+      "medianPackage": 3.25,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "INDIAN ARMY",
+        "batch": 2015,
+        "role": "For SSB",
+        "package": "For SSB",
+        "offers": 18,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Snapdeal",
+        "batch": 2015,
+        "role": "Software Developer",
+        "package": "15.25 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Adobe",
+        "batch": 2015,
+        "role": "MTS",
+        "package": "8.50 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Capital IQ",
+        "batch": 2015,
+        "role": "Research Associate",
+        "package": "6.70 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "M/s Azcom Infosolution",
+        "batch": 2015,
+        "role": "Engineer",
+        "package": "6.50 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Practo",
+        "batch": 2015,
+        "role": "Developer",
+        "package": "6.47 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Indus Valley Partners(India)",
+        "batch": 2015,
+        "role": "Consultant",
+        "package": "6.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Zillious",
+        "batch": 2015,
+        "role": "Software Engineer",
+        "package": "6.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Interaa",
+        "batch": 2015,
+        "role": "Developer",
+        "package": "6.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Paytm",
+        "batch": 2015,
+        "role": "Developer",
+        "package": "5+ LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Revel",
+        "batch": 2015,
+        "role": "Trainee",
+        "package": "4.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2015,
+        "role": "System Engineer",
+        "package": "4.00 LPA",
+        "offers": 7,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Vinsol",
+        "batch": 2015,
+        "role": "Developer",
+        "package": "4.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Intelligrape",
+        "batch": 2015,
+        "role": "Associate",
+        "package": "3.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Times Internet",
+        "batch": 2015,
+        "role": "Developer",
+        "package": "3 to 5 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ESSE XLG",
+        "batch": 2015,
+        "role": "Trainee",
+        "package": "3 to 5 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS",
+        "batch": 2015,
+        "role": "Ninja/Digital",
+        "package": "3.25 LPA",
+        "offers": 127,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AVL",
+        "batch": 2015,
+        "role": "Trainee",
+        "package": "3.25 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Techmahindra",
+        "batch": 2015,
+        "role": "Engineer",
+        "package": "3.07 LPA",
+        "offers": 12,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Polestar",
+        "batch": 2015,
+        "role": "Developer",
+        "package": "3.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Eninov",
+        "batch": 2015,
+        "role": "Associate",
+        "package": "3.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "M/s Aon Hewitt",
+        "batch": 2015,
+        "role": "Analyst",
+        "package": "2.80 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 7
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 4
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 21
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 158
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Times Internet",
+          "package": "3 to 5 LPA"
+        },
+        {
+          "name": "ESSE XLG",
+          "package": "3 to 5 LPA"
+        },
+        {
+          "name": "Snapdeal",
+          "package": "15.25 LPA"
+        },
+        {
+          "name": "Adobe",
+          "package": "8.50 LPA"
+        },
+        {
+          "name": "Capital IQ",
+          "package": "6.70 LPA"
+        }
+      ]
+    }
+  },
+  "2016": {
+    "summary": {
+      "companiesVisited": 13,
+      "studentsPlaced": 252,
+      "totalOffers": 252,
+      "highestPackage": 57,
+      "averagePackage": 4.88,
+      "medianPackage": 3.33,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Adobe",
+        "batch": 2016,
+        "role": "Associate Developer",
+        "package": "10.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Opera Solutions",
+        "batch": 2016,
+        "role": "Analyst",
+        "package": "6.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Octro",
+        "batch": 2016,
+        "role": "Game Developer",
+        "package": "5-7 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Vinsol",
+        "batch": 2016,
+        "role": "Developer",
+        "package": "5.5 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Compro",
+        "batch": 2016,
+        "role": "Associate",
+        "package": "5.30 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ISS Retails",
+        "batch": 2016,
+        "role": "Trainee",
+        "package": "4.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2016,
+        "role": "Engineer",
+        "package": "4.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Aricent",
+        "batch": 2016,
+        "role": "Software Engineer",
+        "package": "3.50 LPA",
+        "offers": 54,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AVL",
+        "batch": 2016,
+        "role": "Associate",
+        "package": "3.50 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS",
+        "batch": 2016,
+        "role": "Assistant System Engineer",
+        "package": "3.33 LPA",
+        "offers": 125,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "YAMAHA MOTORS",
+        "batch": 2016,
+        "role": "Trainee",
+        "package": "3.30 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Wipro",
+        "batch": 2016,
+        "role": "Project Engineer",
+        "package": "3.25 LPA",
+        "offers": 36,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Adobe For Training",
+        "batch": 2016,
+        "role": "Intern",
+        "package": "0.25 PM",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 6
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 5
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 11
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 230
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Octro",
+          "package": "5-7 LPA"
+        },
+        {
+          "name": "Adobe",
+          "package": "10.00 LPA"
+        },
+        {
+          "name": "Opera Solutions",
+          "package": "6.00 LPA"
+        },
+        {
+          "name": "Vinsol",
+          "package": "5.5 LPA"
+        },
+        {
+          "name": "Compro",
+          "package": "5.30 LPA"
+        }
+      ]
+    }
+  },
+  "2017": {
+    "summary": {
+      "companiesVisited": 16,
+      "studentsPlaced": 117,
+      "totalOffers": 117,
+      "highestPackage": 11,
+      "averagePackage": 4.17,
+      "medianPackage": 3.33,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Amazon",
+        "batch": 2017,
+        "role": "SDE",
+        "package": "11.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "SAMSUNG",
+        "batch": 2017,
+        "role": "Software Engineer",
+        "package": "8.88 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ZILLIOUS",
+        "batch": 2017,
+        "role": "Developer",
+        "package": "7.03 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Axtria",
+        "batch": 2017,
+        "role": "Analyst",
+        "package": "6.80 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Mediatek",
+        "batch": 2017,
+        "role": "Engineer",
+        "package": "6.70 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AZCOM",
+        "batch": 2017,
+        "role": "System Engineer",
+        "package": "6.5 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS(D)",
+        "batch": 2017,
+        "role": "Digital",
+        "package": "6.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Hitachi",
+        "batch": 2017,
+        "role": "Trainee",
+        "package": "5.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Compro(Talent Grid)",
+        "batch": 2017,
+        "role": "Associate",
+        "package": "5.30 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "E & Y India",
+        "batch": 2017,
+        "role": "Consultant",
+        "package": "4.90 LPA",
+        "offers": 12,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2017,
+        "role": "Developer",
+        "package": "4.00 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Eninov",
+        "batch": 2017,
+        "role": "Associate",
+        "package": "3.50 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Indiamart",
+        "batch": 2017,
+        "role": "Developer",
+        "package": "3.40 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS",
+        "batch": 2017,
+        "role": "Ninja",
+        "package": "3.33 LPA",
+        "offers": 68,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "YAMAHA MOTORS",
+        "batch": 2017,
+        "role": "Engineer",
+        "package": "3.30 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Wipro",
+        "batch": 2017,
+        "role": "Project Engineer",
+        "package": "3.25 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 0
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 1
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 19
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 97
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Amazon",
+          "package": "11.00 LPA"
+        },
+        {
+          "name": "SAMSUNG",
+          "package": "8.88 LPA"
+        },
+        {
+          "name": "ZILLIOUS",
+          "package": "7.03 LPA"
+        },
+        {
+          "name": "Axtria",
+          "package": "6.80 LPA"
+        },
+        {
+          "name": "Mediatek",
+          "package": "6.70 LPA"
+        }
+      ]
+    }
+  },
+  "2018": {
+    "summary": {
+      "companiesVisited": 31,
+      "studentsPlaced": 131,
+      "totalOffers": 131,
+      "highestPackage": 1824,
+      "averagePackage": 18.54,
+      "medianPackage": 3.33,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Silver Peak Globle",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "18-24 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Inmobi",
+        "batch": 2018,
+        "role": "Software Engineer",
+        "package": "23.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ION TRADING",
+        "batch": 2018,
+        "role": "Developer",
+        "package": "12.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "HSBC(FEMALE DRIVE)",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "12.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Adobe",
+        "batch": 2018,
+        "role": "MTS",
+        "package": "10.00(app.)",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "C-Vent (2017 Batch)",
+        "batch": 2018,
+        "role": "Associate",
+        "package": "8.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Zopper",
+        "batch": 2018,
+        "role": "Developer",
+        "package": "8.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Mediatek",
+        "batch": 2018,
+        "role": "Engineer",
+        "package": "7.80 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "IVP",
+        "batch": 2018,
+        "role": "Consultant",
+        "package": "7.40 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ZILLIOUS",
+        "batch": 2018,
+        "role": "Software Engineer",
+        "package": "7.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "HSBC(FEMALE DRIVE)",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "7.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "C-VENT",
+        "batch": 2018,
+        "role": "Associate",
+        "package": "6.60 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AZCOM",
+        "batch": 2018,
+        "role": "Engineer",
+        "package": "6.50 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Opera Solutions",
+        "batch": 2018,
+        "role": "Analyst",
+        "package": "6.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "NAGARRO(BOOT CAMP 2019 BATCH)",
+        "batch": 2018,
+        "role": "System Trainee",
+        "package": "6.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Hitachi",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "5.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BLACK STONE",
+        "batch": 2018,
+        "role": "Analyst",
+        "package": "5.50 LPA",
+        "offers": 8,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Causecode",
+        "batch": 2018,
+        "role": "Developer",
+        "package": "5.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Hughes",
+        "batch": 2018,
+        "role": "Engineer",
+        "package": "5.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "LIVE LIKE TECHNOLOGIES",
+        "batch": 2018,
+        "role": "Developer",
+        "package": "5.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "YAMAHA MOTORS",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "5.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Mtree",
+        "batch": 2018,
+        "role": "Associate",
+        "package": "4.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "VEDA IIT",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "4.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "NAGARRO",
+        "batch": 2018,
+        "role": "Developer",
+        "package": "4.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "NAGARRO(BOOT CAMP 2019 BATCH)",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "4.00 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TTN(2019 BATCH)",
+        "batch": 2018,
+        "role": "Associate",
+        "package": "3.75 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "VEDA IIT",
+        "batch": 2018,
+        "role": "Associate",
+        "package": "3.60 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "STELLAR",
+        "batch": 2018,
+        "role": "Trainee",
+        "package": "3.50 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS",
+        "batch": 2018,
+        "role": "Ninja",
+        "package": "3.33 LPA",
+        "offers": 62,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Xceedance",
+        "batch": 2018,
+        "role": "Analyst",
+        "package": "3.30 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Wipro",
+        "batch": 2018,
+        "role": "Assistant Engineer",
+        "package": "3.25 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 2
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 4
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 37
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 88
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Silver Peak Globle",
+          "package": "18-24 LPA"
+        },
+        {
+          "name": "Inmobi",
+          "package": "23.00 LPA"
+        },
+        {
+          "name": "ION TRADING",
+          "package": "12.00 LPA"
+        },
+        {
+          "name": "HSBC(FEMALE DRIVE)",
+          "package": "12.00 LPA"
+        },
+        {
+          "name": "Adobe",
+          "package": "10.00(app.)"
+        }
+      ]
+    }
+  },
+  "2019": {
+    "summary": {
+      "companiesVisited": 31,
+      "studentsPlaced": 128,
+      "totalOffers": 128,
+      "highestPackage": 28.25,
+      "averagePackage": 5.66,
+      "medianPackage": 3.5,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Amazon(SDE)",
+        "batch": 2019,
+        "role": "SDE",
+        "package": "28.25 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AMAZON (AWS)",
+        "batch": 2019,
+        "role": "Cloud Support",
+        "package": "18.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ION TRADING",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "12.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Indiamart",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Posist",
+        "batch": 2019,
+        "role": "Software Engineer",
+        "package": "8.50 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "IVP",
+        "batch": 2019,
+        "role": "Associate",
+        "package": "7.40 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (D)",
+        "batch": 2019,
+        "role": "Digital",
+        "package": "7.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Scry Analytics",
+        "batch": 2019,
+        "role": "Analyst",
+        "package": "7.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "C-vent",
+        "batch": 2019,
+        "role": "Associate",
+        "package": "6.78 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AZCOM",
+        "batch": 2019,
+        "role": "Engineer",
+        "package": "6.50 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Libsys",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "6.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Oodles Technologies",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "6.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BLACK STONE",
+        "batch": 2019,
+        "role": "Analyst",
+        "package": "5.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Infoedge",
+        "batch": 2019,
+        "role": "Software Engineer",
+        "package": "5.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Kony",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "5.5 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Compro(Talent Grid)",
+        "batch": 2019,
+        "role": "Associate",
+        "package": "5.30 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Paytm( FOR 2018 BATCH)",
+        "batch": 2019,
+        "role": "Trainee",
+        "package": "5.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "YAMAHA MOTORS",
+        "batch": 2019,
+        "role": "Engineer",
+        "package": "5.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "S&S",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "5.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nineleaps",
+        "batch": 2019,
+        "role": "Trainee",
+        "package": "4.50 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Bravura Solutions",
+        "batch": 2019,
+        "role": "Associate",
+        "package": "4.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "NAGARRO",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "4.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Orange(ECE)",
+        "batch": 2019,
+        "role": "Assistant Engineer",
+        "package": "3.90 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TTN(2019 BATCH)",
+        "batch": 2019,
+        "role": "Associate",
+        "package": "3.75 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS",
+        "batch": 2019,
+        "role": "Ninja",
+        "package": "3.50 LPA",
+        "offers": 51,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Wipro",
+        "batch": 2019,
+        "role": "Project Engineer",
+        "package": "3.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cognizant",
+        "batch": 2019,
+        "role": "Engineer",
+        "package": "3.50 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Polestar",
+        "batch": 2019,
+        "role": "Analyst",
+        "package": "3.47 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "VIVO",
+        "batch": 2019,
+        "role": "Developer",
+        "package": "3.40 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Infosys",
+        "batch": 2019,
+        "role": "System Engineer",
+        "package": "3.25-3.5 LPA",
+        "offers": 7,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Genpact",
+        "batch": 2019,
+        "role": "Intern",
+        "package": "15k/month during internship",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 2
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 10
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 40
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 76
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Amazon(SDE)",
+          "package": "28.25 LPA"
+        },
+        {
+          "name": "AMAZON (AWS)",
+          "package": "18.00 LPA"
+        },
+        {
+          "name": "Genpact",
+          "package": "15k/month during internship"
+        },
+        {
+          "name": "ION TRADING",
+          "package": "12.00 LPA"
+        },
+        {
+          "name": "Indiamart",
+          "package": "10.00 LPA"
+        }
+      ]
+    }
+  },
+  "2020": {
+    "summary": {
+      "companiesVisited": 25,
+      "studentsPlaced": 124,
+      "totalOffers": 124,
+      "highestPackage": 18,
+      "averagePackage": 5.27,
+      "medianPackage": 3.75,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "AMAZON(AWS)",
+        "batch": 2020,
+        "role": "Cloud Support",
+        "package": "18.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Thorogood",
+        "batch": 2020,
+        "role": "Consultant",
+        "package": "11.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "C-Vent(SD)",
+        "batch": 2020,
+        "role": "SDE",
+        "package": "9.32 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "RTDS",
+        "batch": 2020,
+        "role": "Developer",
+        "package": "9.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Unreal AI",
+        "batch": 2020,
+        "role": "AI Engineer",
+        "package": "8.88 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "C-Vent",
+        "batch": 2020,
+        "role": "Associate",
+        "package": "8.05 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Innovaccer",
+        "batch": 2020,
+        "role": "Software Engineer",
+        "package": "8.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BLACK STONE",
+        "batch": 2020,
+        "role": "Analyst",
+        "package": "7.50 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (D)",
+        "batch": 2020,
+        "role": "Digital",
+        "package": "7.00 LPA",
+        "offers": 8,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "IVP",
+        "batch": 2020,
+        "role": "Executive",
+        "package": "6.80 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2020,
+        "role": "Engineer",
+        "package": "6.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Libsys",
+        "batch": 2020,
+        "role": "Developer",
+        "package": "6.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "JARO",
+        "batch": 2020,
+        "role": "Graduate Trainee",
+        "package": "5.16 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Mads Technology",
+        "batch": 2020,
+        "role": "Trainee",
+        "package": "5.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Bharti Airtel",
+        "batch": 2020,
+        "role": "Engineer",
+        "package": "4.68 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2020,
+        "role": "Associate",
+        "package": "4.50 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Newgen",
+        "batch": 2020,
+        "role": "Developer",
+        "package": "4.25 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2020,
+        "role": "Trainee",
+        "package": "4.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Sopra Steria",
+        "batch": 2020,
+        "role": "Software Engineer",
+        "package": "4.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "IBM",
+        "batch": 2020,
+        "role": "Associate",
+        "package": "4.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "CapeGemini",
+        "batch": 2020,
+        "role": "Analyst",
+        "package": "3.80 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TTN",
+        "batch": 2020,
+        "role": "Associate",
+        "package": "3.75 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Infosys",
+        "batch": 2020,
+        "role": "Engineer",
+        "package": "3.75 LPA",
+        "offers": 14,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Media Agility",
+        "batch": 2020,
+        "role": "Consultant",
+        "package": "3.60 LPA",
+        "offers": 10,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Ninja)",
+        "batch": 2020,
+        "role": "Ninja",
+        "package": "3.50 LPA",
+        "offers": 35,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 0
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 5
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 37
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 82
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "AMAZON(AWS)",
+          "package": "18.00 LPA"
+        },
+        {
+          "name": "Thorogood",
+          "package": "11.00 LPA"
+        },
+        {
+          "name": "C-Vent(SD)",
+          "package": "9.32 LPA"
+        },
+        {
+          "name": "RTDS",
+          "package": "9.00 LPA"
+        },
+        {
+          "name": "Unreal AI",
+          "package": "8.88 LPA"
+        }
+      ]
+    }
+  },
+  "2021": {
+    "summary": {
+      "companiesVisited": 32,
+      "studentsPlaced": 246,
+      "totalOffers": 246,
+      "highestPackage": 32,
+      "averagePackage": 6.28,
+      "medianPackage": 3.6,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Amazon (SDE)",
+        "batch": 2021,
+        "role": "SDE",
+        "package": "32.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (Programmer Analyst)",
+        "batch": 2021,
+        "role": "Programmer Analyst",
+        "package": "27.83 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "UNIAS Inc.",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "20.00 LPA",
+        "offers": 10,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (AWS)",
+        "batch": 2021,
+        "role": "AWS",
+        "package": "19.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Adobe",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "12.11 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "rtCamp",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "12.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Thorogood",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ZS Associates",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "10.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cvent",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "9.70 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cvent",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "7.05 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cvent",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "7.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Josh Technology",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "8.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Josh Technology",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "6.75 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Digital)",
+        "batch": 2021,
+        "role": "Digital",
+        "package": "7.00 LPA",
+        "offers": 30,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Yamaha Motors",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "7.00 LPA",
+        "offers": 8,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ClickLabs(JungleWorks)",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "7.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Wiley",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "7.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Libsys",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "7.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Freecharge",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "6.70 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Indiamart",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "6.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Bravura Solutions",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "5.50 LPA",
+        "offers": 8,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Compunnel Digital",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "4.80 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nagarro",
+        "batch": 2021,
+        "role": "Trainee",
+        "package": "4.50 LPA",
+        "offers": 7,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "VectoScalar",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "4.50 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "NewGen",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "4.25 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "PSIT",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "4.20 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Tata Advance System Ltd.",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "3.99 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "DXC",
+        "batch": 2021,
+        "role": "Associate",
+        "package": "3.60 LPA",
+        "offers": 64,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Media Agility",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "3.60 LPA",
+        "offers": 9,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Ninja)",
+        "batch": 2021,
+        "role": "Ninja",
+        "package": "3.50 LPA",
+        "offers": 56,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cognizant",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "3.50 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Omnepresent",
+        "batch": 2021,
+        "role": "Direct Placement",
+        "package": "3.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 15
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 10
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 71
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 150
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Amazon (SDE)",
+          "package": "32.00 LPA"
+        },
+        {
+          "name": "Amazon (Programmer Analyst)",
+          "package": "27.83 LPA"
+        },
+        {
+          "name": "UNIAS Inc.",
+          "package": "20.00 LPA"
+        },
+        {
+          "name": "Amazon (AWS)",
+          "package": "19.00 LPA"
+        },
+        {
+          "name": "Adobe",
+          "package": "12.11 LPA"
+        }
+      ]
+    }
+  },
+  "2022": {
+    "summary": {
+      "companiesVisited": 37,
+      "studentsPlaced": 83,
+      "totalOffers": 83,
+      "highestPackage": 51,
+      "averagePackage": 19.59,
+      "medianPackage": 17.35,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "D.E. SHAW",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "51.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "SERVICE NOW",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "33.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BROWSERSTACK",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "27.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "QUALCOMM",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "26.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TEXAS INSTRUMENTS",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "25.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "GOLDMAN SACHS",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "24.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BHARAT PE",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "22.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BRIGHTMONEY",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "21.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "FRONTROW",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "20.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BIZONGO",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "19.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "MOENGAGE",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "18.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "LEMNISK",
+        "batch": 2022,
+        "role": "Direct Placement",
+        "package": "18.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Adobe (Technical)",
+        "batch": 2022,
+        "role": "Technical Staff",
+        "package": "45.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (SDE)",
+        "batch": 2022,
+        "role": "SDE",
+        "package": "44.14 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (SDET)",
+        "batch": 2022,
+        "role": "SDET",
+        "package": "31.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (Programmer Analyst)",
+        "batch": 2022,
+        "role": "Analyst",
+        "package": "31.31 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (Data Engineer)",
+        "batch": 2022,
+        "role": "Data Engineer",
+        "package": "29.36 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Rapido",
+        "batch": 2022,
+        "role": "Developer",
+        "package": "23.00 LPA",
+        "offers": 9,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (Support Engineer)",
+        "batch": 2022,
+        "role": "Support Engineer",
+        "package": "20.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Tata 1mg",
+        "batch": 2022,
+        "role": "Engineer",
+        "package": "18.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Josh Technology",
+        "batch": 2022,
+        "role": "Developer",
+        "package": "18.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Amazon (QA Engineer)",
+        "batch": 2022,
+        "role": "QA Engineer",
+        "package": "17.35 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Adobe (CX)",
+        "batch": 2022,
+        "role": "Customer Experience",
+        "package": "15.30 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Mobikwik",
+        "batch": 2022,
+        "role": "Developer",
+        "package": "14.50 LPA",
+        "offers": 9,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Bain & Co.",
+        "batch": 2022,
+        "role": "Consultant",
+        "package": "14.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Zenon AI",
+        "batch": 2022,
+        "role": "AI Engineer",
+        "package": "13.80 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "JP Morgan (Tavisca)",
+        "batch": 2022,
+        "role": "Associate",
+        "package": "13.00 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "ZS Associates",
+        "batch": 2022,
+        "role": "Associate",
+        "package": "13.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Oracle (High)",
+        "batch": 2022,
+        "role": "Developer",
+        "package": "12.60 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Oracle (Standard)",
+        "batch": 2022,
+        "role": "Developer",
+        "package": "11.20 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cvent (ASE)",
+        "batch": 2022,
+        "role": "ASE",
+        "package": "11.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Super Six Sports",
+        "batch": 2022,
+        "role": "Developer",
+        "package": "11.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "FIS Global",
+        "batch": 2022,
+        "role": "Analyst",
+        "package": "10.45 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Alternative Path",
+        "batch": 2022,
+        "role": "Associate",
+        "package": "10.00 LPA",
+        "offers": 7,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Grade Up",
+        "batch": 2022,
+        "role": "Trainee",
+        "package": "10.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Indian Shelter Finance",
+        "batch": 2022,
+        "role": "Finance Analyst",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Interra Systems",
+        "batch": 2022,
+        "role": "Engineer",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 31
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 52
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 0
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 0
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "D.E. SHAW",
+          "package": "51.00 LPA"
+        },
+        {
+          "name": "Adobe (Technical)",
+          "package": "45.00 LPA"
+        },
+        {
+          "name": "Amazon (SDE)",
+          "package": "44.14 LPA"
+        },
+        {
+          "name": "SERVICE NOW",
+          "package": "33.00 LPA"
+        },
+        {
+          "name": "Amazon (SDET)",
+          "package": "31.50 LPA"
+        }
+      ]
+    }
+  },
+  "2023": {
+    "summary": {
+      "companiesVisited": 21,
+      "studentsPlaced": 52,
+      "totalOffers": 52,
+      "highestPackage": 23,
+      "averagePackage": 12.28,
+      "medianPackage": 12,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Rapido",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "23.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Achieve AI",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "19.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "MathWorks India",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "18.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Saxo Group",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "17.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Josh Technology",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "14.75 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Thorogood",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "14.15 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Applicate AI",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "14.10 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Zenon Analytics",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "14.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cvent",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "13.70 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Gradeup",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "12.00 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Interra Systems India",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "12.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Bluecore India",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "12.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Super Six Gaming",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "11.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "POSHN",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Travclan",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Indus Valley Partners",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "9.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Libsys Ltd",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "9.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Roro Solutions LLP",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "9.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Oracle",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "8.80 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Nokia",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "8.70 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Yamaha Motors",
+        "batch": 2023,
+        "role": "Corporate Selection",
+        "package": "8.60 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 2
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 30
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 20
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 0
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Rapido",
+          "package": "23.00 LPA"
+        },
+        {
+          "name": "Achieve AI",
+          "package": "19.00 LPA"
+        },
+        {
+          "name": "MathWorks India",
+          "package": "18.00 LPA"
+        },
+        {
+          "name": "Saxo Group",
+          "package": "17.00 LPA"
+        },
+        {
+          "name": "Josh Technology",
+          "package": "14.75 LPA"
+        }
+      ]
+    }
+  },
+  "2024": {
+    "summary": {
+      "companiesVisited": 29,
+      "studentsPlaced": 119,
+      "totalOffers": 119,
+      "highestPackage": 20.5,
+      "averagePackage": 6.9,
+      "medianPackage": 6,
+      "internships": 0,
+      "ppo": 0
+    },
+    "companies": [
+      {
+        "name": "Corning",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "20.50 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cvent",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "15.30 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Zenon",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "14.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "CVent (SRE)",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "13.60 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "AB InBev",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "12.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Prime)",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "11.50 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Yamaha",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "10.30 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Tejas Networks Ltd",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "10.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Tredence Analytics",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "10.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Roro.ai",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "9.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Prime Fallback)",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "9.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Unacademy",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "8.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Cubastion Consulting",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "7.70 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Hexaview",
+        "batch": 2024,
+        "role": "Corporate Selection",
+        "package": "7.50 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Digital)",
+        "batch": 2024,
+        "role": "Digital",
+        "package": "7.00 LPA",
+        "offers": 13,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Genpact",
+        "batch": 2024,
+        "role": "Technical Consultant",
+        "package": "6.30 LPA",
+        "offers": 17,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "BUSY Infotech",
+        "batch": 2024,
+        "role": "Software Engineer",
+        "package": "6.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "L&T LTD",
+        "batch": 2024,
+        "role": "Engineer",
+        "package": "6.00 LPA",
+        "offers": 1,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "SUCCESSIVE TECHNOLOGIES",
+        "batch": 2024,
+        "role": "Software Engineer",
+        "package": "6.00 LPA",
+        "offers": 8,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Hexaview (AE)",
+        "batch": 2024,
+        "role": "AE",
+        "package": "6.00 LPA",
+        "offers": 2,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Ganit",
+        "batch": 2024,
+        "role": "Data Analyst",
+        "package": "6.00 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "INDIA SHELTER",
+        "batch": 2024,
+        "role": "Data Analyst",
+        "package": "6.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "CTPL.ai",
+        "batch": 2024,
+        "role": "Assistant Professorσè⌐τÉå",
+        "package": "5.40 LPA",
+        "offers": 6,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Finvest Fx",
+        "batch": 2024,
+        "role": "SDE",
+        "package": "5.00 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Airtel",
+        "batch": 2024,
+        "role": "GET NOC Engineer",
+        "package": "4.50 LPA",
+        "offers": 5,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "IBM",
+        "batch": 2024,
+        "role": "Associate System Engineer",
+        "package": "4.50 LPA",
+        "offers": 4,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Orange Business",
+        "batch": 2024,
+        "role": "GET",
+        "package": "4.40 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "Vivo",
+        "batch": 2024,
+        "role": "SMT",
+        "package": "3.60 LPA",
+        "offers": 3,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      },
+      {
+        "name": "TCS (Ninja)",
+        "batch": 2024,
+        "role": "Ninja",
+        "package": "3.30 LPA",
+        "offers": 15,
+        "location": "India",
+        "eligibilityText": "Technology",
+        "status": "Completed",
+        "deadline": "Finished"
+      }
+    ],
+    "eligibility": [],
+    "analytics": {
+      "branchStats": [],
+      "packageDistribution": [
+        {
+          "range": "20+ LPA",
+          "count": 2
+        },
+        {
+          "range": "10-20 LPA",
+          "count": 16
+        },
+        {
+          "range": "5-10 LPA",
+          "count": 71
+        },
+        {
+          "range": "0-5 LPA",
+          "count": 30
+        }
+      ],
+      "topCompanies": [
+        {
+          "name": "Corning",
+          "package": "20.50 LPA"
+        },
+        {
+          "name": "Cvent",
+          "package": "15.30 LPA"
+        },
+        {
+          "name": "Zenon",
+          "package": "14.00 LPA"
+        },
+        {
+          "name": "CVent (SRE)",
+          "package": "13.60 LPA"
+        },
+        {
+          "name": "AB InBev",
+          "package": "12.00 LPA"
+        }
+      ]
+    }
+  }
+}

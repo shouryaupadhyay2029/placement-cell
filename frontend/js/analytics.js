@@ -400,100 +400,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         const college = localStorage.getItem("college") || "USAR";
         const analyticsCard = document.querySelector('.analytics-card');
 
-        // SPECIAL CASE: USICT 2021 & 2022 - Focus on elite high-fidelity direct placement tables
+        // 1. Fetch ALL companies to check for Direct Placements (High Value Roles)
+        let directPlaced = [];
         if (college === "USICT" && (batchYear === "2021" || batchYear === "2022")) {
             try {
-                // 1. Fetch Direct Placements (High Value Roles)
                 const res = await window.api.get(`/companies?batch_year=${batchYear}`);
                 const allCompanies = await res.json();
-                const directPlaced = allCompanies.filter(c => c.role === "Direct Placement");
-
-                // 2. Fetch Official Branch Rates (If available)
-                const brUrl = `/companies/branch-stats?batch_year=${batchYear}`;
-                const brRes = await window.api.get(brUrl);
-                const brData = await brRes.json();
-                const officialRates = brData.official_rates || [];
-
-                if (analyticsCard) {
-                    let html = `
-                        <div class="card-header" style="margin-bottom: 25px;">
-                            <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
-                                    <path d="M16 21v-2a4 0 0 0-4-4H5a4 0 0 0-4 4v2"></path>
-                                    <circle cx="8.5" cy="7" r="4"></circle>
-                                    <polyline points="17 11 19 13 23 9"></polyline>
-                                </svg>
-                                Directly Placed Students (${batchYear})
-                            </h3>
-                        </div>
-                        <div class="table-container mini-table" style="margin-bottom: 30px;">
-                            <table style="width: 100%; font-size: 13px;">
-                                <thead>
-                                    <tr>
-                                        <th style="padding: 10px; text-align: left;">Company</th>
-                                        <th style="padding: 10px; text-align: center;">Selections</th>
-                                        <th style="padding: 10px; text-align: right;">Package (LPA)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${directPlaced.map((c, i) => `
-                                        <tr style="${i % 2 === 0 ? 'background: rgba(16, 185, 129, 0.03);' : ''}">
-                                            <td style="padding: 10px; font-weight: 600;">${c.company_name}</td>
-                                            <td style="padding: 10px; text-align: center; color: var(--primary); font-weight: 700;">${c.students_placed}</td>
-                                            <td style="padding: 10px; text-align: right; opacity: 0.8; font-weight: 600;">${c.package}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-
-                    // Add Branch Statistics Table if it's 2022
-                    if (officialRates.length > 0) {
-                        html += `
-                            <div class="card-header" style="margin-bottom: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
-                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                                    </svg>
-                                    Official Branch-wise Statistics
-                                </h3>
-                            </div>
-                            <div class="table-container mini-table">
-                                <table style="width: 100%; font-size: 13px;">
-                                    <thead>
-                                        <tr>
-                                            <th style="padding: 10px; text-align: left;">Branch</th>
-                                            <th style="padding: 10px; text-align: right;">Placement Rate</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${officialRates.map((r, i) => `
-                                            <tr style="${i % 2 === 0 ? 'background: rgba(255,255,255,0.02);' : ''}">
-                                                <td style="padding: 10px; font-weight: 500;">${r.name}</td>
-                                                <td style="padding: 10px; text-align: right; color: var(--primary); font-weight: 700;">${r.rate.toFixed(2)}%</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                    <tfoot>
-                                        <tr style="background: rgba(16, 185, 129, 0.1); border-top: 2px solid var(--primary);">
-                                            <td style="padding:10px; font-weight: 800; font-size: 14px;">Total Institutional Average</td>
-                                            <td style="padding:10px; text-align: right; color: var(--primary); font-weight: 800; font-size: 14px;">${(brData.overall_rate || 0).toFixed(2)}%</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        `;
-                    }
-                    analyticsCard.innerHTML = html;
-                }
-                return; // Exit early for high-fidelity special cases
+                directPlaced = allCompanies.filter(c => c.role === "Direct Placement");
             } catch (err) {
-                console.error("Failed to load institutional analytics:", err);
+                console.error("Direct Placement fetch failed:", err);
             }
         }
 
         // DEFAULT CASE: Branch-wise Placement Statistics
+        const isOfficialUSICT = college === "USICT" && (batchYear === "2022" || batchYear === "2023");
+        
+        if (college === "USICT" && !isOfficialUSICT) {
+            // If it's a hidden year but has direct placements, show ONLY the direct placement table
+            if (directPlaced.length > 0 && analyticsCard) {
+                analyticsCard.style.display = "block";
+                renderDirectPlacementTable(analyticsCard, directPlaced, batchYear);
+                return;
+            }
+            if (analyticsCard) {
+                analyticsCard.style.display = "none";
+            }
+            return;
+        } else if (analyticsCard) {
+            analyticsCard.style.display = "block";
+        }
+
+
         try {
             // Restore original UI if it was swapped (or if it's the first render)
             if (analyticsCard) {
@@ -591,7 +528,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (body) {
                     body.innerHTML = labels.map((b, i) => {
                         const c = counts[i];
-                        const p = total > 0 ? ((c / total) * 100).toFixed(1) : 0;
+                        // Use official rate if available, else calculate from student count
+                        const officialRate = (data.rates && data.rates[i] !== undefined) ? data.rates[i] : null;
+                        const p = officialRate !== null ? officialRate.toFixed(2) : (total > 0 ? ((c / total) * 100).toFixed(1) : 0);
+                        
                         return `
                         <tr>
                             <td style="font-weight:600;">${b}</td>
@@ -610,33 +550,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const ctx = canvas.getContext('2d');
 
-            // Short labels for branch chart (matching reference image)
-            const shortLabels = labels.map(l => {
-                if (l.includes('Data Science'))       return 'AI & DS';
-                if (l.includes('Machine Learning'))   return 'AI & ML';
-                if (l.includes('Internet of Things')) return 'IIOT';
-                if (l.includes('Automation'))          return 'A & R';
-                return l;
-            });
-
-            // Compute total for percentage labels
+            // Compute total for percentage labels (used for fallback if rates not available)
             const totalPlaced = counts.reduce((s, v) => s + v, 0);
 
             new Chart(ctx, {
                 type: 'pie',
                 plugins: [ChartDataLabels],
                 data: {
-                    labels: shortLabels,
+                    labels: labels.map(l => {
+                        const short = l.includes('Data Science') ? 'AI & DS' :
+                                      l.includes('Machine Learning') ? 'AI & ML' :
+                                      l.includes('Internet of Things') ? 'IIOT' :
+                                      l.includes('Automation') ? 'A & R' : l;
+                        return short;
+                    }),
                     datasets: [{
                         data: counts,
-                        // Order: AI & ML (hot pink), AI & DS (dark purple), IIOT (light purple), A & R (light pink)
-                        // The branch_full order from DB: AI&DS, AI&ML, IIOT, A&R
-                        // Remap colors to match image 2: DS=dark purple, ML=hot pink, IIOT=lt purple, AR=lt pink
                         backgroundColor: [
-                            '#7B1FA2', // AI & DS — dark purple
-                            '#E91E8C', // AI & ML — hot pink
-                            '#9C59B6', // IIOT — medium purple
-                            '#F06292', // A & R — light pink
+                            '#7B1FA2', // DS/CSE
+                            '#E91E8C', // ML/IT
+                            '#9C59B6', // IIOT/ECE
+                            '#F06292', // A & R
                         ],
                         borderWidth: 2,
                         borderColor: '#111',
@@ -647,31 +581,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },   // Labels shown in-slice via datalabels
+                        legend: { display: false },
                         tooltip: {
-                            padding: 12,
-                            backgroundColor: 'rgba(0,0,0,0.95)',
-                            borderColor: 'rgba(255,255,255,0.1)',
-                            borderWidth: 1,
-                            displayColors: true,
                             callbacks: {
                                 label: (ctx) => {
                                     const val = ctx.raw;
-                                    const pct = totalPlaced > 0 ? Math.round((val / totalPlaced) * 100) : 0;
-                                    return ` ${ctx.label}: ${val} Placed (${pct}%)`;
+                                    const rate = (data.rates && data.rates[ctx.dataIndex] !== undefined) 
+                                                 ? data.rates[ctx.dataIndex] 
+                                                 : (totalPlaced > 0 ? (val / totalPlaced) * 100 : 0);
+                                    return ` ${ctx.label}: ${val} Placed (${Math.round(rate)}%)`;
                                 }
                             }
                         },
                         datalabels: {
                             color: '#ffffff',
-                            font: { size: 14, weight: 'bold' },
+                            font: { size: 13, weight: 'bold' },
                             textAlign: 'center',
                             formatter: (value, ctx) => {
                                 const label = ctx.chart.data.labels[ctx.dataIndex];
-                                const pct = totalPlaced > 0 ? Math.round((value / totalPlaced) * 100) : 0;
-                                return `${label}\n${pct}%`;
+                                const rate = (data.rates && data.rates[ctx.dataIndex] !== undefined) 
+                                             ? data.rates[ctx.dataIndex] 
+                                             : (totalPlaced > 0 ? (value / totalPlaced) * 100 : 0);
+                                return `${label}\n${Math.round(rate)}%`;
                             },
-                            // Only show label if slice is big enough
                             display: (ctx) => {
                                 const value = ctx.dataset.data[ctx.dataIndex];
                                 const pct = totalPlaced > 0 ? (value / totalPlaced) * 100 : 0;

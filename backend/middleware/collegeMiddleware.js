@@ -7,10 +7,10 @@ const enforceCollege = (req, res, next) => {
     if (!req.body) req.body = {};
 
     // 2. Extract context from Header, Query, or Body
-    const college = req.headers["x-college"] 
-                 || req.headers["x-college-context"] 
-                 || req.query?.college 
-                 || req.body?.college;
+    const college = req.headers["x-college"]
+        || req.headers["x-college-context"]
+        || req.query?.college
+        || req.body?.college;
 
     // 3. SAFE DEFAULT (Step 2)
     // If college context is missing or invalid, default to "USAR" to prevent breaking the flow

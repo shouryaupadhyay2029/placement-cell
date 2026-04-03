@@ -766,59 +766,11 @@ async function fetchDashboardStats(year = "2025") {
         if (cardHighest) {
             cardHighest.onclick = () => {
                 const overallHighest = bs.overall_highest_package || highestPackage;
-                let bodyHtml = `<div style="text-align:center; padding:10px 0 20px 0; border-bottom:1px solid rgba(255,255,255,0.07); margin-bottom:18px;">
+                let bodyHtml = `<div style="text-align:center; padding:20px 0;">
                     <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Institutional Peak</p>
-                    <strong style="color:var(--primary); font-size:34px; letter-spacing:-1px;">₹${overallHighest} LPA</strong>
-                    <p style="opacity:0.5; font-size:12px; margin-top:4px;">On Campus CTC</p>
+                    <strong style="color:var(--primary); font-size:42px; letter-spacing:-1px;">₹${overallHighest} LPA</strong>
+                    <p style="opacity:0.5; font-size:13px; margin-top:10px;">On Campus CTC across all departments.</p>
                 </div>`;
-
-                if (branchFull.length > 0) {
-                    bodyHtml += `<div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; font-size:13px;">
-                        <thead>
-                            <tr style="background:rgba(212,175,55,0.12); color:var(--primary);">
-                                <th style="padding:10px 8px; text-align:left; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Branch</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Placed</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Rate</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Avg</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Highest</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-                    branchFull.forEach((b, i) => {
-                        const bg = i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)';
-                        const isTop = b.highest_package === overallHighest;
-                        bodyHtml += `<tr style="background:${bg};">
-                            <td style="padding:10px 8px; color:${isTop ? 'var(--primary)' : 'rgba(255,255,255,0.85)'}; font-weight:${isTop ? '700' : '500'}; border-bottom:1px solid rgba(255,255,255,0.04);">${b.name}</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04);">${b.placed}</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.7);">${b.rate}%</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.7);">${b.avg_package} LPA</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:${isTop ? 'var(--primary)' : 'rgba(255,255,255,0.9)'}; font-weight:700;">${b.highest_package} LPA</td>
-                        </tr>`;
-                    });
-                    // Totals row
-                    bodyHtml += `<tr style="background:rgba(212,175,55,0.08); font-weight:700;">
-                        <td style="padding:10px 8px; color:var(--primary);">Total / Avg</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${totalPlaced}</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${data.placement_rate}%</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${avgPackage} LPA</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${overallHighest} LPA</td>
-                    </tr></tbody></table></div>`;
-                } else {
-                    // Fallback bar chart
-                    const officialHighest = bs.branch_highest || [];
-                    if (officialHighest.length > 0) {
-                        bodyHtml += `<div style="display:flex; flex-direction:column; gap:12px;">`;
-                        officialHighest.forEach(r => {
-                            const pct = (r.value / overallHighest) * 100;
-                            bodyHtml += `<div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid rgba(212,175,55,0.1);">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="font-weight:600;">${r.name}</span><strong style="color:var(--primary);">${r.value} LPA</strong></div>
-                                <div style="background:rgba(255,255,255,0.05); border-radius:10px; height:7px;"><div style="background:linear-gradient(90deg,var(--primary-dark),var(--primary)); height:100%; width:${pct}%; border-radius:10px;"></div></div>
-                            </div>`;
-                        });
-                        bodyHtml += `</div>`;
-                    }
-                }
                 showPopup("Highest Package — Branch Breakdown", bodyHtml);
             };
         }
@@ -828,61 +780,12 @@ async function fetchDashboardStats(year = "2025") {
         if (cardAverage) {
             cardAverage.onclick = () => {
                 const overallAvg = bs.overall_avg_package || avgPackage;
-                let bodyHtml = `<div style="text-align:center; padding:10px 0 20px 0; border-bottom:1px solid rgba(255,255,255,0.07); margin-bottom:18px;">
+                let bodyHtml = `<div style="text-align:center; padding:20px 0;">
                     <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Institutional Average CTC</p>
-                    <strong style="color:var(--primary); font-size:34px; letter-spacing:-1px;">₹${overallAvg} LPA</strong>`;
-                if (medianPackage > 0) bodyHtml += `<p style="opacity:0.55; font-size:13px; margin-top:5px;">Median: <strong style="color:var(--primary);">${medianPackage} LPA</strong></p>`;
-                bodyHtml += `</div>`;
-
-                if (branchFull.length > 0) {
-                    bodyHtml += `<div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; font-size:13px;">
-                        <thead>
-                            <tr style="background:rgba(212,175,55,0.12); color:var(--primary);">
-                                <th style="padding:10px 8px; text-align:left; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Branch</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Total</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Part.</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Placed</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Avg</th>
-                                <th style="padding:10px 8px; text-align:center; font-weight:700; border-bottom:1px solid rgba(212,175,55,0.2);">Median</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-                    branchFull.forEach((b, i) => {
-                        const bg = i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)';
-                        bodyHtml += `<tr style="background:${bg};">
-                            <td style="padding:10px 8px; color:rgba(255,255,255,0.85); font-weight:500; border-bottom:1px solid rgba(255,255,255,0.04);">${b.name}</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); opacity:0.6;">${b.total}</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); opacity:0.6;">${b.participated}</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.9); font-weight:600;">${b.placed}</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--primary); font-weight:700;">${b.avg_package} LPA</td>
-                            <td style="padding:10px 8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(255,255,255,0.7);">${b.median_package} LPA</td>
-                        </tr>`;
-                    });
-                    bodyHtml += `<tr style="background:rgba(212,175,55,0.08); font-weight:700;">
-                        <td style="padding:10px 8px; color:var(--primary);">Total</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">501</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">251</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${totalPlaced}</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${overallAvg} LPA</td>
-                        <td style="padding:10px 8px; text-align:center; color:var(--primary);">${medianPackage} LPA</td>
-                    </tr></tbody></table></div>`;
-                } else {
-                    // Fallback bar chart
-                    const officialAverage = bs.branch_average || [];
-                    if (officialAverage.length > 0) {
-                        const maxAvg = Math.max(...officialAverage.map(r => r.value));
-                        bodyHtml += `<div style="display:flex; flex-direction:column; gap:12px;">`;
-                        officialAverage.forEach(r => {
-                            const pct = (r.value / maxAvg) * 100;
-                            bodyHtml += `<div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid rgba(212,175,55,0.1);">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="font-weight:600;">${r.name}</span><strong style="color:var(--primary);">${r.value} LPA</strong></div>
-                                <div style="background:rgba(255,255,100,0.05); border-radius:10px; height:7px;"><div style="background:linear-gradient(90deg,#B8860B,var(--primary)); height:100%; width:${pct}%; border-radius:10px;"></div></div>
-                            </div>`;
-                        });
-                        bodyHtml += `</div>`;
-                    }
-                }
+                    <strong style="color:var(--primary); font-size:42px; letter-spacing:-1px;">₹${overallAvg} LPA</strong>`;
+                if (medianPackage > 0) bodyHtml += `<p style="opacity:0.55; font-size:14px; margin-top:8px;">Median Compensation: <strong style="color:var(--primary);">${medianPackage} LPA</strong></p>`;
+                bodyHtml += `<p style="opacity:0.5; font-size:13px; margin-top:15px; border-top:1px solid rgba(255,255,255,0.05); padding-top:15px;">Average salary across all technical and consulting roles.</p>
+                </div>`;
                 showPopup("Average Package — Branch Breakdown", bodyHtml);
             };
         }

@@ -45,6 +45,7 @@ const authRoutes = require("./routes/auth");
 const studentRoutes = require("./routes/studentRoutes");
 const companyRoutes = require("./routes/companyRoutes");
 const placementRoutes = require("./routes/placementRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
 const pdfRoutes = require("./routes/pdfRoutes");
 const { protect, admin } = require("./middleware/authMiddleware");
 const { enforceCollege } = require("./middleware/collegeMiddleware");
@@ -55,6 +56,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/students", enforceCollege, lockPlacementData, studentRoutes);
 app.use("/api/companies", enforceCollege, lockPlacementData, companyRoutes);
 app.use("/api/placements", enforceCollege, lockPlacementData, placementRoutes);
+app.use("/api/analytics", enforceCollege, lockPlacementData, analyticsRoutes);
 app.use("/api/ingest", enforceCollege, lockPlacementData, pdfRoutes);
 
 app.get("/api/profile", protect, (req, res) => {
