@@ -44,12 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 2. FETCH DATA FROM BACKEND ---
     async function fetchCompanies() {
         try {
-            const response = await window.api.get("/companies");
+            const college = localStorage.getItem("college") || "USAR";
+            const batch = localStorage.getItem("year") || "2025";
+            const response = await window.api.get(`/companies/eligibility?batch_year=${batch}`);
             const result = await response.json();
             
             // Standardize format (Backend returns { success: true, data: [...] })
-            let rawCompanies = result.data || result;
-            if (!Array.isArray(rawCompanies)) rawCompanies = [];
+            let rawCompanies = Array.isArray(result) ? result : (result.data || []);
             
             // --- NEW: Only show companies specifically added for Eligibility Intelligence ---
             const intelligenceReady = [

@@ -13,7 +13,7 @@ app.use(helmet({
     contentSecurityPolicy: false, // Allow external assets if needed
 }));
 app.use(cors({
-    origin: (origin, callback) => callback(null, true), 
+    origin: (origin, callback) => callback(null, true),
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -49,15 +49,15 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const pdfRoutes = require("./routes/pdfRoutes");
 const { protect, admin } = require("./middleware/authMiddleware");
 const { enforceCollege } = require("./middleware/collegeMiddleware");
-const { dataGuard } = require("./middleware/dataGuardMiddleware");
+const { lockPlacementData } = require("./middleware/dataGuardMiddleware");
 
 // API routes
 app.use("/api/auth", authRoutes);
-app.use("/api/students", enforceCollege, dataGuard, studentRoutes);
-app.use("/api/companies", enforceCollege, dataGuard, companyRoutes);
-app.use("/api/placements", enforceCollege, dataGuard, placementRoutes);
-app.use("/api/analytics", enforceCollege, dataGuard, analyticsRoutes);
-app.use("/api/ingest", enforceCollege, dataGuard, pdfRoutes);
+app.use("/api/students", enforceCollege, lockPlacementData, studentRoutes);
+app.use("/api/companies", enforceCollege, lockPlacementData, companyRoutes);
+app.use("/api/placements", enforceCollege, lockPlacementData, placementRoutes);
+app.use("/api/analytics", enforceCollege, lockPlacementData, analyticsRoutes);
+app.use("/api/ingest", enforceCollege, lockPlacementData, pdfRoutes);
 
 app.get("/api/profile", protect, (req, res) => {
     res.json({ success: true, user: req.user });

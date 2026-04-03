@@ -3,13 +3,15 @@
     "2024": {
       "summary": {
         "companiesVisited": 28,
+        "companiesOffered": 21,
+        "totalEnrolled": 217,
         "studentsPlaced": 135,
         "totalOffers": 135,
         "highestPackage": 51,
         "averagePackage": 5.64,
         "medianPackage": 4.25,
-        "internships": 0,
-        "ppo": 0
+        "ppo": 0,
+        "internships": 0
       },
       "companies": [
         {
@@ -382,251 +384,145 @@
       },
       "companies": [
         {
-          "name": "GoDaddy Inc.",
+          "name": "GoDaddy",
           "batch": 2025,
-          "role": "SDE Intern",
+          "role": "Software Development Engineer",
           "package": "27 LPA",
           "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Gurugram / Remote",
+          "eligibilityText": "B.E. / B.Tech CS/IT",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "RT Camp Solutions Pvt. Ltd.",
+          "name": "rtCamp",
           "batch": 2025,
-          "role": "Software Engineer",
+          "role": "WordPress Developer",
           "package": "12 LPA",
           "offers": 3,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Remote / Hybrid",
+          "eligibilityText": "Based on GitHub Profile & Projects",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "McKinley & Rice Pvt. Ltd.",
+          "name": "McKinley & Rice",
           "batch": 2025,
-          "role": "Business Development Executive",
+          "role": "Full Stack Developer",
           "package": "10 LPA",
-          "offers": 1,
-          "location": "India",
-          "eligibilityText": "Consulting",
+          "offers": 3,
+          "location": "Noida / Global",
+          "eligibilityText": "70% or 75% throughout (10th, 12th, Graduation)",
           "status": "Completed",
           "deadline": "Finished"
-        },
-        {
-          "name": "Infosys Ltd.",
-          "batch": 2025,
-          "role": "Specialist Programmer",
-          "package": "9.5 LPA",
-          "offers": 5,
-          "location": "India",
-          "eligibilityText": "Technology",
-          "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 6.8,
-          "allowed_branches": "B.E / B.Tech / M.Tech / MCA (Any Branch)",
-          "backlog_criteria": "No active backlogs",
-          "selection_process": "Online OA > Technical Interview > HR Discussion",
-          "description": "Expect questions on DSA, DBMS, OS, Networking, OOP, and one programming language.",
-          "required_skills": [
-            "DSA",
-            "DBMS",
-            "OS",
-            "Networking",
-            "OOP",
-            "Programming (Java/Python/C++)"
-          ],
-          "company_type": "Service-based IT"
         },
         {
           "name": "TVS Motor Company",
           "batch": 2025,
-          "role": "Quality Engineer (Mechatronics)",
+          "role": "Graduate Engineer Trainee (GET)",
           "package": "8 LPA",
           "offers": 2,
-          "location": "India",
-          "eligibilityText": "Manufacturing",
+          "location": "Hosur / Bangalore / Chennai",
+          "eligibilityText": "60% Marks Throughout education",
           "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 6,
-          "allowed_branches": "Mechanical, Electrical, Electronics, CS, IT",
-          "backlog_criteria": "No history of arrears / backlogs throughout education",
-          "selection_process": "Profile Screening > Online Technical Test > Leadership Assessment > Group Discussion > PI",
-          "description": "Strong technical knowledge of core subjects, proficiency in MS Excel, and good communication skills.",
-          "required_skills": [
-            "Core Engineering Domain",
-            "MS Excel",
-            "Communication",
-            "Leadership Competence"
-          ],
-          "company_type": "Core Automotive"
+          "deadline": "Finished"
         },
         {
           "name": "RSM USI",
           "batch": 2025,
-          "role": "Technical Risk Consultant / Associate Consultant",
+          "role": "Advisory / Audit / Tax Associate",
           "package": "7.7 LPA",
           "offers": 5,
-          "location": "India",
-          "eligibilityText": "Consulting",
-          "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 0,
-          "allowed_branches": "MBA (Finance), MCA, M.Com, CA, CPA",
-          "backlog_criteria": "No active backlogs allowed",
-          "selection_process": "Numerical & Situational Tests > Technical (US GAAP) Interview > HR Round",
-          "description": "Strong understanding of US GAAP accounting standards, financial statement analysis, advanced Excel, and PowerPoint. Focus on critical thinking.",
-          "required_skills": [
-            "US GAAP",
-            "Financial Analysis",
-            "Excel",
-            "PowerPoint",
-            "Critical Thinking"
-          ],
-          "company_type": "Tax & Advisory"
-        },
-        {
-          "name": "Terafac Technologies Pvt. Ltd.",
-          "batch": 2025,
-          "role": "Jr. AIML & Vision Engineer",
-          "package": "7 LPA",
-          "offers": 2,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Gurugram / Bangalore / Hyderabad",
+          "eligibilityText": "CA, CPA, MBA (Finance), or Master's in Commerce",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Internzvalley Pvt. Ltd.",
+          "name": "Internzvalley",
           "batch": 2025,
-          "role": "Business Development Executive",
+          "role": "Technical Intern / Trainee",
           "package": "7 LPA",
           "offers": 11,
-          "location": "India",
-          "eligibilityText": "Consulting",
+          "location": "Remote / Hybrid",
+          "eligibilityText": "Student from 2nd/3rd/Final year",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Cloud Techner Services Pvt. Ltd.",
+          "name": "Cloud Techner",
           "batch": 2025,
-          "role": "DevOps Intern",
+          "role": "Cloud / DevOps Engineer",
           "package": "7 LPA",
           "offers": 2,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Pan India / Remote",
+          "eligibilityText": "B.E/B.Tech in CS, IT, or related fields",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Cognizant Corporation",
+          "name": "Amar Ujala",
           "batch": 2025,
-          "role": "Genc Next Select",
-          "package": "6.75 LPA",
-          "offers": 3,
-          "location": "India",
-          "eligibilityText": "Technology",
-          "status": "Completed",
-          "deadline": "Finished"
-        },
-        {
-          "name": "Amar Ujala Ltd.",
-          "batch": 2025,
-          "role": "Data Scientist",
+          "role": "Tech Operations Trainee",
           "package": "6.5 LPA",
           "offers": 1,
-          "location": "India",
-          "eligibilityText": "Media",
+          "location": "Noida / New Delhi",
+          "eligibilityText": "Bachelors in any technical stream",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Infogain Corporation India Ltd.",
+          "name": "Infogain",
           "batch": 2025,
-          "role": "Associate Software Engineer / Data Science Engineer",
+          "role": "Associate Software Engineer",
           "package": "6.35 LPA",
           "offers": 7,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Noida / Mumbai / Pune",
+          "eligibilityText": "60% throughout (Class X, XII and Graduation)",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Genpact Ltd.",
+          "name": "Terafac Technologies",
           "batch": 2025,
-          "role": "DevOps Cloud Consultant / Technical Consultant",
-          "package": "6.35 LPA",
-          "offers": 5,
-          "location": "India",
-          "eligibilityText": "Consulting",
+          "role": "Embedded Systems / ML Engineer",
+          "package": "6 - 7 LPA",
+          "offers": 4,
+          "location": "Noida / Bangalore",
+          "eligibilityText": "Degree in CS/IT or Electronics",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "McKinley & Rice Pvt. Ltd.",
+          "name": "TensorGo",
           "batch": 2025,
-          "role": "Sales Intern / Accounts Manager",
+          "role": "Computer Vision / Full Stack Engineer",
           "package": "6 LPA",
           "offers": 2,
-          "location": "India",
-          "eligibilityText": "Consulting",
-          "status": "Completed",
-          "deadline": "Finished"
-        },
-        {
-          "name": "TensorGo Software Technologies",
-          "batch": 2025,
-          "role": "Computer Vision Engineer",
-          "package": "6 LPA",
-          "offers": 2,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Hyderabad / Remote",
+          "eligibilityText": "Min 70% in 10th/12th, 8.0 CGPA in Degree",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
           "name": "AVL",
           "batch": 2025,
-          "role": "Software Developer",
+          "role": "Graduate Engineering Trainee",
           "package": "6 LPA",
           "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
-          "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 6,
-          "allowed_branches": "Mechanical and Electronics engineering",
-          "backlog_criteria": "Zero active or cleared backlogs permitted",
-          "selection_process": "Domain Knowledge Test > Aptitude Test > Personal Interview",
-          "description": "Automotive engineering and development services. Simulation and testing focus.",
-          "required_skills": [
-            "Mechanical Engineering",
-            "Electronics Engineering",
-            "Aptitude",
-            "Domain Core Knowledge"
-          ],
-          "company_type": "Automotive / Simulation"
-        },
-        {
-          "name": "RTDS Pvt. Ltd.",
-          "batch": 2025,
-          "role": "Cloud Solutions Consultant",
-          "package": "6 LPA",
-          "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Gurugram / Pune",
+          "eligibilityText": "Consistently >60% in 10th, 12th, and B.Tech",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Terafac Technologies Pvt. Ltd.",
+          "name": "RTDS",
           "batch": 2025,
-          "role": "Jr. Robotics Engineer",
+          "role": "Associate Cloud Telephony / Server Engineer",
           "package": "6 LPA",
-          "offers": 2,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "offers": 1,
+          "location": "Gurugram / Noida",
+          "eligibilityText": "75% in X, XII and Graduation (Strict Requirement)",
           "status": "Completed",
           "deadline": "Finished"
         },
@@ -653,67 +549,48 @@
           "deadline": "Finished"
         },
         {
-          "name": "Capgemini Technology Services India Ltd.",
+          "name": "Publicis Sapient",
           "batch": 2025,
-          "role": "Analyst-2",
-          "package": "5.75 LPA",
-          "offers": 2,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "role": "Software Engineer / Data Engineer",
+          "package": "5.1 - 15.0 LPA",
+          "offers": 1,
+          "location": "Gurugram / Bangalore / Pune",
+          "eligibilityText": "6.5 CGPA or 65% throughout academics",
           "status": "Completed",
           "deadline": "Finished"
         },
         {
-          "name": "Publicis Sapient",
-          "batch": 2025,
-          "role": "Quality Engineer",
-          "package": "5.1 LPA",
-          "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
-          "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 6.5,
-          "allowed_branches": "CS, IT, Software Eng, Math & Computing, ECE",
-          "backlog_criteria": "No active backlogs",
-          "selection_process": "Online Coding Assessment > 2-3 Technical Interviews (DSA/System Design) > HR Evaluation",
-          "description": "Problem-solving, Linked lists, Trees, Subarrays. Databases, OS, Networking, OOP, Agile, Digital Consulting.",
-          "required_skills": [
-            "DSA (Trees/Lists/Subarrays)",
-            "SQL",
-            "DBMS",
-            "OS",
-            "Networking",
-            "OOP",
-            "Agile",
-            "Digital Transformation",
-            "UX Design"
-          ],
-          "company_type": "Digital Transformation Consulting"
-        },
-        {
           "name": "Unthinkable Solutions",
           "batch": 2025,
-          "role": "Software Developer",
+          "role": "Full-Stack Developer",
           "package": "5 LPA",
           "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "location": "Gurugram",
+          "eligibilityText": "60% or above in 10th, 12th, and Graduation",
           "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 6.5,
-          "allowed_branches": "B.Tech, MCA, BCA, M.Tech (CS, IT, ECE)",
-          "backlog_criteria": "No pending/active backlogs",
-          "selection_process": "Online Coding Assessment (3 Qs) > Technical Rounds (2-3) > HR Interview",
-          "description": "Project-focused assessments. Strong understanding of DSA, OOPS, Databases, and SQL.",
-          "required_skills": [
-            "DSA",
-            "OOPS",
-            "Databases",
-            "SQL",
-            "Logic Development"
-          ],
-          "company_type": "Product Engineering"
+          "deadline": "Finished"
+        },
+        {
+          "name": "Capgemini",
+          "batch": 2025,
+          "role": "Software Engineering Associate",
+          "package": "4.5 - 7.5 LPA",
+          "offers": 28,
+          "location": "Pan India",
+          "eligibilityText": "Minimum 65% throughout (10th, 12th, UG/PG)",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Genpact",
+          "batch": 2025,
+          "role": "Software Engineer",
+          "package": "4.5 - 6.35 LPA",
+          "offers": 5,
+          "location": "Gurugram / Noida / Bangalore",
+          "eligibilityText": "60% or 6.0 CGPA throughout (10th, 12th, UG)",
+          "status": "Completed",
+          "deadline": "Finished"
         },
         {
           "name": "High-Technext Engineering & Telecom Pvt. Ltd.",
@@ -727,24 +604,13 @@
           "deadline": "Finished"
         },
         {
-          "name": "Capgemini Technology Services India Ltd.",
+          "name": "Cognizant",
           "batch": 2025,
-          "role": "Analyst",
-          "package": "4.25 LPA",
-          "offers": 26,
-          "location": "India",
-          "eligibilityText": "Technology",
-          "status": "Completed",
-          "deadline": "Finished"
-        },
-        {
-          "name": "Cognizant Corporation",
-          "batch": 2025,
-          "role": "Genc Select",
-          "package": "4 LPA",
-          "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "role": "Software Engineer (GenC)",
+          "package": "4.0 - 6.75 LPA",
+          "offers": 4,
+          "location": "Pan India",
+          "eligibilityText": "60% or above throughout (10th, 12th, UG, PG). Max 2-year academic gap.",
           "status": "Completed",
           "deadline": "Finished"
         },
@@ -752,49 +618,23 @@
           "name": "Infosys Ltd.",
           "batch": 2025,
           "role": "Systems Engineer",
-          "package": "3.6 LPA",
-          "offers": 9,
-          "location": "India",
-          "eligibilityText": "Technology",
+          "package": "3.6 - 9.5 LPA",
+          "offers": 14,
+          "location": "Multiple Locations",
+          "eligibilityText": "Minimum 60% throughout academics (10th, 12th, UG/PG)",
           "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 6.8,
-          "allowed_branches": "B.E / B.Tech / M.Tech / MCA (Any Branch)",
-          "backlog_criteria": "No active backlogs",
-          "selection_process": "Online OA > Technical Interview > HR Discussion",
-          "description": "Expect questions on DSA, DBMS, OS, Networking, OOP, and one programming language.",
-          "required_skills": [
-            "DSA",
-            "DBMS",
-            "OS",
-            "Networking",
-            "OOP",
-            "Programming (Java/Python/C++)"
-          ],
-          "company_type": "Service-based IT"
+          "deadline": "Finished"
         },
         {
           "name": "IndiaMart",
           "batch": 2025,
-          "role": "Field Sales Exec. Intern",
+          "role": "Executive - Client Acquisition / Servicing",
           "package": "3.5 LPA",
           "offers": 1,
-          "location": "India",
-          "eligibilityText": "E-Commerce",
+          "location": "Noida / Pan India",
+          "eligibilityText": "65% in X/XII, 50% or above in Graduation/MBA",
           "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 5,
-          "allowed_branches": "Any Degree / MBA / Engineering",
-          "backlog_criteria": "None specified",
-          "selection_process": "Sales Aptitude Assessment > Group Discussion > Personal Interview Rounds",
-          "description": "Excellent verbal communication, active listening, quick thinking, and a target-oriented attitude.",
-          "required_skills": [
-            "Verbal Communication",
-            "Active Listening",
-            "Quick Thinking",
-            "Target-Oriented Attitude"
-          ],
-          "company_type": "B2B Marketplace"
+          "deadline": "Finished"
         },
         {
           "name": "Physics Wallah",
@@ -806,33 +646,6 @@
           "eligibilityText": "EdTech",
           "status": "Completed",
           "deadline": "Finished"
-        },
-        {
-          "name": "Microsoft",
-          "batch": 2025,
-          "role": "Software Engineer",
-          "package": "- LPA",
-          "offers": 1,
-          "location": "India",
-          "eligibilityText": "Technology",
-          "status": "Completed",
-          "deadline": "Finished",
-          "min_cgpa": 8,
-          "allowed_branches": "B.E / B.Tech / M.Tech / MCA (CS/IT or related)",
-          "backlog_criteria": "No active backlogs permitted",
-          "selection_process": "Online Round > 4-6 Stages (Onsite Rounds / Technical DSA-1 / Technical DSA-2 / System Design / HR)",
-          "description": "Exceptional DSA and system design skills. Roles in Azure, Office, Copilot and AI. Proficiency in C#, Java, Python, and C++.",
-          "required_skills": [
-            "DSA (Exceptional)",
-            "System Design",
-            "C#",
-            "Java",
-            "Python",
-            "C++",
-            "Azure/Cloud",
-            "Leadership Principles"
-          ],
-          "company_type": "Big Tech Product"
         }
       ],
       "eligibility": [
@@ -864,13 +677,14 @@
             "Unit Testing"
           ],
           "company_type": "Service-based",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 28
         },
         {
           "company_name": "rtCamp",
           "batch_year": "2025",
           "role": "WordPress Developer",
-          "package": "Standard Product Package",
+          "package": "12 LPA",
           "location": "Remote / Hybrid",
           "min_cgpa": 0,
           "allowed_branches": "CS, IT, All (Skill-based)",
@@ -885,15 +699,16 @@
             "GitHub Portfolio"
           ],
           "company_type": "Product-based",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 3
         },
         {
           "company_name": "GoDaddy",
           "batch_year": "2025",
           "role": "Software Development Engineer",
-          "package": "8 - 14 LPA",
+          "package": "27 LPA",
           "location": "Gurugram / Remote",
-          "min_cgpa": 0,
+          "min_cgpa": 8,
           "allowed_branches": "B.E./B.Tech in CS or related fields",
           "backlog_criteria": "No active backlogs allowed",
           "selection_process": "HackerRank OA > 2-3 Technical Interviews > Behavioral/Fit Round",
@@ -910,13 +725,14 @@
             "AI/ML"
           ],
           "company_type": "Product-based",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         },
         {
           "company_name": "McKinley & Rice",
           "batch_year": "2025",
           "role": "Full Stack Developer",
-          "package": "LPA",
+          "package": "10 LPA",
           "location": "Noida / Global",
           "min_cgpa": 7,
           "allowed_branches": "B.Tech (CSE/IT/AI), MCA, M.Tech, MBA",
@@ -931,7 +747,8 @@
             "Time Management"
           ],
           "company_type": "Global Multi-disciplinary",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 3
         },
         {
           "company_name": "Infosys Ltd.",
@@ -954,13 +771,14 @@
             "Programming (Java/Python/C++)"
           ],
           "company_type": "Service-based IT",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 14
         },
         {
           "company_name": "TVS Motor Company",
           "batch_year": "2025",
           "role": "Graduate Engineer Trainee (GET)",
-          "package": "7 - 9.5 LPA",
+          "package": "8 LPA",
           "location": "Hosur / Bangalore / Chennai",
           "min_cgpa": 6,
           "allowed_branches": "Mechanical, Electrical, Electronics, CS, IT",
@@ -975,13 +793,14 @@
             "Leadership Competence"
           ],
           "company_type": "Core Automotive",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 2
         },
         {
           "company_name": "RSM USI",
           "batch_year": "2025",
           "role": "Advisory / Audit / Tax Associate",
-          "package": "Competitive Package",
+          "package": "7.7 LPA",
           "location": "Gurugram / Bangalore / Hyderabad",
           "min_cgpa": 0,
           "allowed_branches": "MBA (Finance), MCA, M.Com, CA, CPA",
@@ -997,13 +816,14 @@
             "Critical Thinking"
           ],
           "company_type": "Tax & Advisory",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 5
         },
         {
           "company_name": "Terafac Technologies",
           "batch_year": "2025",
           "role": "Embedded Systems / ML Engineer",
-          "package": "Standard Product Package",
+          "package": "6 - 7 LPA",
           "location": "Noida / Bangalore",
           "min_cgpa": 0,
           "allowed_branches": "B.E / B.Tech / BCA / MCA / BSc / MSc (CS/IT/Electronics)",
@@ -1023,13 +843,14 @@
             "IoT"
           ],
           "company_type": "Robotics & IoT",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 4
         },
         {
           "company_name": "Internzvalley",
           "batch_year": "2025",
           "role": "Technical Intern / Trainee",
-          "package": "Stipend Based",
+          "package": "7 LPA",
           "location": "Remote / Hybrid",
           "min_cgpa": 0,
           "allowed_branches": "All Engineering Branches",
@@ -1043,13 +864,14 @@
             "Technical Fundamentals"
           ],
           "company_type": "EdTech / Consulting",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 11
         },
         {
           "company_name": "Cloud Techner",
           "batch_year": "2025",
           "role": "Cloud / DevOps Engineer",
-          "package": "Competitive Package",
+          "package": "7 LPA",
           "location": "Pan India / Remote",
           "min_cgpa": 0,
           "allowed_branches": "B.E / B.Tech (CS, IT, or related)",
@@ -1069,13 +891,14 @@
             "Ansible"
           ],
           "company_type": "Cloud & Managed Services",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 2
         },
         {
           "company_name": "Cognizant",
           "batch_year": "2025",
           "role": "Software Engineer (GenC)",
-          "package": "4.0 - 8.5 LPA",
+          "package": "4.0 - 6.75 LPA",
           "location": "Pan India",
           "min_cgpa": 6,
           "allowed_branches": "B.E / B.Tech / M.E / M.Tech / MCA / MSc",
@@ -1099,13 +922,14 @@
             "Unit Testing"
           ],
           "company_type": "Service-based MNC",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 4
         },
         {
           "company_name": "Amar Ujala",
           "batch_year": "2025",
           "role": "Tech Operations Trainee",
-          "package": "Standard Package",
+          "package": "6.5 LPA",
           "location": "Noida / New Delhi",
           "min_cgpa": 0,
           "allowed_branches": "All Engineering Branches",
@@ -1119,13 +943,14 @@
             "Media Tech"
           ],
           "company_type": "Media & Publishing",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         },
         {
           "company_name": "Infogain",
           "batch_year": "2025",
           "role": "Associate Software Engineer",
-          "package": "Standard Package",
+          "package": "6.35 LPA",
           "location": "Noida / Mumbai / Pune",
           "min_cgpa": 6,
           "allowed_branches": "CS, IT, Electronics",
@@ -1142,13 +967,14 @@
             "Technical Logic"
           ],
           "company_type": "Digital Platform Engineering",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 7
         },
         {
           "company_name": "Genpact",
           "batch_year": "2025",
           "role": "Software Engineer",
-          "package": "4.5 - 6.5 LPA",
+          "package": "4.5 - 6.35 LPA",
           "location": "Gurugram / Noida / Bangalore",
           "min_cgpa": 6,
           "allowed_branches": "CSE, ECE, IT, EEE, TELECOM, EI",
@@ -1168,13 +994,14 @@
             "AI for Business"
           ],
           "company_type": "Professional Services / MNC",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 5
         },
         {
           "company_name": "TensorGo",
           "batch_year": "2025",
           "role": "Computer Vision / Full Stack Engineer",
-          "package": "Competitive",
+          "package": "6 LPA",
           "location": "Hyderabad / Remote",
           "min_cgpa": 8,
           "allowed_branches": "CS, AI, Data Science (B.Tech/M.Tech/MCA)",
@@ -1196,13 +1023,14 @@
             "AWS/OCI"
           ],
           "company_type": "AI & CV Specialist",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 2
         },
         {
           "company_name": "AVL",
           "batch_year": "2025",
           "role": "Graduate Engineering Trainee",
-          "package": "Standard Package",
+          "package": "6 LPA",
           "location": "Gurugram / Pune",
           "min_cgpa": 6,
           "allowed_branches": "Mechanical and Electronics engineering",
@@ -1217,13 +1045,14 @@
             "Domain Core Knowledge"
           ],
           "company_type": "Automotive / Simulation",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         },
         {
           "company_name": "RTDS",
           "batch_year": "2025",
           "role": "Associate Cloud Telephony / Server Engineer",
-          "package": "Standard Package",
+          "package": "6 LPA",
           "location": "Gurugram / Noida",
           "min_cgpa": 7.5,
           "allowed_branches": "B.Tech (CS/IT/EC/ET/EE), B.Com",
@@ -1240,13 +1069,14 @@
             "Data Structures"
           ],
           "company_type": "Cloud Telephony & Services",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         },
         {
           "company_name": "Publicis Sapient",
           "batch_year": "2025",
           "role": "Software Engineer / Data Engineer",
-          "package": "8.5 - 15.0 LPA",
+          "package": "5.1 - 15.0 LPA",
           "location": "Gurugram / Bangalore / Pune",
           "min_cgpa": 6.5,
           "allowed_branches": "CS, IT, Software Eng, Math & Computing, ECE",
@@ -1266,13 +1096,14 @@
             "UX Design"
           ],
           "company_type": "Digital Transformation Consulting",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         },
         {
           "company_name": "Unthinkable Solutions",
           "batch_year": "2025",
           "role": "Full-Stack Developer",
-          "package": "Competitive",
+          "package": "5 LPA",
           "location": "Gurugram",
           "min_cgpa": 6.5,
           "allowed_branches": "B.Tech, MCA, BCA, M.Tech (CS, IT, ECE)",
@@ -1288,13 +1119,14 @@
             "Logic Development"
           ],
           "company_type": "Product Engineering",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         },
         {
           "company_name": "IndiaMart",
           "batch_year": "2025",
           "role": "Executive - Client Acquisition / Servicing",
-          "package": "4.5 - 7.5 LPA",
+          "package": "3.5 LPA",
           "location": "Noida / Pan India",
           "min_cgpa": 5,
           "allowed_branches": "Any Degree / MBA / Engineering",
@@ -1309,73 +1141,41 @@
             "Target-Oriented Attitude"
           ],
           "company_type": "B2B Marketplace",
-          "college": "USAR"
-        },
-        {
-          "company_name": "Microsoft",
-          "batch_year": "2025",
-          "role": "Software Development Engineer (SDE-1)",
-          "package": "44 - 51 LPA",
-          "location": "Hyderabad / Bangalore / Noida",
-          "min_cgpa": 8,
-          "allowed_branches": "B.E / B.Tech / M.Tech / MCA (CS/IT or related)",
-          "backlog_criteria": "No active backlogs permitted",
-          "selection_process": "Online Round > 4-6 Stages (Onsite Rounds / Technical DSA-1 / Technical DSA-2 / System Design / HR)",
-          "eligibility": "Consistent academics (typically 7.0-8.0+ CGPA)",
-          "description": "Exceptional DSA and system design skills. Roles in Azure, Office, Copilot and AI. Proficiency in C#, Java, Python, and C++.",
-          "required_skills": [
-            "DSA (Exceptional)",
-            "System Design",
-            "C#",
-            "Java",
-            "Python",
-            "C++",
-            "Azure/Cloud",
-            "Leadership Principles"
-          ],
-          "company_type": "Big Tech Product",
-          "college": "USAR"
+          "college": "USAR",
+          "offers": 1
         }
       ],
       "analytics": {
         "branchStats": [
           {
-            "name": "AI & Data Science",
-            "total": 132,
-            "eligible": 75,
+            "name": "Data Science",
             "placed": 36,
-            "rate": 48.00,
-            "avg": 6.33,
+            "rate": 48,
+            "avg": 6.5,
             "median": 6.35,
             "highest": 12
           },
           {
-            "name": "AI & Machine Learning",
-            "total": 131,
-            "eligible": 69,
+            "name": "Machine Learning",
             "placed": 30,
             "rate": 43.48,
-            "avg": 6.16,
+            "avg": 6.2,
             "median": 6,
             "highest": 12
           },
           {
             "name": "Industrial Internet of Things",
-            "total": 127,
-            "eligible": 66,
             "placed": 33,
-            "rate": 50.00,
-            "avg": 5.88,
+            "rate": 50,
+            "avg": 5.9,
             "median": 4.5,
             "highest": 27
           },
           {
             "name": "Automation & Robotics",
-            "total": 111,
-            "eligible": 41,
             "placed": 16,
             "rate": 39.02,
-            "avg": 5.95,
+            "avg": 5.8,
             "median": 6,
             "highest": 8
           }
@@ -1400,15 +1200,15 @@
         ],
         "topCompanies": [
           {
-            "name": "GoDaddy Inc.",
+            "name": "GoDaddy",
             "package": "27 LPA"
           },
           {
-            "name": "RT Camp Solutions Pvt. Ltd.",
+            "name": "rtCamp",
             "package": "12 LPA"
           },
           {
-            "name": "McKinley & Rice Pvt. Ltd.",
+            "name": "McKinley & Rice",
             "package": "10 LPA"
           },
           {
@@ -3915,7 +3715,7 @@
         "medianPackage": 17.35,
         "internships": 0,
         "ppo": 0,
-        "placementRate": 62.50
+        "placementRate": 62.5
       },
       "companies": [
         {
@@ -4333,7 +4133,7 @@
             "name": "Computer Science and Engineering",
             "placed": 60,
             "total": 88,
-            "rate": 67.80
+            "rate": 67.8
           },
           {
             "name": "Electronics and Communication Engineering",
@@ -4400,7 +4200,7 @@
         "medianPackage": 12,
         "internships": 0,
         "ppo": 0,
-        "placementRate": 85.40
+        "placementRate": 85.4
       },
       "companies": [
         {
@@ -4956,7 +4756,7 @@
         {
           "name": "CTPL.ai",
           "batch": 2024,
-          "role": "Assistant Professorσè⌐τÉå",
+          "role": "Assistant Professor",
           "package": "5.40 LPA",
           "offers": 6,
           "location": "India",

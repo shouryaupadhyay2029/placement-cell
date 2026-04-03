@@ -17,14 +17,14 @@ function initUI() {
 function initAboutModal() {
     const aboutBtn = document.getElementById("aboutBtn");
     if (!aboutBtn) return;
-    
+
     aboutBtn.addEventListener("click", () => {
         const glassPopup = document.getElementById("glassPopup");
         const glassPopupTitle = document.getElementById("glassPopupTitle");
         const glassPopupBody = document.getElementById("glassPopupBody");
-        
+
         if (!glassPopup || !glassPopupTitle || !glassPopupBody) return;
-        
+
         glassPopupTitle.textContent = "About PlacePro";
         glassPopupBody.innerHTML = `
             <div class="about-scroll-body" style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); max-width: 600px; padding-right: 12px; max-height: 68vh; overflow-y: auto;">
@@ -81,10 +81,10 @@ function initAboutModal() {
                 <p style="font-style: italic; color: var(--primary); text-align: center; margin-top: 10px; font-weight: 500;">PlacePro — Turning placement data into actionable intelligence.</p>
             </div>
         `;
-        
+
         glassPopup.style.display = 'flex';
         setTimeout(() => glassPopup.classList.add("show"), 10);
-        
+
         const closeBtn = document.getElementById("closeGlassPopup");
         if (closeBtn) {
             closeBtn.onclick = () => {
@@ -248,7 +248,7 @@ function initDynamicSidebar() {
                 document.body.classList.add('fade-out');
                 const globalLoader = document.getElementById('loader');
                 if (globalLoader) globalLoader.classList.remove('hidden');
-                
+
                 setTimeout(() => {
                     window.location.href = nav;
                 }, 500);
@@ -303,7 +303,7 @@ function initDynamicSidebar() {
 
     dynamicSidebar.addEventListener('mouseenter', expandSidebar);
     dynamicSidebar.addEventListener('mouseleave', collapseSidebar);
-    
+
     if (collegePanel) {
         collegePanel.addEventListener('mouseenter', expandSidebar);
         collegePanel.addEventListener('mouseleave', collapseSidebar);
@@ -314,7 +314,7 @@ function initDynamicSidebar() {
 function initMobileDrawer() {
     const hamburger = document.getElementById('hamburgerToggle');
     const dynamicSidebar = document.getElementById('dynamicSidebar');
-    
+
     if (!hamburger || !dynamicSidebar) return;
 
     // Create overlay if not exists
@@ -534,100 +534,211 @@ async function fetchDashboardStats(year = "2025") {
     // Update Header Context immediately for responsiveness
     updateContextIndicator(college, year);
 
+    // Show skeletons in cards
+    const cards = document.querySelectorAll(".card");
     cards.forEach(card => {
         card.classList.add("skeleton-active");
         const num = card.querySelector(".number");
-        if (num) num.style.opacity = "0";
+        if (num) num.style.opacity = "0"; // Hide actual number while loading
     });
 
     try {
+        const college = localStorage.getItem("college") || "USAR";
+
+        console.log(`[DATA-ISOLATION] Fetching Dashboard Stats | College: ${college} | Year: ${year}`);
+
+        // CENTRALIZED DATA FLOW: Always use the dynamic Analytics API (Single Source of Truth)
         const response = await window.api.get(`/companies/analytics?batch_year=${year}`);
         if (!response.ok) throw new Error("Fetch failed");
         const data = await response.json();
 
+        // Also fetch companies for the list if needed
         const compResponse = await window.api.get(`/companies?batch_year=${year}`);
         const companies = compResponse.ok ? await compResponse.json() : [];
 
+        // Ensure minimum 300ms for visual transition
         await new Promise(resolve => setTimeout(resolve, 300));
 
+        // Define variables for highlights and popups
         const bs = data.batch_stats || {};
         const companiesVisited = bs.companies_visited || data.total_companies || 0;
         const companiesOffered = bs.companies_offered || 0;
+        const totalCompanies = data.total_companies || 0;
         const avgPackage = data.avg_package || 0;
         const highestPackage = data.highest_package || 0;
         const totalPlaced = data.total_placed || 0;
+        const ppoOffers = bs.ppo_offers || data.ppo_offers || 0;
+        const internshipOffers = bs.internship_offers || data.internship_offers || 0;
+        const medianPackage = bs.median_package || data.median_package || 0;
+        const branchFull = bs.branch_full || [];
         const activelyParticipated = bs.actively_participated || data.total_enrolled || 0;
         const totalStudents = bs.total_students || activelyParticipated;
 
         const elTotalCompanies = document.getElementById("dashCompanies");
         const elHighest = document.getElementById("dashHighest");
+        const elHighestCap = document.getElementById("dashHighestCaption");
         const elAverage = document.getElementById("dashAverage");
         const elPlaced = document.getElementById("dashPlaced");
         const elEnrolled = document.getElementById("dashEnrolled");
         const elRate = document.getElementById("dashRate");
         const elSubText = document.getElementById("dashSubText");
         const dashTitle = document.getElementById("dashTitle");
-        const elHighestCap = document.getElementById("dashHighestCaption");
 
         if (dashTitle) dashTitle.textContent = `${year || 'Overall'} Placement Overview`;
 
-        if (elTotalCompanies) elTotalCompanies.textContent = companiesVisited || "0";
-        if (elHighest) elHighest.textContent = highestPackage || "—";
-        if (elAverage) elAverage.textContent = avgPackage || "—";
-        if (elPlaced) elPlaced.textContent = totalPlaced || "0";
-        if (elEnrolled) elEnrolled.textContent = activelyParticipated || "0";
-        if (elRate) elRate.textContent = (data.placement_rate || "0") + "%";
+        // Update main numbers using data-target for counters
+        if (elTotalCompanies) {
+            elTotalCompanies.setAttribute("data-target", companiesVisited);
+            // Suffix logic for 80+ companies in USAR 2025
+            if (college === "USAR" && year === "2025" && companiesVisited >= 80) {
+                elTotalCompanies.setAttribute("data-suffix", "+");
+            } else {
+                elTotalCompanies.removeAttribute("data-suffix");
+            }
+        }
+        if (elHighest) elHighest.setAttribute("data-target", highestPackage);
+        if (elAverage) elAverage.setAttribute("data-target", avgPackage);
+        if (elPlaced) elPlaced.setAttribute("data-target", totalPlaced);
+        if (elEnrolled) elEnrolled.setAttribute("data-target", activelyParticipated);
+        if (elRate) elRate.setAttribute("data-target", data.placement_rate || 0);
 
+        // Update enriched card captions
         const elCompaniesCap = document.getElementById("dashCompaniesCaption");
         const elPlacedCap = document.getElementById("dashPlacedCaption");
         const elAvgCap = document.getElementById("dashAvgCaption");
         const elEnrolledCap = document.getElementById("dashEnrolledCaption");
 
-        if (elCompaniesCap) elCompaniesCap.textContent = (college === 'USAR' && year === '2025') ? "30 offered job" : `${companiesOffered} Offered Jobs`;
-        if (elPlacedCap) elPlacedCap.textContent = (college === 'USAR' && year === '2025') ? "251 actively participated" : `out of ${activelyParticipated} participated`;
+        if (elCompaniesCap) {
+            if (college === "USICT") {
+                elCompaniesCap.textContent = "Documented Success Rate";
+            } else {
+                // Simplified dynamic terminology for USAR (e.g. 30 offered job, 21 offered job)
+                elCompaniesCap.textContent = `${companiesOffered} offered job`;
+            }
+        }
+        if (elPlacedCap) {
+            if (college === "USICT") {
+                elPlacedCap.textContent = "Total documented offers";
+            } else {
+                // Simplified dynamic terminology for USAR (e.g. 251 actively participated)
+                elPlacedCap.textContent = `${activelyParticipated} actively participated`;
+            }
+        }
         if (elAvgCap) elAvgCap.textContent = `LPA across all companies`;
-        if (elEnrolledCap) elEnrolledCap.textContent = `${totalStudents} Total • ${activelyParticipated} Participated`;
+        if (elEnrolledCap) elEnrolledCap.textContent = college === "USICT" ? `${year} Placement Statistics` : `${totalStudents} Total • ${activelyParticipated} Participated`;
 
+        // Update subtexts & captions
         if (elSubText) {
-            elSubText.textContent = (college === 'USAR' && year === '2025') 
-                ? "Institutional average and highest package metrics locked for USAR 2025."
-                : `${totalPlaced} Offers • ${companiesVisited}+ Companies Visited • ${data.placement_rate || 0}% Placement Rate`;
+            if (college === 'USAR' && year === '2025') {
+                let parts = [`${totalPlaced} Offers`];
+                if (ppoOffers > 0) parts.push(`${ppoOffers} PPO`);
+                if (internshipOffers > 0) parts.push(`${internshipOffers} Internship`);
+                parts.push(`${companiesVisited}+ Companies`);
+                parts.push(`Median ${medianPackage} LPA`);
+                elSubText.innerHTML = parts.join(' &bull; ');
+            } else {
+                elSubText.innerHTML = `${totalPlaced} Offers &bull; ${companiesVisited}+ Companies Visited &bull; ${data.placement_rate || 0}% Placement Rate`;
+            }
         }
 
         if (elHighestCap) {
-            elHighestCap.textContent = (college === 'USAR' && year === '2025') ? 'Industrial Internet of Things' : `Highest recorded package`;
-        }
-
-        if (data) updateHeroCarousel(data, year || "Overall");
-
-        const highlightsList = document.getElementById("dashHighlightsList");
-        if (highlightsList) {
-            highlightsList.textContent = ""; 
-            const insights = [];
-            if (highestPackage > 0) insights.push({ icon: "💰", title: "Package Peak", text: `Highest package of ₹${highestPackage} LPA recorded.` });
-            if (data.placement_rate > 0) insights.push({ icon: "⚡", title: "Placement Velocity", text: `Drive maintained a ${data.placement_rate}% success rate.` });
+            const overallHighest = bs.overall_highest_package || highestPackage;
+            // Identify branch with highest package dynamically (e.g. Industrial Internet of Things for 2025)
+            const highestBranch = (bs.branch_full || []).find(b => parseFloat(b.highest) === parseFloat(overallHighest));
             
-            insights.forEach(ins => {
-                const card = document.createElement("div");
-                card.className = "insight-card-mini";
-                card.innerHTML = `
-                    <div class="insight-icon-box">${ins.icon}</div>
-                    <div class="insight-content">
-                        <h4 class="insight-title">${ins.title}</h4>
-                        <p class="insight-text">${ins.text}</p>
-                    </div>
-                `;
-                highlightsList.appendChild(card);
-            });
+            if (highestBranch) {
+                elHighestCap.textContent = highestBranch.name;
+            } else {
+                const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : college;
+                elHighestCap.textContent = `Offered by ${topComp}`;
+            }
         }
 
+        // Trigger counters to animate new values
         runCounters();
 
-    } catch (e) {
-        console.error("Dashboard Locked - Fetch Error:", e);
-        const dashTitle = document.getElementById("dashTitle");
-        const elSubText = document.getElementById("dashSubText");
-        if (dashTitle) dashTitle.textContent = "Data Unavailable (Read-Only Mode)";
+        if (data) {
+            updateHeroCarousel(data, year || "Overall");
+        }
+
+        // --- DYNAMIC PLACEMENT INSIGHTS ---
+        if (highlightsList) {
+            let insights = [];
+
+            // 1. Highest Package Insight
+            if (highestPackage > 0) {
+                const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : "Elite Recruitment";
+                insights.push({
+                    icon: "💰",
+                    title: "Package Peak",
+                    text: `Highest package of <strong>₹${highestPackage} LPA</strong> offered by <strong>${topComp}</strong>.`
+                });
+            }
+
+            // 2. Top Recruiter Insight
+            if (companies.length > 0) {
+                // Find company with most students (from recruitment API data)
+                const recRes = await window.api.get(`/companies/recruitment?batch_year=${year}`);
+                const recData = recRes.ok ? await recRes.json() : { companies: [], students_placed: [] };
+
+                let maxPlaced = 0;
+                let topRecruiter = "";
+                recData.companies.forEach((name, i) => {
+                    if (recData.students_placed[i] > maxPlaced) {
+                        maxPlaced = recData.students_placed[i];
+                        topRecruiter = name;
+                    }
+                });
+
+                if (topRecruiter) {
+                    insights.push({
+                        icon: "🏢",
+                        title: "Top Recruiter",
+                        text: `<strong>${topRecruiter}</strong> emerged as the top recruiter with <strong>${maxPlaced} offers</strong>.`
+                    });
+                }
+
+                // 3. Industry Dominance
+                const industries = companies.map(c => c.type || c.category || "Technology");
+                const mostCommon = industries.sort((a, b) =>
+                    industries.filter(v => v === a).length - industries.filter(v => v === b).length
+                ).pop();
+
+                if (mostCommon) {
+                    insights.push({
+                        icon: "📈",
+                        title: "Market Trend",
+                        text: `Most placements were driven by <strong>${mostCommon}</strong> sector companies.`
+                    });
+                }
+            }
+
+            // 4. Placement Vitality
+            if (data.placement_rate > 0) {
+                const status = data.placement_rate > 80 ? "exceptional" : "steady";
+                insights.push({
+                    icon: "⚡",
+                    title: "Placement Velocity",
+                    text: `The drive maintained a ${status} <strong>${data.placement_rate}%</strong> placement rate for ${year}.`
+                });
+            }
+
+            // Render as cards if possible, otherwise list
+            highlightsList.innerHTML = insights.length > 0
+                ? insights.map(ins => `
+                    <div class="insight-card-mini">
+                        <div class="insight-icon-box">${ins.icon}</div>
+                        <div class="insight-content">
+                            <h4 class="insight-title">${ins.title}</h4>
+                            <p class="insight-text">${ins.text}</p>
+                        </div>
+                    </div>
+                `).join('')
+                : `<div class="insight-placeholder">No patterns identified for this criteria yet</div>`;
+        }
+
+        // Setup Popup Logic
+        const glassPopup = document.getElementById("glassPopup");
         const glassPopupTitle = document.getElementById("glassPopupTitle");
         const glassPopupBody = document.getElementById("glassPopupBody");
         const closeGlassPopup = document.getElementById("closeGlassPopup");
@@ -683,7 +794,7 @@ async function fetchDashboardStats(year = "2025") {
                     <strong style="color:var(--primary); font-size:42px; letter-spacing:-1.5px; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));">₹${overallHighest} LPA</strong>
                     <p style="opacity:0.5; font-size:13px; margin-top:8px;">Certified across all departments for the ${year} drive.</p>
                 </div>`;
-                
+
                 if (bs.branch_full && bs.branch_full.length > 0) {
                     bodyHtml += `<div class="branch-stats-grid" style="display: flex; flex-direction: column; gap: 12px;">`;
                     bs.branch_full.forEach(branch => {
@@ -702,7 +813,7 @@ async function fetchDashboardStats(year = "2025") {
                 } else {
                     bodyHtml += `<p style="padding:20px; text-align:center; opacity:0.5; font-style:italic;">Detailed branch-wise peak data is being verified for ${year}.</p>`;
                 }
-                
+
                 showPopup("Highest Package Breakdown", bodyHtml);
             };
         }
@@ -736,7 +847,7 @@ async function fetchDashboardStats(year = "2025") {
                 } else {
                     bodyHtml += `<p style="padding:20px; text-align:center; opacity:0.5; font-style:italic;">Institutional average breakdown is under calculation for ${year}.</p>`;
                 }
-                
+
                 showPopup("Average Package Breakdown", bodyHtml);
             };
         }
@@ -1560,7 +1671,7 @@ function initCustomDropdowns() {
                 const wasActive = optionsList.classList.contains('active');
                 // Close all other instances
                 document.querySelectorAll('.custom-dropdown-options').forEach(o => o.classList.remove('active'));
-                
+
                 if (!wasActive) {
                     optionsList.classList.add('active');
                     // Scroll selected pill into center for alarm effect
@@ -1657,7 +1768,7 @@ function updateBatchUI(batches, college) {
 async function triggerPageRefresh(year) {
     const mainContent = document.querySelector('.main-content');
     const loader = document.getElementById('loader');
-    
+
     if (mainContent) mainContent.classList.add('context-switching');
     if (loader) loader.classList.remove('hidden');
 
@@ -1668,9 +1779,9 @@ async function triggerPageRefresh(year) {
         if (typeof fetchAllStudents === 'function') promises.push(fetchAllStudents(year));
         if (typeof loadAnalytics === 'function') promises.push(loadAnalytics(year));
         if (typeof fetchCompanies === 'function') promises.push(fetchCompanies());
-        
+
         await Promise.allSettled(promises);
-        
+
         if (typeof updateContextIndicator === 'function') {
             const currentCollege = document.body.getAttribute('data-college-context') || localStorage.getItem('college') || 'USAR';
             updateContextIndicator(currentCollege, year);
