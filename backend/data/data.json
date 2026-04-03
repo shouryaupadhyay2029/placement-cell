@@ -369,14 +369,16 @@
     "2025": {
       "summary": {
         "companiesVisited": 80,
+        "companiesOffered": 30,
+        "totalEnrolled": 251,
         "studentsPlaced": 115,
-        "totalOffers": 26,
+        "totalOffers": 115,
         "highestPackage": 27,
         "averagePackage": 6.11,
         "medianPackage": 6,
         "internships": 0,
         "ppo": 0,
-        "placementRate": 37.68
+        "placementRate": 45.81
       },
       "companies": [
         {
@@ -1338,28 +1340,44 @@
       "analytics": {
         "branchStats": [
           {
-            "name": "AI & DS",
+            "name": "AI & Data Science",
+            "total": 132,
+            "eligible": 75,
             "placed": 36,
-            "total": 35,
-            "rate": 31
+            "rate": 48.00,
+            "avg": 6.33,
+            "median": 6.35,
+            "highest": 12
           },
           {
-            "name": "AI & ML",
+            "name": "AI & Machine Learning",
+            "total": 131,
+            "eligible": 69,
             "placed": 30,
-            "total": 35,
-            "rate": 26
+            "rate": 43.48,
+            "avg": 6.16,
+            "median": 6,
+            "highest": 12
           },
           {
-            "name": "IIOT",
+            "name": "Industrial Internet of Things",
+            "total": 127,
+            "eligible": 66,
             "placed": 33,
-            "total": 34,
-            "rate": 29
+            "rate": 50.00,
+            "avg": 5.88,
+            "median": 4.5,
+            "highest": 27
           },
           {
-            "name": "A & R",
+            "name": "Automation & Robotics",
+            "total": 111,
+            "eligible": 41,
             "placed": 16,
-            "total": 34,
-            "rate": 14
+            "rate": 39.02,
+            "avg": 5.95,
+            "median": 6,
+            "highest": 8
           }
         ],
         "packageDistribution": [
@@ -3281,16 +3299,214 @@
     },
     "2021": {
       "summary": {
-        "companiesVisited": 32,
+        "companiesVisited": 18,
         "studentsPlaced": 246,
         "totalOffers": 246,
-        "highestPackage": 32,
+        "highestPackage": 40,
         "averagePackage": 6.28,
         "medianPackage": 3.6,
         "internships": 0,
         "ppo": 0
       },
       "companies": [
+        {
+          "name": "CRED",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "35-40 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Amazon",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "30-32 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Flipkart",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "25-30 LPA",
+          "offers": 3,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Razorpay",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "25-30 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Goldman Sachs",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "23-25 LPA",
+          "offers": 3,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Disney+Hotstar",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "23-25 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Browser Stack",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "16-20 LPA",
+          "offers": 2,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Hackerrank",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "18-20 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "BNY Mellon",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "17-20 LPA",
+          "offers": 2,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Grofers",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "15-18 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Vedantu",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "15-18 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Pulang",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "15-20 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Nasdaq",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "12-16 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Morgan Stanley",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "10-13 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Atlan (Frontend)",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "8-15 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Airbus",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "8-13 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "Mobstack",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "8-10 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
+        {
+          "name": "HashedIn",
+          "batch": 2021,
+          "role": "Direct Placement",
+          "package": "7-10 LPA",
+          "offers": 1,
+          "location": "India",
+          "eligibilityText": "Technology",
+          "status": "Completed",
+          "deadline": "Finished"
+        },
         {
           "name": "Amazon (SDE)",
           "batch": 2021,
@@ -3316,7 +3532,7 @@
         {
           "name": "UNIAS Inc.",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "20.00 LPA",
           "offers": 10,
           "location": "India",
@@ -3338,7 +3554,7 @@
         {
           "name": "Adobe",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "12.11 LPA",
           "offers": 1,
           "location": "India",
@@ -3349,7 +3565,7 @@
         {
           "name": "rtCamp",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "12.00 LPA",
           "offers": 1,
           "location": "India",
@@ -3360,7 +3576,7 @@
         {
           "name": "Thorogood",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "10.00 LPA",
           "offers": 1,
           "location": "India",
@@ -3371,7 +3587,7 @@
         {
           "name": "ZS Associates",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "10.00 LPA",
           "offers": 2,
           "location": "India",
@@ -3382,7 +3598,7 @@
         {
           "name": "Cvent",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "9.70 LPA",
           "offers": 3,
           "location": "India",
@@ -3393,7 +3609,7 @@
         {
           "name": "Cvent",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "7.05 LPA",
           "offers": 4,
           "location": "India",
@@ -3404,7 +3620,7 @@
         {
           "name": "Cvent",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "7.00 LPA",
           "offers": 4,
           "location": "India",
@@ -3415,7 +3631,7 @@
         {
           "name": "Josh Technology",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "8.00 LPA",
           "offers": 2,
           "location": "India",
@@ -3426,7 +3642,7 @@
         {
           "name": "Josh Technology",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "6.75 LPA",
           "offers": 1,
           "location": "India",
@@ -3448,7 +3664,7 @@
         {
           "name": "Yamaha Motors",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "7.00 LPA",
           "offers": 8,
           "location": "India",
@@ -3459,7 +3675,7 @@
         {
           "name": "ClickLabs(JungleWorks)",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "7.00 LPA",
           "offers": 3,
           "location": "India",
@@ -3470,7 +3686,7 @@
         {
           "name": "Wiley",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "7.00 LPA",
           "offers": 2,
           "location": "India",
@@ -3481,7 +3697,7 @@
         {
           "name": "Libsys",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "7.00 LPA",
           "offers": 1,
           "location": "India",
@@ -3492,7 +3708,7 @@
         {
           "name": "Freecharge",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "6.70 LPA",
           "offers": 1,
           "location": "India",
@@ -3503,7 +3719,7 @@
         {
           "name": "Indiamart",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "6.00 LPA",
           "offers": 4,
           "location": "India",
@@ -3514,7 +3730,7 @@
         {
           "name": "Bravura Solutions",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "5.50 LPA",
           "offers": 8,
           "location": "India",
@@ -3525,7 +3741,7 @@
         {
           "name": "Compunnel Digital",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "4.80 LPA",
           "offers": 1,
           "location": "India",
@@ -3547,7 +3763,7 @@
         {
           "name": "VectoScalar",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "4.50 LPA",
           "offers": 5,
           "location": "India",
@@ -3558,7 +3774,7 @@
         {
           "name": "NewGen",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "4.25 LPA",
           "offers": 1,
           "location": "India",
@@ -3569,7 +3785,7 @@
         {
           "name": "PSIT",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "4.20 LPA",
           "offers": 2,
           "location": "India",
@@ -3580,7 +3796,7 @@
         {
           "name": "Tata Advance System Ltd.",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "3.99 LPA",
           "offers": 1,
           "location": "India",
@@ -3602,7 +3818,7 @@
         {
           "name": "Media Agility",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "3.60 LPA",
           "offers": 9,
           "location": "India",
@@ -3624,7 +3840,7 @@
         {
           "name": "Cognizant",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "3.50 LPA",
           "offers": 3,
           "location": "India",
@@ -3635,7 +3851,7 @@
         {
           "name": "Omnepresent",
           "batch": 2021,
-          "role": "Direct Placement",
+          "role": "Placement",
           "package": "3.50 LPA",
           "offers": 1,
           "location": "India",

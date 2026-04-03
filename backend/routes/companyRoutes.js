@@ -115,6 +115,8 @@ router.get("/analytics", (req, res) => {
         batch_stats: {
             total_placed: summary.studentsPlaced,
             companies_visited: summary.companiesVisited,
+            companies_offered: summary.companiesOffered || 0,
+            actively_participated: summary.totalEnrolled || 0,
             overall_highest_package: summary.highestPackage,
             overall_avg_package: summary.averagePackage,
             median_package: summary.medianPackage || 0,

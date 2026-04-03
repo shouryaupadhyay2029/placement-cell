@@ -49,15 +49,15 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const pdfRoutes = require("./routes/pdfRoutes");
 const { protect, admin } = require("./middleware/authMiddleware");
 const { enforceCollege } = require("./middleware/collegeMiddleware");
-const { lockPlacementData } = require("./middleware/dataGuardMiddleware");
+const { dataGuard } = require("./middleware/dataGuardMiddleware");
 
 // API routes
 app.use("/api/auth", authRoutes);
-app.use("/api/students", enforceCollege, lockPlacementData, studentRoutes);
-app.use("/api/companies", enforceCollege, lockPlacementData, companyRoutes);
-app.use("/api/placements", enforceCollege, lockPlacementData, placementRoutes);
-app.use("/api/analytics", enforceCollege, lockPlacementData, analyticsRoutes);
-app.use("/api/ingest", enforceCollege, lockPlacementData, pdfRoutes);
+app.use("/api/students", enforceCollege, dataGuard, studentRoutes);
+app.use("/api/companies", enforceCollege, dataGuard, companyRoutes);
+app.use("/api/placements", enforceCollege, dataGuard, placementRoutes);
+app.use("/api/analytics", enforceCollege, dataGuard, analyticsRoutes);
+app.use("/api/ingest", enforceCollege, dataGuard, pdfRoutes);
 
 app.get("/api/profile", protect, (req, res) => {
     res.json({ success: true, user: req.user });

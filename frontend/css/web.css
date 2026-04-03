@@ -2195,6 +2195,36 @@ body.sidebar-open .main-content {
     /* Adjusted from -90deg for a cleaner UI look */
 }
 
+.card .card-hint {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    padding: 4px 10px;
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+}
+
+.card:hover .card-hint {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.card-hint span {
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: block;
+}
+
+/* Sub-text styles */
 .sub-text {
     color: var(--primary);
     margin-top: 10px;
@@ -3491,7 +3521,105 @@ body.fade-out {
     transform: rotate(360deg);
 }
 
-/* Glossy Stat Popup */
+/* Clean Radial UI (Hero Slide) - No Central Button */
+.avg-container {
+    position: absolute;
+    top: 50%;
+    right: 64%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 280px;
+    z-index: 100;
+}
+
+.branch {
+    position: absolute;
+    opacity: 0;
+    transform: scale(0.85) translate(10px, 0);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: default;
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0));
+}
+
+.avg-container:hover .branch {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+    color: #fff;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.5), 0 0 25px rgba(212, 175, 55, 0.2);
+}
+
+.branch:hover {
+    color: var(--primary) !important;
+    transform: scale(1.05) translate(5px, 0) !important;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.8), 0 0 30px rgba(212, 175, 55, 0.4) !important;
+}
+
+.branch::after {
+    content: attr(data-value) " LPA";
+    display: block;
+    font-size: 11px;
+    color: var(--primary);
+    font-weight: 700;
+    margin-top: 4px;
+    opacity: 0.85;
+}
+
+/* Premium Trace Lines (Centered Radial Path) */
+.branch::before {
+    content: "";
+    position: absolute;
+    width: 45px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6));
+    top: 50%;
+    right: 100%;
+    margin-right: 12px;
+    pointer-events: none;
+    opacity: 0.3;
+    transition: opacity 0.4s ease;
+}
+
+.avg-container:hover .branch::before {
+    opacity: 1;
+}
+
+/* Branch Positions (Elite Fan Arcing Right) */
+.branch:nth-child(1) { top: 0; left: 65%; transition-delay: 0.05s; }
+.branch:nth-child(2) { top: 28%; left: 88%; transition-delay: 0.1s; }
+.branch:nth-child(3) { top: 62%; left: 88%; transition-delay: 0.15s; }
+.branch:nth-child(4) { bottom: 0; left: 65%; transition-delay: 0.2s; }
+
+/* Dots Navigation */
+.carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 40px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dot.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Glass Popup for Analytics (Same as Student Modal) */
 .glass-popup-overlay {
     position: fixed;
     top: 0;
@@ -3517,10 +3645,12 @@ body.fade-out {
 .glass-popup-content {
     background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.9));
     border: 1px solid rgba(212, 175, 55, 0.4);
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.15), inset 0 0 20px rgba(212, 175, 55, 0.05);
+    box-shadow:
+        0 0 30px rgba(212, 175, 55, 0.15),
+        inset 0 0 20px rgba(212, 175, 55, 0.05);
     border-radius: 16px;
     padding: 30px;
-    width: 450px;
+    width: 500px;
     max-width: 90%;
     transform: scale(0.8) translateY(20px);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3563,7 +3693,7 @@ body.fade-out {
 .popup-body {
     font-size: 15px;
     line-height: 1.7;
-    max-height: 60vh;
+    max-height: 70vh;
     overflow-y: auto;
     padding-right: 5px;
 }
@@ -3579,6 +3709,33 @@ body.fade-out {
 .popup-body::-webkit-scrollbar-thumb {
     background: rgba(212, 175, 55, 0.3);
     border-radius: 4px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 992px) {
+    .carousel-item {
+        grid-template-columns: 1fr;
+        padding: 40px;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .slide-content {
+        align-items: center;
+    }
+
+    .slide-data-visual {
+        align-items: center;
+    }
+
+    .slide-value {
+        font-size: 72px;
+    }
+
+    .semi-circle-reveal {
+        display: none;
+        /* Hide on mobile for better UX */
+    }
 }
 
 /* SMOOTH TRANSITIONS FOR FILTERS */

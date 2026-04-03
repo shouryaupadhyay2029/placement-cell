@@ -428,6 +428,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         } else if (analyticsCard) {
             analyticsCard.style.display = "block";
+            // Pre-load direct placements into a variable if needed later
         }
 
 
@@ -614,6 +615,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
+            // 3. HYBRID ADDITION: For USICT 2022, append Direct Placement table if data exists
+            if (college === "USICT" && batchYear === "2022" && directPlaced.length > 0 && analyticsCard) {
+                const directContainer = document.createElement('div');
+                directContainer.style.marginTop = '40px';
+                directContainer.style.borderTop = '1px solid rgba(255,255,255,0.05)';
+                directContainer.style.paddingTop = '30px';
+                renderDirectPlacementTable(directContainer, directPlaced, batchYear);
+                analyticsCard.appendChild(directContainer);
+            }
+
         } catch (e) {
             console.error('Branch stats error:', e);
         }
@@ -741,6 +752,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem("selectedBatchYear", newYear);
             loadAnalytics(newYear);
         });
+    }
+
+    // Helper to render high-fidelity direct placement tables
+    function renderDirectPlacementTable(card, companies, year) {
+        if (!card || !companies.length) return;
+        card.innerHTML = `
+            <div class="card-header" style="margin-bottom: 25px;">
+                <h3 style="color: var(--text-main); font-size: 1.1rem; font-weight: 700;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-right: 12px; vertical-align: middle;">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8 12 12 16 16 12"></polyline>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                    </svg>
+                    Directly Placed Students (${year})
+                </h3>
+            </div>
+            <div class="table-container mini-table" style="margin-bottom: 30px;">
+                <table style="width: 100%; font-size: 13px;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 10px; text-align: left;">Company</th>
+                            <th style="padding: 10px; text-align: center;">Selections</th>
+                            <th style="padding: 10px; text-align: right;">Package (LPA)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${companies.map((c, i) => `
+                            <tr style="${i % 2 === 0 ? 'background: rgba(16, 185, 129, 0.03);' : ''}">
+                                <td style="padding: 10px; font-weight: 600;">${c.company_name || c.name}</td>
+                                <td style="padding: 10px; text-align: center; color: var(--primary); font-weight: 700;">${c.offers || c.students_placed || 1}</td>
+                                <td style="padding: 10px; text-align: right; opacity: 0.8; font-weight: 600;">${c.package}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
     }
 
     // Initial Load

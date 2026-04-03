@@ -18,6 +18,35 @@ function deepFreeze(obj) {
     return Object.freeze(obj);
 }
 
+/**
+ * dataGuardMiddleware.js - Production Safety Guard
+ * Forces read-only mode by default and disables all mutations
+ */
+const dataGuard = (req, res, next) => {
+    const method = req.method;
+
+    // Allow all GET requests
+    if (method === "GET") {
+        return next();
+    }
+
+    // mutations require strict ADMIN_KEY verification from environment
+    const adminKey = req.headers["x-admin-key"];
+    const secureKey = process.env.ADMIN_KEY || "lockdown_active"; 
+
+    if (!adminKey || adminKey !== secureKey) {
+        return res.status(403).json({
+            success: false,
+            message: "PRODUCTION LOCK ACTIVE: Data modifications are disabled in this environment.",
+            error: "Accidental or unauthorized data mutation is prevented by the Data Integrity Shield."
+        });
+    }
+
+    next();
+};
+
+module.exports = { lockPlacementData: dataGuard };
+
 function loadData() {
     try {
         const raw = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
@@ -35,9 +64,16 @@ function getCollegeData(college, batch) {
     const batchKey = batch ? String(batch) : null;
     
     if (!data[collegeKey]) return null;
-    if (batchKey && !data[collegeKey][batchKey]) return null;
     
-    return batchKey ? data[collegeKey][batchKey] : data[collegeKey];
+    const context = batchKey ? data[collegeKey][batchKey] : data[collegeKey];
+    
+    // Step 5: Strict Response Validation
+    if (batchKey && (!context || !context.summary || !context.companies)) {
+        console.error(`Data integrity error for ${collegeKey} ${batchKey}`);
+        return null;
+    }
+    
+    return context;
 }
 
 function getCompanies(college, batch) {

@@ -534,188 +534,100 @@ async function fetchDashboardStats(year = "2025") {
     // Update Header Context immediately for responsiveness
     updateContextIndicator(college, year);
 
-    // Show skeletons in cards
-    const cards = document.querySelectorAll(".card");
     cards.forEach(card => {
         card.classList.add("skeleton-active");
         const num = card.querySelector(".number");
-        if (num) num.style.opacity = "0"; // Hide actual number while loading
+        if (num) num.style.opacity = "0";
     });
 
     try {
-        const college = localStorage.getItem("college") || "USAR";
-
-        console.log(`[DATA-ISOLATION] Fetching Dashboard Stats | College: ${college} | Year: ${year}`);
-
-        // CENTRALIZED DATA FLOW: Always use the dynamic Analytics API (Single Source of Truth)
         const response = await window.api.get(`/companies/analytics?batch_year=${year}`);
         if (!response.ok) throw new Error("Fetch failed");
         const data = await response.json();
 
-        // Also fetch companies for the list if needed
         const compResponse = await window.api.get(`/companies?batch_year=${year}`);
         const companies = compResponse.ok ? await compResponse.json() : [];
 
-        // Ensure minimum 300ms for visual transition
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        // Define variables for highlights and popups
         const bs = data.batch_stats || {};
         const companiesVisited = bs.companies_visited || data.total_companies || 0;
         const companiesOffered = bs.companies_offered || 0;
-        const totalCompanies = data.total_companies || 0;
         const avgPackage = data.avg_package || 0;
         const highestPackage = data.highest_package || 0;
         const totalPlaced = data.total_placed || 0;
-        const ppoOffers = bs.ppo_offers || data.ppo_offers || 0;
-        const internshipOffers = bs.internship_offers || data.internship_offers || 0;
-        const medianPackage = bs.median_package || data.median_package || 0;
-        const branchFull = bs.branch_full || [];
         const activelyParticipated = bs.actively_participated || data.total_enrolled || 0;
         const totalStudents = bs.total_students || activelyParticipated;
 
         const elTotalCompanies = document.getElementById("dashCompanies");
         const elHighest = document.getElementById("dashHighest");
-        const elHighestCap = document.getElementById("dashHighestCaption");
         const elAverage = document.getElementById("dashAverage");
         const elPlaced = document.getElementById("dashPlaced");
         const elEnrolled = document.getElementById("dashEnrolled");
         const elRate = document.getElementById("dashRate");
         const elSubText = document.getElementById("dashSubText");
         const dashTitle = document.getElementById("dashTitle");
+        const elHighestCap = document.getElementById("dashHighestCaption");
 
         if (dashTitle) dashTitle.textContent = `${year || 'Overall'} Placement Overview`;
 
-        // Update main numbers using data-target for counters
-        if (elTotalCompanies) {
-            elTotalCompanies.setAttribute("data-target", companiesVisited);
-            // Suffix logic for 80+ companies in USAR 2025
-            if (college === "USAR" && year === "2025" && companiesVisited >= 80) {
-                elTotalCompanies.setAttribute("data-suffix", "+");
-            } else {
-                elTotalCompanies.removeAttribute("data-suffix");
-            }
-        }
-        if (elHighest) elHighest.setAttribute("data-target", highestPackage);
-        if (elAverage) elAverage.setAttribute("data-target", avgPackage);
-        if (elPlaced) elPlaced.setAttribute("data-target", totalPlaced);
-        if (elEnrolled) elEnrolled.setAttribute("data-target", activelyParticipated);
-        if (elRate) elRate.setAttribute("data-target", data.placement_rate || 0);
+        if (elTotalCompanies) elTotalCompanies.textContent = companiesVisited || "0";
+        if (elHighest) elHighest.textContent = highestPackage || "—";
+        if (elAverage) elAverage.textContent = avgPackage || "—";
+        if (elPlaced) elPlaced.textContent = totalPlaced || "0";
+        if (elEnrolled) elEnrolled.textContent = activelyParticipated || "0";
+        if (elRate) elRate.textContent = (data.placement_rate || "0") + "%";
 
-        // Update enriched card captions
         const elCompaniesCap = document.getElementById("dashCompaniesCaption");
         const elPlacedCap = document.getElementById("dashPlacedCaption");
         const elAvgCap = document.getElementById("dashAvgCaption");
         const elEnrolledCap = document.getElementById("dashEnrolledCaption");
 
-        if (elCompaniesCap) elCompaniesCap.textContent = college === "USICT" ? `Documented Success Rate` : `${companiesOffered} Offered Jobs`;
-        if (elPlacedCap) elPlacedCap.textContent = college === "USICT" ? `Total documented offers` : `out of ${activelyParticipated} participated`;
+        if (elCompaniesCap) elCompaniesCap.textContent = (college === 'USAR' && year === '2025') ? "30 offered job" : `${companiesOffered} Offered Jobs`;
+        if (elPlacedCap) elPlacedCap.textContent = (college === 'USAR' && year === '2025') ? "251 actively participated" : `out of ${activelyParticipated} participated`;
         if (elAvgCap) elAvgCap.textContent = `LPA across all companies`;
-        if (elEnrolledCap) elEnrolledCap.textContent = college === "USICT" ? `${year} Placement Statistics` : `${totalStudents} Total • ${activelyParticipated} Participated`;
+        if (elEnrolledCap) elEnrolledCap.textContent = `${totalStudents} Total • ${activelyParticipated} Participated`;
 
-        // Update subtexts & captions
         if (elSubText) {
-            if (college === 'USAR' && year === '2025') {
-                elSubText.innerHTML = `${totalPlaced} Offers &bull; ${ppoOffers} PPO &bull; ${internshipOffers} Internship &bull; ${companiesVisited}+ Companies &bull; Median ${medianPackage} LPA`;
-            } else {
-                elSubText.innerHTML = `${totalPlaced} Offers &bull; ${companiesVisited}+ Companies Visited &bull; ${data.placement_rate || 0}% Placement Rate`;
-            }
+            elSubText.textContent = (college === 'USAR' && year === '2025') 
+                ? "Institutional average and highest package metrics locked for USAR 2025."
+                : `${totalPlaced} Offers • ${companiesVisited}+ Companies Visited • ${data.placement_rate || 0}% Placement Rate`;
         }
 
         if (elHighestCap) {
-            if (college === 'USAR' && year === '2025') {
-                elHighestCap.textContent = 'Industrial Internet of Things';
-            } else {
-                const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : college;
-                elHighestCap.textContent = `Offered by ${topComp}`;
-            }
+            elHighestCap.textContent = (college === 'USAR' && year === '2025') ? 'Industrial Internet of Things' : `Highest recorded package`;
         }
 
-        // Trigger counters to animate new values
+        if (data) updateHeroCarousel(data, year || "Overall");
+
+        const highlightsList = document.getElementById("dashHighlightsList");
+        if (highlightsList) {
+            highlightsList.textContent = ""; 
+            const insights = [];
+            if (highestPackage > 0) insights.push({ icon: "💰", title: "Package Peak", text: `Highest package of ₹${highestPackage} LPA recorded.` });
+            if (data.placement_rate > 0) insights.push({ icon: "⚡", title: "Placement Velocity", text: `Drive maintained a ${data.placement_rate}% success rate.` });
+            
+            insights.forEach(ins => {
+                const card = document.createElement("div");
+                card.className = "insight-card-mini";
+                card.innerHTML = `
+                    <div class="insight-icon-box">${ins.icon}</div>
+                    <div class="insight-content">
+                        <h4 class="insight-title">${ins.title}</h4>
+                        <p class="insight-text">${ins.text}</p>
+                    </div>
+                `;
+                highlightsList.appendChild(card);
+            });
+        }
+
         runCounters();
 
-        if (data) {
-            updateHeroCarousel(data, year || "Overall");
-        }
-
-        // --- DYNAMIC PLACEMENT INSIGHTS ---
-        if (highlightsList) {
-            let insights = [];
-
-            // 1. Highest Package Insight
-            if (highestPackage > 0) {
-                const topComp = data.top_companies && data.top_companies[0] ? data.top_companies[0].name : "Elite Recruitment";
-                insights.push({
-                    icon: "💰",
-                    title: "Package Peak",
-                    text: `Highest package of <strong>₹${highestPackage} LPA</strong> offered by <strong>${topComp}</strong>.`
-                });
-            }
-
-            // 2. Top Recruiter Insight
-            if (companies.length > 0) {
-                // Find company with most students (from recruitment API data)
-                const recRes = await window.api.get(`/companies/recruitment?batch_year=${year}`);
-                const recData = recRes.ok ? await recRes.json() : { companies: [], students_placed: [] };
-
-                let maxPlaced = 0;
-                let topRecruiter = "";
-                recData.companies.forEach((name, i) => {
-                    if (recData.students_placed[i] > maxPlaced) {
-                        maxPlaced = recData.students_placed[i];
-                        topRecruiter = name;
-                    }
-                });
-
-                if (topRecruiter) {
-                    insights.push({
-                        icon: "🏢",
-                        title: "Top Recruiter",
-                        text: `<strong>${topRecruiter}</strong> emerged as the top recruiter with <strong>${maxPlaced} offers</strong>.`
-                    });
-                }
-
-                // 3. Industry Dominance
-                const industries = companies.map(c => c.type || c.category || "Technology");
-                const mostCommon = industries.sort((a, b) =>
-                    industries.filter(v => v === a).length - industries.filter(v => v === b).length
-                ).pop();
-
-                if (mostCommon) {
-                    insights.push({
-                        icon: "📈",
-                        title: "Market Trend",
-                        text: `Most placements were driven by <strong>${mostCommon}</strong> sector companies.`
-                    });
-                }
-            }
-
-            // 4. Placement Vitality
-            if (data.placement_rate > 0) {
-                const status = data.placement_rate > 80 ? "exceptional" : "steady";
-                insights.push({
-                    icon: "⚡",
-                    title: "Placement Velocity",
-                    text: `The drive maintained a ${status} <strong>${data.placement_rate}%</strong> placement rate for ${year}.`
-                });
-            }
-
-            // Render as cards if possible, otherwise list
-            highlightsList.innerHTML = insights.length > 0
-                ? insights.map(ins => `
-                    <div class="insight-card-mini">
-                        <div class="insight-icon-box">${ins.icon}</div>
-                        <div class="insight-content">
-                            <h4 class="insight-title">${ins.title}</h4>
-                            <p class="insight-text">${ins.text}</p>
-                        </div>
-                    </div>
-                `).join('')
-                : `<div class="insight-placeholder">No patterns identified for this criteria yet</div>`;
-        }
-
-        // Setup Popup Logic
-        const glassPopup = document.getElementById("glassPopup");
+    } catch (e) {
+        console.error("Dashboard Locked - Fetch Error:", e);
+        const dashTitle = document.getElementById("dashTitle");
+        const elSubText = document.getElementById("dashSubText");
+        if (dashTitle) dashTitle.textContent = "Data Unavailable (Read-Only Mode)";
         const glassPopupTitle = document.getElementById("glassPopupTitle");
         const glassPopupBody = document.getElementById("glassPopupBody");
         const closeGlassPopup = document.getElementById("closeGlassPopup");
@@ -766,12 +678,32 @@ async function fetchDashboardStats(year = "2025") {
         if (cardHighest) {
             cardHighest.onclick = () => {
                 const overallHighest = bs.overall_highest_package || highestPackage;
-                let bodyHtml = `<div style="text-align:center; padding:20px 0;">
-                    <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Institutional Peak</p>
-                    <strong style="color:var(--primary); font-size:42px; letter-spacing:-1px;">₹${overallHighest} LPA</strong>
-                    <p style="opacity:0.5; font-size:13px; margin-top:10px;">On Campus CTC across all departments.</p>
+                let bodyHtml = `<div style="text-align:center; padding:15px 0 25px 0; border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom:20px;">
+                    <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px;">Institutional Peak</p>
+                    <strong style="color:var(--primary); font-size:42px; letter-spacing:-1.5px; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));">₹${overallHighest} LPA</strong>
+                    <p style="opacity:0.5; font-size:13px; margin-top:8px;">Certified across all departments for the ${year} drive.</p>
                 </div>`;
-                showPopup("Highest Package — Branch Breakdown", bodyHtml);
+                
+                if (bs.branch_full && bs.branch_full.length > 0) {
+                    bodyHtml += `<div class="branch-stats-grid" style="display: flex; flex-direction: column; gap: 12px;">`;
+                    bs.branch_full.forEach(branch => {
+                        bodyHtml += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:rgba(255,255,255,0.03); border-radius:12px; border-left:3px solid var(--primary);">
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <span style="font-size:14px; font-weight:600; color:rgba(255,255,255,0.95);">${branch.name}</span>
+                                    <span style="font-size:11px; opacity:0.4; text-transform:uppercase; letter-spacing:0.5px;">Direct Branch Metric</span>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span style="font-size:18px; font-weight:700; color:var(--primary);">${branch.highest || branch.highest_package || '—'} LPA</span>
+                                </div>
+                            </div>`;
+                    });
+                    bodyHtml += `</div>`;
+                } else {
+                    bodyHtml += `<p style="padding:20px; text-align:center; opacity:0.5; font-style:italic;">Detailed branch-wise peak data is being verified for ${year}.</p>`;
+                }
+                
+                showPopup("Highest Package Breakdown", bodyHtml);
             };
         }
 
@@ -780,13 +712,32 @@ async function fetchDashboardStats(year = "2025") {
         if (cardAverage) {
             cardAverage.onclick = () => {
                 const overallAvg = bs.overall_avg_package || avgPackage;
-                let bodyHtml = `<div style="text-align:center; padding:20px 0;">
-                    <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Institutional Average CTC</p>
-                    <strong style="color:var(--primary); font-size:42px; letter-spacing:-1px;">₹${overallAvg} LPA</strong>`;
-                if (medianPackage > 0) bodyHtml += `<p style="opacity:0.55; font-size:14px; margin-top:8px;">Median Compensation: <strong style="color:var(--primary);">${medianPackage} LPA</strong></p>`;
-                bodyHtml += `<p style="opacity:0.5; font-size:13px; margin-top:15px; border-top:1px solid rgba(255,255,255,0.05); padding-top:15px;">Average salary across all technical and consulting roles.</p>
-                </div>`;
-                showPopup("Average Package — Branch Breakdown", bodyHtml);
+                let bodyHtml = `<div style="text-align:center; padding:15px 0 25px 0; border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom:20px;">
+                    <p style="opacity:0.5; font-size:12px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px;">Average Compensation</p>
+                    <strong style="color:var(--primary); font-size:38px; letter-spacing:-1px;">₹${overallAvg} LPA</strong>`;
+                if (medianPackage > 0) bodyHtml += `<p style="opacity:0.6; font-size:14px; margin-top:8px;">Median Placement: <strong style="color:var(--primary);">${medianPackage} LPA</strong></p>`;
+                bodyHtml += `</div>`;
+
+                if (bs.branch_full && bs.branch_full.length > 0) {
+                    bodyHtml += `<div class="branch-stats-grid" style="display: flex; flex-direction: column; gap: 12px;">`;
+                    bs.branch_full.forEach(branch => {
+                        bodyHtml += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:rgba(255,255,255,0.03); border-radius:12px; border-left:3px solid var(--primary);">
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <span style="font-size:14px; font-weight:600; color:rgba(255,255,255,0.95);">${branch.name}</span>
+                                    <span style="font-size:11px; opacity:0.4; text-transform:uppercase; letter-spacing:0.5px;">Avg &bull; Median: ${branch.avg || branch.avg_package || '—'} / ${branch.median || '—'} LPA</span>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span style="font-size:18px; font-weight:700; color:var(--primary);">${branch.avg || branch.avg_package || '—'} LPA</span>
+                                </div>
+                            </div>`;
+                    });
+                    bodyHtml += `</div>`;
+                } else {
+                    bodyHtml += `<p style="padding:20px; text-align:center; opacity:0.5; font-style:italic;">Institutional average breakdown is under calculation for ${year}.</p>`;
+                }
+                
+                showPopup("Average Package Breakdown", bodyHtml);
             };
         }
 
@@ -1280,20 +1231,34 @@ function updateHeroCarousel(data, yearLabel) {
     const slides = [];
     const college = localStorage.getItem("college") || "USAR";
 
-    // 1. Highest Package
+    // 1. Highest Package (Enhanced with Radial Reveal)
     if (data.highest_package) {
+        const branches = bs.branch_full || [];
         slides.push({
             tag: `${yearLabel} Placement Milestone`,
             title: "Highest Package",
             value: `₹${data.highest_package}`,
             unit: "LPA",
             subtitle: `Secured by top performing talent in ${yearLabel}`,
-            logos: (college === "USICT" || yearLabel === "2024") ? [] : ["../assets/godaddy_clean.png"]
+            logos: (college === "USICT" || yearLabel === "2024") ? [] : ["../assets/godaddy_clean.png"],
+            isHighestSlide: true,
+            branches: branches.map(b => {
+                let short = "BR";
+                if (b.name.includes("Data Science")) short = "DS";
+                else if (b.name.includes("Machine Learning")) short = "ML";
+                else if (b.name.includes("Internet of Things")) short = "IIOT";
+                else if (b.name.includes("Automation")) short = "A&R";
+                return {
+                    short: short,
+                    package: b.highest || b.highest_package || '—'
+                };
+            })
         });
     }
 
-    // 2. Average CTC (Enhanced with Hover-Tree)
+    // 2. Average CTC (Clean Minimal Radial Reveal)
     if (data.avg_package) {
+        const branches = bs.branch_full || [];
         slides.push({
             tag: "Institutional Growth",
             title: "Average CTC",
@@ -1302,10 +1267,17 @@ function updateHeroCarousel(data, yearLabel) {
             subtitle: `Sustained high average across all engineering streams`,
             logos: [],
             isAverageSlide: true,
-            branches: Object.entries(bs.branch_details || {}).map(([name, info]) => ({
-                name: name.replace("AI & ", ""), // Shorten for the tree
-                package: info.avg_package
-            }))
+            branches: branches.map(b => {
+                let short = "BR";
+                if (b.name.includes("Data Science")) short = "DS";
+                else if (b.name.includes("Machine Learning")) short = "ML";
+                else if (b.name.includes("Internet of Things")) short = "IIOT";
+                else if (b.name.includes("Automation")) short = "A&R";
+                return {
+                    short: short,
+                    package: b.avg || b.avg_package || '—'
+                };
+            })
         });
     }
 
@@ -1400,17 +1372,13 @@ function updateHeroCarousel(data, yearLabel) {
                    </div>
                 ` : ''}
                 
-                ${s.isAverageSlide ? `
-                    <div class="branch-tree">
-                        ${s.branches.map((b, bi) => `
-                            <div class="branch-item branch-${bi + 1}">
-                                <div class="branch-line"></div>
-                                <div class="branch-node">
-                                    <span class="branch-name">${b.name}</span>
-                                    <span class="branch-val">₹${b.package} LPA</span>
-                                </div>
-                            </div>
-                        `).join('')}
+                ${(s.isAverageSlide || s.isHighestSlide) ? `
+                    <div class="avg-container">
+                        <div class="avg-branches">
+                            ${s.branches.map((b, bi) => `
+                                <div class="branch" data-value="${b.package}">${b.short}</div>
+                            `).join('')}
+                        </div>
                     </div>
                 ` : ''}
                 
