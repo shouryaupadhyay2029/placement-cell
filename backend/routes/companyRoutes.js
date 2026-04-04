@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
     }
 
     const data = getCompanies(college, batch);
-    
+
     // Safety check as requested
     if (!data || data.length === 0) {
         return res.json([]); // Return empty list to maintain array structure
@@ -36,9 +36,9 @@ router.get("/", (req, res) => {
         students_placed: c.offers || c.students_placed || 0,
         eligibility: c.eligibilityText || c.eligibility || "—",
         // Ensure package includes 'LPA' if it's purely numeric for consistent display
-        package: (typeof c.package === 'number' || (!isNaN(c.package) && !String(c.package).includes('LPA'))) 
-                 ? `${c.package} LPA` 
-                 : (c.package || "—")
+        package: (typeof c.package === 'number' || (!isNaN(c.package) && !String(c.package).includes('LPA')))
+            ? `${c.package} LPA`
+            : (c.package || "—")
     }));
 
     // Returning naked array to maintain backward compatibility with frontend
@@ -107,9 +107,9 @@ router.get("/analytics", (req, res) => {
         top_companies: (analytics.topCompanies || []).map(c => ({
             ...c,
             name: c.name || c.company_name || "—",
-            package_str: (typeof c.package === 'number' || (!isNaN(c.package) && !String(c.package).includes('LPA'))) 
-                         ? `${c.package} LPA` 
-                         : (c.package || "—"),
+            package_str: (typeof c.package === 'number' || (!isNaN(c.package) && !String(c.package).includes('LPA')))
+                ? `${c.package} LPA`
+                : (c.package || "—"),
             students_placed: c.offers || c.students_placed || 0
         })),
         batch_stats: {
@@ -153,7 +153,7 @@ router.get("/branch-stats", (req, res) => {
     const batch = req.query.batch || req.query.batch_year;
 
     const analytics = require("../services/dataService").getAnalytics(college, batch);
-    
+
     if (analytics && analytics.branchStats && analytics.branchStats.length > 0) {
         const labels = analytics.branchStats.map(b => b.name);
         const counts = analytics.branchStats.map(b => b.placed);
