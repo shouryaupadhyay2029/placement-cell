@@ -32,60 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let typeChart = null;
     let recruitmentChart = null;
 
-    async function loadAnalytics(year = '') {
-        const loader = document.getElementById("loader");
-        if (loader) loader.classList.remove("hidden");
-
-        try {
-            // 1. Fetch Main Stats from Consolidated API
-            const response = await window.api.get(`/companies/analytics${year ? '?batch_year=' + year : ''}`);
-            if (!response.ok) throw new Error('Failed to fetch analytics');
-            const data = await response.json();
-
-            // 2. Populate Cards
-            const placementElem = document.getElementById('placementRate');
-            const activeElem = document.getElementById('activeCompanies');
-            const highestElem = document.getElementById('highestPackage');
-            const avgElem = document.getElementById('avgPackage');
-
-            animateValue(placementElem, 0, data.placement_rate || 0, 1000);
-            animateValue(activeElem, 0, data.active_companies || 0, 1000);
-            animateValue(highestElem, 0, data.highest_package || 0, 1000);
-            animateValue(avgElem, 0, data.avg_package || 0, 1000);
-
-            // 3. Render Charts
-            renderBatchChart(data.batch_distribution || {});
-            
-            // Conditional Company Type Chart (Hide for USICT)
-            const college = localStorage.getItem('college') || 'USAR';
-            const typeCtx = document.getElementById('companyTypeChart');
-            const typeCard = typeCtx ? typeCtx.closest('.chart-card') : null;
-            
-            if (typeCard) {
-                if (college === 'USICT') {
-                    typeCard.style.display = 'none';
-                } else {
-                    typeCard.style.display = 'block';
-                    renderTypeChart(data.type_distribution || {});
-                }
-            }
-
-            populateTopCompanies(data.top_companies || []);
-
-            // 4. Detail Data Refresh
-            await loadRecruitmentChart(year);
-            await loadBranchStats(year);
-
-            // 5. Internship Section Visibility (Only for 2025)
-            const internSection = document.getElementById('internshipSection');
-            if (internSection) {
-                internSection.style.display = (year === '2025') ? 'block' : 'none';
-            }
-
-        } catch (err) {
-            console.error('Error loading analytics:', err);
-        }
-    }
 
     function renderBatchChart(batchDist) {
         const ctx = document.getElementById('batchYearChart');
@@ -125,16 +71,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!ctx) return;
         if (typeChart) typeChart.destroy();
 
-        // Handle both array [{name,value}] and plain object {key: val} formats
-        let keys, values;
-        if (Array.isArray(typeDist)) {
-            keys   = typeDist.map(d => d.name);
-            values = typeDist.map(d => d.value);
-        } else {
-            keys   = Object.keys(typeDist);
-            values = keys.map(k => typeDist[k]);
-        }
-        if (keys.length === 0) { keys = ['No Data']; values = [1]; }
+        // FORCED: Institutional Request to keep Company Type as "No Data Available"
+        let keys = ['No Data Available'];
+        let values = [1];
 
         // Compute percentages for labels
         const total = values.reduce((s, v) => s + v, 0);
@@ -146,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 datasets: [{
                     data: values,
                     backgroundColor: [
-                        '#1565C0', // Software & IT — deep blue
+                        '#2e2e2e', // Gray for No Data
                         '#4CAF50', // Sales & Consulting — green
                         '#FFA726', // Data Science/AIML — amber
                         '#26C6DA', // Cloud & DevOps — teal

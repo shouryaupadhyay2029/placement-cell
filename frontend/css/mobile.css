@@ -7,11 +7,14 @@
  */
 
 /* ─── Base Reset ─── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     max-width: 100vw;
     overflow-x: hidden;
 }
@@ -20,9 +23,19 @@ html, body {
    TABLET PRE-MOBILE (769px - 1024px)
    ════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
-    .navbar-wrapper { margin: 16px 20px 0 20px; }
-    .stats-container { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .insights-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .navbar-wrapper {
+        margin: 16px 20px 0 20px;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .insights-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
 }
 
 /* ════════════════════════════════════════════════
@@ -31,15 +44,28 @@ html, body {
 @media (max-width: 768px) {
 
     /* ── 1. GLOBAL TYPOGRAPHY ── */
-    h1 { font-size: 24px !important; letter-spacing: -0.5px !important; }
-    h2 { font-size: 20px !important; }
-    p, span, td, th { font-size: 14px !important; }
+    h1 {
+        font-size: 24px !important;
+        letter-spacing: -0.5px !important;
+    }
+
+    h2 {
+        font-size: 20px !important;
+    }
+
+    p,
+    span,
+    td,
+    th {
+        font-size: 14px !important;
+    }
 
     /* ── 2. NAVBAR: REDUCED CLUTTER ── */
     .navbar-wrapper {
         margin: 0 !important;
         padding: 0 12px !important;
-        height: 50px !important; /* Compact high-up feel */
+        height: 50px !important;
+        /* Compact high-up feel */
         width: 100vw !important;
         max-width: 100% !important;
         background: rgba(10, 10, 10, 0.99);
@@ -49,7 +75,8 @@ html, body {
         left: 0 !important;
         z-index: 10000;
         display: flex !important;
-        flex-direction: row !important; /* Standard row + Order control */
+        flex-direction: row !important;
+        /* Standard row + Order control */
         justify-content: space-between !important;
         align-items: center !important;
         flex-wrap: nowrap !important;
@@ -58,32 +85,37 @@ html, body {
 
     /* Move Navigation Group to FAR LEFT */
     .navbar-right-group {
-        order: -1 !important; 
+        order: -1 !important;
         width: auto !important;
         display: flex !important;
-        flex-direction: row-reverse !important; /* Visual: [Hamburger] [Profile] */
+        flex-direction: row-reverse !important;
+        /* Visual: [Hamburger] [Profile] */
         align-items: center !important;
         gap: 12px !important;
         margin: 0 !important;
     }
 
     /* Move Branding to FAR RIGHT */
-    .navbar-wrapper > a[style*="text-decoration: none"] {
+    .navbar-wrapper>a[style*="text-decoration: none"] {
         order: 10 !important;
         display: block !important;
         margin: 0 !important;
     }
 
-    .logo { 
+    .logo {
         justify-content: flex-end !important;
         text-align: right !important;
     }
-    .logo-tagline { display: none !important; }
-    
-    .user-profile { 
-        display: flex !important; 
+
+    .logo-tagline {
+        display: none !important;
+    }
+
+    .user-profile {
+        display: flex !important;
         position: static !important;
-        transform: scale(0.85); /* Smaller profile icon */
+        transform: scale(0.85);
+        /* Smaller profile icon */
     }
 
     .profile-trigger {
@@ -94,8 +126,12 @@ html, body {
         box-shadow: 0 0 10px rgba(212, 175, 55, 0.1) !important;
     }
 
-    .user-icon { color: var(--primary) !important; width: 16px !important; height: 16px !important; }
-    
+    .user-icon {
+        color: var(--primary) !important;
+        width: 16px !important;
+        height: 16px !important;
+    }
+
     /* Small badge next to logo */
     #navCollegeDisplay {
         position: static !important;
@@ -110,14 +146,16 @@ html, body {
         color: var(--primary);
     }
 
-    .place-text, .pro-text { 
-        font-size: 14px !important; 
+    .place-text,
+    .pro-text {
+        font-size: 14px !important;
         line-height: 1 !important;
         letter-spacing: -0.3px !important;
     }
-    
-    .hamburger-container { 
-        transform: scale(0.6); /* Small signature size */
+
+    .hamburger-container {
+        transform: scale(0.6);
+        /* Small signature size */
         margin: 0 !important;
         padding: 0 !important;
         display: flex !important;
@@ -127,13 +165,15 @@ html, body {
 
     /* Yellow/Gold Hamburger Lines */
     .line {
-        stroke: #FFD700 !important; /* Vivid Gold/Yellow */
-        stroke-width: 4.5 !important; /* Bold for small scale */
+        stroke: #FFD700 !important;
+        /* Vivid Gold/Yellow */
+        stroke-width: 4.5 !important;
+        /* Bold for small scale */
     }
 
-    .dropdown-menu { 
-        left: 0 !important; 
-        right: auto !important; 
+    .dropdown-menu {
+        left: 0 !important;
+        right: auto !important;
         transform-origin: top left !important;
         top: 100% !important;
         margin-top: 5px !important;
@@ -143,21 +183,23 @@ html, body {
     .hero-carousel {
         height: auto !important;
         aspect-ratio: 16/11;
-        margin-top: 75px !important;
+        margin-top: 60px !important;
         border-radius: 12px !important;
         padding: 10px !important;
         overflow: hidden;
     }
 
-    .carousel-inner { max-width: 100% !important; }
+    .carousel-inner {
+        max-width: 100% !important;
+    }
 
     .carousel-item {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         align-items: center !important;
         text-align: center !important;
-        padding: 15px !important;
+        padding: 5px 15px !important;
         gap: 15px !important;
     }
 
@@ -168,9 +210,25 @@ html, body {
         width: 100% !important;
     }
 
-    .slide-tag { font-size: 9px !important; padding: 3px 8px !important; margin: 0 !important; }
-    .slide-title { font-size: 26px !important; letter-spacing: -1px !important; margin: 0 !important; }
-    .slide-subtitle { font-size: 13px !important; line-height: 1.3 !important; max-width: 100% !important; margin: 0 !important; opacity: 0.7; }
+    .slide-tag {
+        font-size: 9px !important;
+        padding: 3px 8px !important;
+        margin: 0 !important;
+    }
+
+    .slide-title {
+        font-size: 26px !important;
+        letter-spacing: -1px !important;
+        margin: 0 !important;
+    }
+
+    .slide-subtitle {
+        font-size: 13px !important;
+        line-height: 1.3 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        opacity: 0.7;
+    }
 
     .slide-data-visual {
         align-items: center !important;
@@ -185,7 +243,11 @@ html, body {
         gap: 12px !important;
         margin-bottom: 5px !important;
     }
-    .slide-logo { height: 20px !important; opacity: 0.8 !important; }
+
+    .slide-logo {
+        height: 20px !important;
+        opacity: 0.8 !important;
+    }
 
     /* SCALE DOWN GIANT NUMBERS & PROTECT DOTS */
     .slide-value {
@@ -193,9 +255,14 @@ html, body {
         letter-spacing: -1px !important;
         text-align: center !important;
         margin: 0 !important;
-        padding-bottom: 5px; /* Protective buffer for indicators */
+        padding-bottom: 5px;
+        /* Protective buffer for indicators */
     }
-    .slide-value .unit { font-size: 14px !important; opacity: 0.8; }
+
+    .slide-value .unit {
+        font-size: 14px !important;
+        opacity: 0.8;
+    }
 
     .carousel-dots {
         bottom: 5px !important;
@@ -205,7 +272,8 @@ html, body {
     .dashboard-header {
         flex-direction: column !important;
         align-items: flex-start !important;
-        gap: 15px !important; /* Forces separation between title and dropdown */
+        gap: 15px !important;
+        /* Forces separation between title and dropdown */
         margin-top: 20px !important;
         padding: 0 15px !important;
     }
@@ -219,16 +287,21 @@ html, body {
         width: 100% !important;
         margin: 0 !important;
     }
-    .batch-select-input { width: 100% !important; }
 
-    #dashboard { padding-top: 75px !important; }
-    
+    .batch-select-input {
+        width: 100% !important;
+    }
+
+    #dashboard {
+        padding-top: 0 !important;
+    }
+
     .stats-container {
         display: grid !important;
         grid-template-columns: 1fr !important;
         gap: 12px !important;
         padding: 15px !important;
-        margin: 20px 0 !important;
+        margin: 20px 0 40px 0 !important;
     }
 
     .card {
@@ -237,19 +310,41 @@ html, body {
         min-height: auto !important;
     }
 
-    .card h3 { font-size: 10px !important; opacity: 0.8; margin-bottom: 4px; }
-    .card .number { font-size: 28px !important; margin-bottom: 2px !important; }
-    .card span { font-size: 11px !important; opacity: 0.6; }
+    .card h3 {
+        font-size: 10px !important;
+        opacity: 0.8;
+        margin-bottom: 4px;
+    }
+
+    .card .number {
+        font-size: 28px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .card span {
+        font-size: 11px !important;
+        opacity: 0.6;
+    }
 
     /* ── 5. TABLES: HORIZONTAL FLUIDITY ── */
-    .recruitment-table-container, .table-container {
+    .recruitment-table-container,
+    .table-container {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
         border-radius: 10px !important;
         margin: 15px 0;
     }
-    table { min-width: 450px !important; } /* force scroll, disable squash */
-    th, td { padding: 10px 12px !important; font-size: 13px !important; }
+
+    table {
+        min-width: 450px !important;
+    }
+
+    /* force scroll, disable squash */
+    th,
+    td {
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
 
     /* ── 6. FORMS & BUTTONS: TAP-FRIENDLY ── */
     .top-controls {
@@ -257,11 +352,20 @@ html, body {
         align-items: stretch !important;
         padding: 15px !important;
     }
-    .control-group { width: 100% !important; flex-direction: column !important; gap: 10px !important; }
-    .top-controls input, .top-controls select, .primary-btn {
+
+    .control-group {
+        width: 100% !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .top-controls input,
+    .top-controls select,
+    .primary-btn {
         width: 100% !important;
         min-height: 48px !important;
-        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+        font-size: 16px !important;
+        /* Prevents auto-zoom on iOS */
     }
 
     /* ── 7. SIDE DRAWER REDESIGN ── */
@@ -277,22 +381,63 @@ html, body {
         padding: 60px 20px !important;
         border-radius: 0 !important;
     }
-    .dynamic-island-sidebar.mobile-active { left: 0 !important; }
-    .dynamic-island-text { display: block !important; position: static !important; font-size: 14px; margin-bottom: 20px; color: var(--primary); letter-spacing: 2.5px; opacity: 1 !important; }
-    .dynamic-icons { flex-direction: column; width: 100%; gap: 12px; }
-    .dynamic-item { width: 100%; justify-content: flex-start !important; padding: 12px !important; margin: 0 !important; background: rgba(212,175,55,0.05); }
-    .dynamic-item svg { width: 18px; height: 18px; }
-    .dynamic-item::after { display: block; position: static; transform: none; opacity: 1; font-size: 14px; margin-left: 12px; box-shadow: none; padding: 0; background: transparent; }
+
+    .dynamic-island-sidebar.mobile-active {
+        left: 0 !important;
+    }
+
+    .dynamic-island-text {
+        display: block !important;
+        position: static !important;
+        font-size: 14px;
+        margin-bottom: 20px;
+        color: var(--primary);
+        letter-spacing: 2.5px;
+        opacity: 1 !important;
+    }
+
+    .dynamic-icons {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .dynamic-item {
+        width: 100%;
+        justify-content: flex-start !important;
+        padding: 12px !important;
+        margin: 0 !important;
+        background: rgba(212, 175, 55, 0.05);
+    }
+
+    .dynamic-item svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .dynamic-item::after {
+        display: block;
+        position: static;
+        transform: none;
+        opacity: 1;
+        font-size: 14px;
+        margin-left: 12px;
+        box-shadow: none;
+        padding: 0;
+        background: transparent;
+    }
 
     /* ── 8. ANALYTICS & INSIGHTS GRID ── */
     .insights-grid {
         display: grid !important;
-        grid-template-columns: 1fr !important; /* Fixed: Force 1-column Insights (Image 1 fix) */
+        grid-template-columns: 1fr !important;
+        /* Fixed: Force 1-column Insights (Image 1 fix) */
         gap: 20px !important;
         padding: 0 !important;
     }
 
-    .analytics-grid, .charts-grid {
+    .analytics-grid,
+    .charts-grid {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
         padding: 10px !important;
@@ -305,16 +450,20 @@ html, body {
 
     .placement-highlights {
         padding: 20px 15px !important;
-        margin-top: 30px !important;
+        margin-top: 50px !important;
     }
 
     /* ── 9. MODALS & POPUPS ── */
-    .glass-popup-content, .modal-content {
+    .glass-popup-content,
+    .modal-content {
         width: 95vw !important;
         margin: 0 10px !important;
         padding: 20px 15px !important;
     }
-    .popup-title { font-size: 18px !important; }
+
+    .popup-title {
+        font-size: 18px !important;
+    }
 
     /* ── 10. BACKGROUND OVERLAY (DRAWER) ── */
     .mobile-sidebar-overlay {
@@ -331,6 +480,7 @@ html, body {
         transition: opacity 0.4s ease !important;
         display: block !important;
     }
+
     .mobile-sidebar-overlay.active {
         opacity: 1 !important;
         pointer-events: auto !important;
@@ -339,8 +489,110 @@ html, body {
 
 /* PERFORMANCE: NO BLUR/SHADOW ON TINY SCREENS */
 @media (max-width: 480px) {
-    .glass-popup-content, .card, .navbar-wrapper { backdrop-filter: none !important; }
-    .slide-title { font-size: 22px !important; }
-    .slide-value { font-size: 38px !important; }
-    .card .number { font-size: 24px !important; }
+
+    .glass-popup-content,
+    .card,
+    .navbar-wrapper {
+        backdrop-filter: none !important;
+    }
+
+    .slide-title {
+        font-size: 22px !important;
+    }
+
+    .slide-value {
+        font-size: 38px !important;
+    }
+
+    .card .number {
+        font-size: 24px !important;
+    }
+}
+
+/* ════════════════════════════════════════════════
+   FINAL MOBILE UI POLISH (STRICTLY MOBILE ONLY)
+   ════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+    /* FIX 1 — HERO TEXT POSITIONING */
+    .hero,
+    .highlight-section {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding-top: 8px !important;
+        padding-bottom: 30px !important;
+        gap: 22px !important;
+    }
+
+    .hero-title {
+        font-size: 20px !important;
+        margin-top: 8px !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .hero-subtext {
+        font-size: 13px !important;
+        margin-top: 4px !important;
+        line-height: 1.5 !important;
+        opacity: 0.8 !important;
+    }
+
+    .hero-price {
+        font-size: 36px !important;
+        font-weight: 800 !important;
+        margin-top: 18px !important;
+        color: var(--primary) !important;
+    }
+
+    /* FIX 2 — SEPARATE SLIDER FROM TEXT */
+    .hero-slider,
+    .progress-bar,
+    .dots,
+    .slider-container {
+        margin-top: 30px !important;
+        margin-bottom: 10px !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    /* FIX 3 — HEADER PERFECT ALIGNMENT */
+    .header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 16px !important;
+    }
+
+    .header-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .menu-icon,
+    .profile-icon {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* FIX 4 — PREVENT ANY OVERFLOW */
+    body {
+        overflow-x: hidden !important;
+    }
+
+    /* FIX 5 — IMPROVE SECTION SPACING */
+    .section,
+    .overview-section {
+        margin-top: 24px !important;
+    }
+
+    /* FIX 6 — TEXT BLOCK BREATHING */
+    h1,
+    h2,
+    h3 {
+        line-height: 1.3 !important;
+    }
 }
