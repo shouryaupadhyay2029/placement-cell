@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // DEFAULT CASE: Branch-wise Placement Statistics
         const isOfficialUSICT = college === "USICT" && (batchYear === "2022" || batchYear === "2023");
-        
+
         if (college === "USICT" && !isOfficialUSICT) {
             // If it's a hidden year but has direct placements, show ONLY the direct placement table
             if (directPlaced.length > 0 && analyticsCard) {
@@ -385,26 +385,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </h3>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
-                        <div style="height: 300px; position: relative;">
-                            <canvas id="branchBreakdownChart"></canvas>
-                        </div>
-                        <div>
-                            <div class="table-container mini-table">
-                                <table style="font-size: 13px;">
-                                    <thead>
-                                        <tr>
-                                            <th>Branch</th>
-                                            <th>Students</th>
-                                            <th>Percent</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="branchStatsBody"></tbody>
-                                </table>
-                            </div>
-                            <p id="branchTotalLabel" style="margin-top: 15px; font-size: 13px; color: var(--text-muted); text-align: right;"></p>
-                        </div>
+                    <div style="height: 350px; position: relative; max-width: 600px; margin: 0 auto;">
+                        <canvas id="branchBreakdownChart"></canvas>
                     </div>
+                    <p id="branchTotalLabel" style="margin-top: 20px; font-size: 13px; color: var(--text-muted); text-align: center;"></p>
                 `;
             }
 
@@ -429,35 +413,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 Branch-wise Placement Statistics (Official)
                             </h3>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 20px;">
-                            <div style="height: 220px; position: relative;">
-                                <canvas id="branchBreakdownChart"></canvas>
-                            </div>
-                            <div class="table-container mini-table">
-                                <table style="width: 100%; font-size: 14px;">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align: left;">Branch</th>
-                                            <th style="text-align: right;">Placed (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${data.official_rates.map(r => `
-                                            <tr>
-                                                <td style="font-weight: 600;">${r.name}</td>
-                                                <td style="text-align: right; color: var(--primary); font-weight: 700;">${r.rate.toFixed(2)}%</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                    <tfoot>
-                                        <tr style="background: rgba(16, 185, 129, 0.1); border-top: 2px solid var(--primary);">
-                                            <td style="padding:10px; font-weight: 800; font-size: 15px;">Overall Institutional Total</td>
-                                            <td style="padding:10px; text-align: right; color: var(--primary); font-weight: 800; font-size: 15px;">${(data.overall_rate || 0).toFixed(2)}%</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <div style="height: 350px; position: relative; max-width: 600px; margin: 0 auto;">
+                            <canvas id="branchBreakdownChart"></canvas>
                         </div>
+                        <p style="margin-top: 20px; font-size: 14px; font-weight: 700; color: var(--primary); text-align: center; background: rgba(16, 185, 129, 0.05); padding: 10px; border-radius: 8px;">
+                            Overall Institutional Rate: ${(data.overall_rate || 0).toFixed(2)}%
+                        </p>
                     `;
                 }
             } else {
@@ -471,7 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         // Use official rate if available, else calculate from student count
                         const officialRate = (data.rates && data.rates[i] !== undefined) ? data.rates[i] : null;
                         const p = officialRate !== null ? officialRate.toFixed(2) : (total > 0 ? ((c / total) * 100).toFixed(1) : 0);
-                        
+
                         return `
                         <tr>
                             <td style="font-weight:600;">${b}</td>
@@ -499,9 +460,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 data: {
                     labels: labels.map(l => {
                         const short = l.includes('Data Science') ? 'AI & DS' :
-                                      l.includes('Machine Learning') ? 'AI & ML' :
-                                      l.includes('Internet of Things') ? 'IIOT' :
-                                      l.includes('Automation') ? 'A & R' : l;
+                            l.includes('Machine Learning') ? 'AI & ML' :
+                                l.includes('Internet of Things') ? 'IIOT' :
+                                    l.includes('Automation') ? 'A & R' : l;
                         return short;
                     }),
                     datasets: [{
@@ -526,10 +487,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             callbacks: {
                                 label: (ctx) => {
                                     const val = ctx.raw;
-                                    const rate = (data.rates && data.rates[ctx.dataIndex] !== undefined) 
-                                                 ? data.rates[ctx.dataIndex] 
-                                                 : (totalPlaced > 0 ? (val / totalPlaced) * 100 : 0);
-                                    return ` ${ctx.label}: ${val} Placed (${Math.round(rate)}%)`;
+                                    const share = (totalPlaced > 0 ? (val / totalPlaced) * 100 : 0);
+                                    return ` ${ctx.label}: ${val} Placed (${Math.round(share)}%)`;
                                 }
                             }
                         },
@@ -539,10 +498,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             textAlign: 'center',
                             formatter: (value, ctx) => {
                                 const label = ctx.chart.data.labels[ctx.dataIndex];
-                                const rate = (data.rates && data.rates[ctx.dataIndex] !== undefined) 
-                                             ? data.rates[ctx.dataIndex] 
-                                             : (totalPlaced > 0 ? (value / totalPlaced) * 100 : 0);
-                                return `${label}\n${Math.round(rate)}%`;
+                                const share = (totalPlaced > 0 ? (value / totalPlaced) * 100 : 0);
+                                return `${label}\n${Math.round(share)}%`;
                             },
                             display: (ctx) => {
                                 const value = ctx.dataset.data[ctx.dataIndex];
@@ -584,7 +541,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Global Filter Initialization (Independent per College)
     const globalFilter = document.getElementById('globalBatchYear');
-    
+
     // Track the last college we synced for to avoid redundant API calls
     let lastSyncedCollege = null;
 
@@ -595,7 +552,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await window.api.get(`/companies/batches`);
             const batches = res.ok ? await res.json() : [];
-            
+
             // 1. CLEAR & RE-POPULATE (Dynamic Generation)
             globalFilter.innerHTML = batches.length > 0 ? '' : '<option value="">No Data</option>';
             batches.forEach(y => {
@@ -609,7 +566,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // If we have a forced year (from a college switch), use it. 
             // Otherwise, check localStorage but validate it exists in the NEW batch list.
             let activeYear = forceYear || localStorage.getItem("selectedBatchYear");
-            
+
             if (!activeYear || (activeYear !== "" && !batches.includes(activeYear))) {
                 activeYear = batches[0] || "";
             }
@@ -629,7 +586,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadAnalytics(year = null) {
         // If year is null, it means we might be switching colleges or initializing
         const currentCollege = localStorage.getItem("college") || "USAR";
-        
+
         // Auto-sync dropdown if college changed
         if (lastSyncedCollege !== currentCollege) {
             const syncedYear = await syncBatchDropdown(year);
@@ -730,7 +687,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
     }
 
-    // Initial Load
-    loadAnalytics();
+// Initial Load
+loadAnalytics();
 });
-;

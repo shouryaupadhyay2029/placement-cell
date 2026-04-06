@@ -1052,6 +1052,7 @@
           {
             "name": "Data Science",
             "placed": 36,
+            "total": 75,
             "rate": 48,
             "avg": 6.5,
             "median": 6.35,
@@ -1060,6 +1061,7 @@
           {
             "name": "Machine Learning",
             "placed": 30,
+            "total": 69,
             "rate": 43.48,
             "avg": 6.2,
             "median": 6,
@@ -1068,6 +1070,7 @@
           {
             "name": "Industrial Internet of Things",
             "placed": 33,
+            "total": 66,
             "rate": 50,
             "avg": 5.9,
             "median": 4.5,
@@ -1076,6 +1079,7 @@
           {
             "name": "Automation & Robotics",
             "placed": 16,
+            "total": 41,
             "rate": 39.02,
             "avg": 5.8,
             "median": 6,
@@ -4733,7 +4737,197 @@
           "deadline": "Finished"
         }
       ],
-      "eligibility": [],
+      "eligibility": [
+        {
+          "companyName": "Corning",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "B.Tech / R&D Roles",
+            "cgpa": "Not specified",
+            "academics": "Technical coursework required",
+            "backlogs": "No active backlogs"
+          },
+          "selectionProcess": [
+            "Technical Review (R&D focus)",
+            "Technical Interview (Proficiency in specialized tools)",
+            "Role-specific assessment (e.g. OpenFOAM for R&D)"
+          ],
+          "skills": {
+            "languages": "C, C++, Python",
+            "coreSubjects": "CFD, Technical Coursework",
+            "tools": "OpenFOAM, Microsoft Power Platform (Solution Architect)"
+          },
+          "roles": [
+            "R&D Engineer",
+            "Solution Architect"
+          ]
+        },
+        {
+          "companyName": "Cvent",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "Any Graduate",
+            "cgpa": "No cgpa criteria available",
+            "academics": "Not specified",
+            "backlogs": "Not specified"
+          },
+          "selectionProcess": [
+            "Written Round: MCQ Questions on aptitude and computer science fundamental subjects, Programming Logics.",
+            "Coding Round: Medium - Hard Level Data Structure and Algorithms",
+            "Technical Interview: Data Structure and Algorithms Questions and Discussion on Projects and Computer Science Concepts",
+            "Aptitude and personal assessment test: MCQ Questions asked in English and Mathematics.",
+            "HR: Normal HR Questions"
+          ],
+          "skills": {
+            "languages": "Not specified",
+            "coreSubjects": "DSA, CS fundamentals",
+            "tools": "Not specified"
+          },
+          "roles": [
+            "Software Engineer",
+            "MTS",
+            "SRE"
+          ]
+        },
+        {
+          "companyName": "CVent (SRE)",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "Any Graduate",
+            "cgpa": "No cgpa criteria available",
+            "academics": "Not specified",
+            "backlogs": "Not specified"
+          },
+          "selectionProcess": [
+            "Written Round: MCQ Questions on aptitude and computer science fundamental subjects, Programming Logics.",
+            "Coding Round: Medium - Hard Level Data Structure and Algorithms",
+            "Technical Interview: Data Structure and Algorithms Questions and Discussion on Projects and Computer Science Concepts",
+            "Aptitude and personal assessment test: MCQ Questions asked in English and Mathematics.",
+            "HR: Normal HR Questions"
+          ],
+          "skills": {
+            "languages": "Not specified",
+            "coreSubjects": "DSA, CS fundamentals",
+            "tools": "Not specified"
+          },
+          "roles": [
+            "SRE"
+          ]
+        },
+        {
+          "companyName": "Zenon",
+          "dataAvailable": false
+        },
+        {
+          "companyName": "AB InBev",
+          "dataAvailable": false
+        },
+        {
+          "companyName": "Yamaha",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "Graduated or expected graduation from a 4-year university, graduate school, or technical college",
+            "cgpa": "Not specified",
+            "academics": "Not specified",
+            "backlogs": "Not specified"
+          },
+          "selectionProcess": [
+            "Application",
+            "1st Selection (Document screening)",
+            "2nd Selection (Personal interview and group discussion - Online)",
+            "Feedback: Online feedback on the 2nd selection (no pass/fail decision)",
+            "Final Selection (Personal interview)"
+          ],
+          "skills": {
+            "languages": "Not specified",
+            "coreSubjects": "Not specified",
+            "tools": "Not specified"
+          },
+          "roles": [
+            "Graduate Engineer Trainee"
+          ]
+        },
+        {
+          "companyName": "Tejas Networks",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "BE/B.Tech/ME/M.Tech (CS, IT, EEE, EC)",
+            "cgpa": "8.0 / 10.0 (80% throughout academics)",
+            "academics": "Batch 2023 / 2024",
+            "backlogs": "No Active Backlogs"
+          },
+          "selectionProcess": [
+            "Online Aptitude + Technical Assessment",
+            "Technical Interview",
+            "HR Interview"
+          ],
+          "skills": {
+            "languages": "C, C++",
+            "coreSubjects": "Data Structures, Algorithms",
+            "tools": "Linux OS"
+          },
+          "roles": [
+            "Software Engineer"
+          ]
+        },
+        {
+          "companyName": "Tredence Analytics",
+          "dataAvailable": false
+        },
+        {
+          "companyName": "Raro.ai",
+          "dataAvailable": false
+        },
+        {
+          "companyName": "Unacademy",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "B.Tech / Relevant Field",
+            "cgpa": "7.0+ CGPA (Safe Zone)",
+            "academics": "Strong Academic Record",
+            "backlogs": "No active backlogs"
+          },
+          "selectionProcess": [
+            "Coding Rounds",
+            "Technical Interviews",
+            "HR Round"
+          ],
+          "skills": {
+            "languages": "Python, Java",
+            "coreSubjects": "DSA (High Priority), System Design",
+            "tools": "Not specified"
+          },
+          "roles": [
+            "Technical Associate",
+            "Software Developer"
+          ]
+        },
+        {
+          "companyName": "Cubastion Consulting",
+          "dataAvailable": true,
+          "eligibility": {
+            "degrees": "B.Tech / B.E. (CSE / IT preferred)",
+            "cgpa": "6.5 - 7.0+ CGPA (Safe Zone)",
+            "academics": "Batch 2024",
+            "backlogs": "No active backlogs"
+          },
+          "selectionProcess": [
+            "Online Test (Aptitude + Technical + Behavioral)",
+            "Group Discussion (GD)",
+            "Technical Interview (Basic Coding + SQL + Resume Questions)",
+            "HR Interview"
+          ],
+          "skills": {
+            "languages": "Python, Java, C++",
+            "coreSubjects": "DSA Basics, SQL (Important), DBMS, OOP",
+            "tools": "Not specified"
+          },
+          "roles": [
+            "Consultant Trainee",
+            "Software Engineer"
+          ]
+        }
+      ],
       "analytics": {
         "branchStats": [
           {

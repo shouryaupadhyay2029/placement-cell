@@ -434,23 +434,33 @@ if (particleContainer) {
     }
 }
 
-// Generate stars for the upper region
+// Generate stars for the upper region (3D Depth Enhanced)
 if (particleContainer) {
     for (let i = 0; i < 40; i++) {
         const star = document.createElement("span");
         star.classList.add("star");
 
-        // Position below the midpoint so they emerge from behind the lower region
+        // Position
         star.style.left = Math.random() * 100 + "vw";
-        star.style.top = Math.random() * 50 + "vh"; // Relocated to top upper section
+        star.style.top = Math.random() * 60 + "vh";
 
-        const duration = 12 + Math.random() * 8;
-        star.style.animationDuration = duration + "s";
-        star.style.animationDelay = Math.random() * 5 + "s";
-
-        const size = 1.5 + Math.random() * 2.5;
+        const size = 1.0 + Math.random() * 3.0;
         star.style.width = size + "px";
         star.style.height = size + "px";
+
+        // 3D Effect Factors
+        const depth = Math.random(); // 0 (far) to 1 (near)
+        const duration = (20 - (depth * 12)) + "s"; // Far stars move slower
+        const blur = (depth < 0.3) ? "2px" : (depth < 0.6 ? "1px" : "0px");
+        const opacity = 0.2 + (depth * 0.6);
+
+        star.style.animationDuration = duration;
+        star.style.animationDelay = Math.random() * 10 + "s";
+        star.style.filter = `blur(${blur})`;
+        star.style.opacity = opacity;
+        
+        // Custom depth property for CSS to use if needed
+        star.style.setProperty('--star-depth', depth);
 
         particleContainer.appendChild(star);
     }
@@ -510,6 +520,18 @@ function updateContextIndicator(college, year) {
         // Add sourced from indicator
         const sourceLabel = document.querySelector('.footer-note')?.innerText || "Data sourced from official placement records";
         console.log("UX Refined: Context set to", college, year);
+    }
+
+    // Dynamic Footer Link Logic
+    const footerLink = document.querySelector('.footer-note a');
+    if (footerLink) {
+        if (college === 'USICT') {
+            footerLink.href = "http://www.ipu.ac.in/usict/placement.php";
+            footerLink.textContent = "www.ipu.ac.in/usict/placement.php";
+        } else {
+            footerLink.href = "http://www.ipu.ac.in/usar/placement.php";
+            footerLink.textContent = "www.ipu.ac.in/usar/placement.php";
+        }
     }
 }
 
