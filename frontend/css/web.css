@@ -4652,17 +4652,65 @@ body.dark-theme .pp-logo-path {
     transform: scale(1.2);
 }
 
-.dot:hover:not(.active) {
-    background: rgba(212, 175, 55, 0.4);
-    transform: scale(1.2);
+/* ===================================================
+   PREMIUM CUSTOM CURSOR (GOLD THEME)
+   =================================================== */
+
+@media (pointer: fine) {
+    body.custom-cursor-enabled * {
+        cursor: none !important;
+    }
 }
 
-.dot:hover:not(.active) {
-    background: rgba(212, 175, 55, 0.4);
-    transform: scale(1.2);
+.custom-cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: #ffc85c;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100000;
+    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 8px rgba(255, 200, 92, 0.8);
 }
 
-.dot:hover:not(.active) {
-    background: rgba(212, 175, 55, 0.4);
-    transform: scale(1.2);
+.custom-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(255, 200, 92, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-cursor-ring.hover {
+    border-color: rgba(255, 200, 92, 0.8);
+    background-color: rgba(255, 200, 92, 0.1);
+    box-shadow: 0 0 15px rgba(255, 200, 92, 0.4), inset 0 0 8px rgba(255, 200, 92, 0.2);
+}
+
+.custom-cursor-ring.click {
+    border-color: #ffc85c;
+    background-color: rgba(255, 200, 92, 0.3);
+    box-shadow: 0 0 20px rgba(255, 200, 92, 0.6);
+    transition: border-color 0.1s ease, background-color 0.1s ease;
+}
+
+.cursor-particle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background-color: #ffc85c;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    box-shadow: 0 0 6px #ffc85c;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
 }

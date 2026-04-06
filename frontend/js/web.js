@@ -12,6 +12,7 @@ function initUI() {
     initDynamicSidebar();
     initAboutModal();
     initMobileDrawer(); // New mobile logic
+    initCustomCursor(); // Premium custom cursor
 }
 
 function initAboutModal() {
@@ -466,15 +467,109 @@ if (particleContainer) {
     }
 }
 
-const glow = document.querySelector(".cursor-glow");
+function initCustomCursor() {
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
 
-document.addEventListener("mousemove", (e) => {
-    if (glow) {
+    const cursorDot = document.createElement('div');
+    cursorDot.classList.add('custom-cursor-dot');
+    
+    const cursorRing = document.createElement('div');
+    cursorRing.classList.add('custom-cursor-ring');
+    
+    document.body.appendChild(cursorDot);
+    document.body.appendChild(cursorRing);
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let isHovering = false;
+    let isClicking = false;
+
+    document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
         requestAnimationFrame(() => {
-            glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+            cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) ${isHovering ? 'scale(0)' : 'scale(1)'}`;
         });
+    });
+
+    const render = () => {
+        ringX += (mouseX - ringX) * 0.2;
+        ringY += (mouseY - ringY) * 0.2;
+        
+        let scale = 1;
+        if (isHovering) scale = 1.5;
+        if (isClicking) scale = 0.8;
+        
+        cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(${scale})`;
+        requestAnimationFrame(render);
+    };
+    requestAnimationFrame(render);
+
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target;
+        if(target.closest('a, button, input, textarea, select, .dynamic-item, .college-option, .stat-card, tr, .interactive, .card, .chart-pill')) {
+            isHovering = true;
+            cursorRing.classList.add('hover');
+        }
+    });
+    
+    document.addEventListener('mouseout', (e) => {
+        const target = e.target;
+        if(target.closest('a, button, input, textarea, select, .dynamic-item, .college-option, .stat-card, tr, .interactive, .card, .chart-pill')) {
+            isHovering = false;
+            cursorRing.classList.remove('hover');
+        }
+    });
+
+    document.addEventListener('mousedown', () => {
+        isClicking = true;
+        cursorRing.classList.add('click');
+        createParticles(mouseX, mouseY);
+    });
+    
+    document.addEventListener('mouseup', () => {
+        isClicking = false;
+        cursorRing.classList.remove('click');
+    });
+
+    function createParticles(x, y) {
+        const count = 3 + Math.floor(Math.random() * 2); 
+        for(let i=0; i<count; i++) {
+            const p = document.createElement('div');
+            p.classList.add('cursor-particle');
+            document.body.appendChild(p);
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 10 + Math.random() * 15;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            p.style.left = `${x}px`;
+            p.style.top = `${y}px`;
+
+            p.style.transform = `translate(-50%, -50%) translate(0px, 0px) scale(0)`;
+            p.style.opacity = '1';
+
+            p.offsetHeight; // Force reflow
+
+            p.style.transform = `translate(-50%, -50%) translate(${tx}px, ${ty}px) scale(1)`;
+
+            setTimeout(() => {
+                p.style.transform = `translate(-50%, -50%) translate(${tx * 1.5}px, ${ty * 1.5}px) scale(0)`;
+                p.style.opacity = '0';
+            }, 150);
+
+            setTimeout(() => {
+                if(p.parentNode) p.parentNode.removeChild(p);
+            }, 400);
+        }
     }
-});
+    
+    document.body.classList.add('custom-cursor-enabled');
+}
 
 /**
  * Counting animation for numbers
