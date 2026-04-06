@@ -3,7 +3,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
+const session = require("express-session");
+const passport = require("passport");
 require("dotenv").config();
+
+// Passport config
+require("./config/passport");
 
 // Initialize the Express app
 const app = express();
@@ -21,6 +26,17 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json()); // Body parser for JSON
+
+// Express session setup (required by Passport for OAuth)
+app.use(session({
+    secret: process.env.JWT_SECRET || "fallback_default_secret",
+    resave: false,
+    saveUninitialized: false
+}));
+
+// Initialize Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 /** 
  * --- FRONTEND STATIC SERVING ---
@@ -53,8 +69,10 @@ const pdfRoutes = require("./routes/pdfRoutes");
 const { protect, admin } = require("./middleware/authMiddleware");
 const { enforceCollege } = require("./middleware/collegeMiddleware");
 const { lockPlacementData } = require("./middleware/dataGuardMiddleware");
+const googleAuthRoutes = require("./routes/googleAuth");
 
 // API routes
+app.use("/auth/google", googleAuthRoutes); // MUST be top level, not inside /api
 app.use("/api/auth", authRoutes);
 app.use("/api/students", enforceCollege, lockPlacementData, studentRoutes);
 app.use("/api/companies", enforceCollege, lockPlacementData, companyRoutes);

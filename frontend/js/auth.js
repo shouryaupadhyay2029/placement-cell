@@ -84,74 +84,36 @@ function startGoogleInitPolling() {
 }
 
 function initGoogleAuth() {
-    // Safety check: Google GIS does not work with file:// protocol
-    if (window.location.protocol === 'file:') {
-        showToast("Error: Please open the app via the server URL, not the file system.", "error");
-        return;
-    }
+    const customBtn = document.getElementById("googleLoginBtn");
+    if (customBtn) {
+        customBtn.onclick = (e) => {
+            e.preventDefault();
+            const originalText = customBtn.innerHTML;
+            customBtn.innerHTML = "<span>Redirecting...</span>";
+            customBtn.disabled = true;
 
-    try {
-        const customBtn = document.getElementById("googleLoginBtn");
-        if (customBtn) {
-            customBtn.onclick = (e) => {
-                e.preventDefault();
-                
-                const originalText = customBtn.innerHTML;
-                customBtn.innerHTML = "<span>Connecting...</span>";
-                customBtn.disabled = true;
-
-                google.accounts.id.prompt((notification) => {
-                    if (notification.isNotDisplayed()) {
-                        const reason = notification.getNotDisplayedReason();
-                        if (reason === 'skipped_by_user') {
-                            showToast("Login prompt closed. Click to retry.", "info");
-                        } else if (reason === 'opt_out_or_no_session') {
-                            showToast("Please ensure you are signed in to Google.", "warning");
-                        }
-                        
-                        customBtn.innerHTML = originalText;
-                        customBtn.disabled = false;
-                    } 
-                    
-                    if (notification.isSkippedMoment() || notification.isDismissedMoment()) {
-                        customBtn.innerHTML = originalText;
-                        customBtn.disabled = false;
-                    }
-                });
-
-                setTimeout(() => {
-                    if (customBtn.disabled) {
-                        customBtn.innerHTML = originalText;
-                        customBtn.disabled = false;
-                    }
-                }, 5000);
-            };
-        }
-    } catch (err) {
-        showToast("Google Auth initialization error.", "error");
+            // Redirect completely to backend passport logic
+            window.location.href = `${API_BASE}/auth/google`;
+        };
     }
 }
 
-async function handleGoogleLogin(response) {
-    if (!response.credential) return;
+// Add a URL parameter listener to catch the return from Passport Google Login
+window.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const success = urlParams.get("success");
+    const err = urlParams.get("error");
 
-    try {
-        const res = await window.api.post("/auth/google-login", {
-            credential: response.credential
-        });
-        const data = await res.json();
-
-        if (data.success) {
-            processLoginSuccess(data);
-        } else {
-            showToast("Google Login Failed: " + (data.message || "Unauthorized"), "error");
-        }
-    } catch (error) {
-        showToast("Google connection error.", "error");
+    if (err === "google_login_failed") {
+        showToast("Google Authentication Failed.", "error");
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (token && success === "true") {
+        // We received a valid auth token from the passport backend
+        processLoginSuccess({ token: token, user: { name: "Google User" } }); // The API handles fetching the profile automatically natively via /profile
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
-}
-
-window.handleGoogleLogin = handleGoogleLogin;
+});
 
 function processLoginSuccess(data) {
     const user = data.user || data;
