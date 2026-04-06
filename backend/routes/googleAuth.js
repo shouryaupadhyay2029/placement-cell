@@ -17,14 +17,14 @@ const generateToken = (id) => {
  * @desc    Auth with Google
  * @route   GET /auth/google
  */
-router.get("/", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 /**
  * @desc    Google auth callback
  * @route   GET /auth/google/callback
  */
 router.get(
-  "/callback",
+  "/google/callback",
   passport.authenticate("google", { failureRedirect: "https://placement-cell-chi.vercel.app/index.html?error=google_login_failed" }),
   (req, res) => {
     // Successful authentication
