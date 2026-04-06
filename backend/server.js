@@ -9,9 +9,7 @@ require("dotenv").config();
 
 // Passport config
 require("./config/passport");
-app.get("/test", (req, res) => {
-    res.send("server working");
-});
+
 
 // Initialize the Express app
 const app = express();
