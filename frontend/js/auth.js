@@ -175,7 +175,7 @@ function processLoginSuccess(data) {
 
 async function initAuthAndProfile() {
     const token = localStorage.getItem("token");
-    const protectedPages = ["eligibility.html", "companies.html"];
+    const protectedPages = []; // All pages are publicly readable; write actions are protected by UI state and API auth
     const isProtected = protectedPages.some(page => window.location.pathname.includes(page));
 
     if (!token) {
