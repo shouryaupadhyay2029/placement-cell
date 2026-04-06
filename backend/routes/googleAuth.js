@@ -15,18 +15,18 @@ const generateToken = (id) => {
 
 /**
  * @desc    Auth with Google
- * @route   GET /auth/google
+ * @route   GET /api/auth/google
  */
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/", passport.authenticate("google", { scope: ["profile", "email"], session: false }));
 
 /**
  * @desc    Google auth callback
- * @route   GET /auth/google/callback
+ * @route   GET /api/auth/google/callback
  */
 router.get(
-  "/google/callback",
+  "/callback",
   (req, res, next) => {
-    passport.authenticate("google", (err, user, info) => {
+    passport.authenticate("google", { session: false, failureRedirect: "https://placement-cell-chi.vercel.app/index.html?error=google_login_failed" }, (err, user, info) => {
       try {
         if (err) {
           console.error("❌ Passport Auth Error:", err);
@@ -38,24 +38,18 @@ router.get(
           return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=google_user_missing");
         }
 
-        req.logIn(user, (loginErr) => {
-          if (loginErr) {
-            console.error("❌ Session logIn Error:", loginErr);
-            return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=session_creation_failed");
-          }
-          
-          if (!process.env.JWT_SECRET) {
-            console.error("❌ CRITICAL: JWT_SECRET environment variable is missing.");
-            return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=server_config_error");
-          }
+        // Since we injected session: false, we skip req.logIn and immediately generate JWT
+        if (!process.env.JWT_SECRET) {
+          console.error("❌ CRITICAL: JWT_SECRET environment variable is missing.");
+          return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=server_config_error");
+        }
 
-          // Successful authentication
-          console.log(`✅ Google OAuth Success: Authorized ${user.email}`);
-          const token = generateToken(user._id);
+        // Successful authentication
+        console.log(`✅ Google OAuth Success: Authorized ${user.email}`);
+        const token = generateToken(user._id);
 
-          // Redirect to frontend with Token in URL query params
-          return res.redirect(`https://placement-cell-chi.vercel.app/index.html?token=${token}&success=true`);
-        });
+        // Redirect to frontend with Token in URL query params
+        return res.redirect(`https://placement-cell-chi.vercel.app/index.html?token=${token}&success=true`);
       } catch (exception) {
         console.error("❌ Google Callback Exception:", exception);
         next(exception);

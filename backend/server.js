@@ -80,7 +80,7 @@ const { lockPlacementData } = require("./middleware/dataGuardMiddleware");
 const googleAuthRoutes = require("./routes/googleAuth");
 
 // API routes
-app.use("/auth", googleAuthRoutes); // Top-level auth mount
+app.use("/api/auth/google", googleAuthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/students", enforceCollege, lockPlacementData, studentRoutes);
 app.use("/api/companies", enforceCollege, lockPlacementData, companyRoutes);
