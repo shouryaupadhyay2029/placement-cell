@@ -1286,13 +1286,14 @@ function initTheme() {
     const body = document.body;
     const currentTheme = localStorage.getItem('theme');
 
-    // Initial sync
-    if (currentTheme === 'dark') {
+    // Initial sync - DEFAULT TO DARK THEME
+    if (currentTheme === 'dark' || currentTheme === null) {
         body.classList.add('dark-theme');
         if (themeToggle) themeToggle.checked = true;
         // Don't call addDarkStars directly to avoid potential race conditions
         // Wait for DOM or call it with a check
         setTimeout(addDarkStars, 0);
+        localStorage.setItem('theme', 'dark');
     } else {
         body.classList.remove('dark-theme');
         if (themeToggle) themeToggle.checked = false;
