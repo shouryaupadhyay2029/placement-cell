@@ -459,7 +459,7 @@ if (particleContainer) {
         star.style.animationDelay = Math.random() * 10 + "s";
         star.style.filter = `blur(${blur})`;
         star.style.opacity = opacity;
-        
+
         // Custom depth property for CSS to use if needed
         star.style.setProperty('--star-depth', depth);
 
@@ -472,10 +472,10 @@ function initCustomCursor() {
 
     const cursorDot = document.createElement('div');
     cursorDot.classList.add('custom-cursor-dot');
-    
+
     const cursorRing = document.createElement('div');
     cursorRing.classList.add('custom-cursor-ring');
-    
+
     document.body.appendChild(cursorDot);
     document.body.appendChild(cursorRing);
 
@@ -489,7 +489,7 @@ function initCustomCursor() {
     document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        
+
         requestAnimationFrame(() => {
             cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) ${isHovering ? 'scale(0)' : 'scale(1)'}`;
         });
@@ -498,11 +498,11 @@ function initCustomCursor() {
     const render = () => {
         ringX += (mouseX - ringX) * 0.2;
         ringY += (mouseY - ringY) * 0.2;
-        
+
         let scale = 1;
-        if (isHovering) scale = 1.5;
+        if (isHovering) scale = 1.6;
         if (isClicking) scale = 0.8;
-        
+
         cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(${scale})`;
         requestAnimationFrame(render);
     };
@@ -510,15 +510,15 @@ function initCustomCursor() {
 
     document.addEventListener('mouseover', (e) => {
         const target = e.target;
-        if(target.closest('a, button, input, textarea, select, .dynamic-item, .college-option, .stat-card, tr, .interactive, .card, .chart-pill')) {
+        if (target.closest('a, button, input, textarea, select, .dynamic-item, .college-option, .stat-card, tr, .interactive, .card, .chart-pill')) {
             isHovering = true;
             cursorRing.classList.add('hover');
         }
     });
-    
+
     document.addEventListener('mouseout', (e) => {
         const target = e.target;
-        if(target.closest('a, button, input, textarea, select, .dynamic-item, .college-option, .stat-card, tr, .interactive, .card, .chart-pill')) {
+        if (target.closest('a, button, input, textarea, select, .dynamic-item, .college-option, .stat-card, tr, .interactive, .card, .chart-pill')) {
             isHovering = false;
             cursorRing.classList.remove('hover');
         }
@@ -529,15 +529,15 @@ function initCustomCursor() {
         cursorRing.classList.add('click');
         createParticles(mouseX, mouseY);
     });
-    
+
     document.addEventListener('mouseup', () => {
         isClicking = false;
         cursorRing.classList.remove('click');
     });
 
     function createParticles(x, y) {
-        const count = 3 + Math.floor(Math.random() * 2); 
-        for(let i=0; i<count; i++) {
+        const count = 3 + Math.floor(Math.random() * 2);
+        for (let i = 0; i < count; i++) {
             const p = document.createElement('div');
             p.classList.add('cursor-particle');
             document.body.appendChild(p);
@@ -563,11 +563,11 @@ function initCustomCursor() {
             }, 150);
 
             setTimeout(() => {
-                if(p.parentNode) p.parentNode.removeChild(p);
+                if (p.parentNode) p.parentNode.removeChild(p);
             }, 400);
         }
     }
-    
+
     document.body.classList.add('custom-cursor-enabled');
 }
 
@@ -762,7 +762,7 @@ async function fetchDashboardStats(year = "2025") {
             const overallHighest = bs.overall_highest_package || highestPackage;
             // Identify branch with highest package dynamically (e.g. Industrial Internet of Things for 2025)
             const highestBranch = (bs.branch_full || []).find(b => parseFloat(b.highest) === parseFloat(overallHighest));
-            
+
             if (highestBranch) {
                 elHighestCap.textContent = highestBranch.name;
             } else {

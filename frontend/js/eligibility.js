@@ -221,8 +221,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getCompSkills(c) {
-        if (c.skills && typeof c.skills === 'object') return [...(c.skills.core || []), ...(c.skills.programming || []), ...(c.skills.tools || [])];
-        return c.required_skills || ["DSA", "System Fundamentals"];
+        let skills = [];
+        if (c.skills) {
+            if (Array.isArray(c.skills)) {
+                skills = c.skills;
+            } else if (typeof c.skills === 'object') {
+                const core = Array.isArray(c.skills.core) ? c.skills.core : (typeof c.skills.core === 'string' ? [c.skills.core] : []);
+                const prog = Array.isArray(c.skills.programming) ? c.skills.programming : (typeof c.skills.programming === 'string' ? [c.skills.programming] : []);
+                const tools = Array.isArray(c.skills.tools) ? c.skills.tools : (typeof c.skills.tools === 'string' ? [c.skills.tools] : []);
+                skills = [...core, ...prog, ...tools];
+            } else if (typeof c.skills === 'string') {
+                skills = c.skills.includes(',') ? c.skills.split(',').map(s => s.trim()) : [c.skills];
+            }
+        }
+        
+        if (skills.length === 0) {
+            let req = c.required_skills || c.requiredSkills;
+            if (Array.isArray(req)) skills = req;
+            else if (typeof req === 'string') skills = req.includes(',') ? req.split(',').map(s => s.trim()) : [req];
+        }
+
+        return skills.length > 0 ? skills.filter(Boolean) : ["Not specified"];
     }
 
     function renderResultsList(id, data) {
