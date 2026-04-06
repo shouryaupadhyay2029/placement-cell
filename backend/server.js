@@ -10,7 +10,10 @@ const app = express();
 
 // Middlewares
 app.use(helmet({
-    contentSecurityPolicy: false, // Allow external assets if needed
+    contentSecurityPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false,
+    crossOriginEmbedderPolicy: false
 }));
 app.use(cors({
     origin: (origin, callback) => callback(null, true),
