@@ -1468,7 +1468,7 @@ function updateHeroCarousel(data, yearLabel) {
             value: `₹${data.highest_package}`,
             unit: "LPA",
             subtitle: `Secured by top performing talent in ${yearLabel}`,
-            logos: (college === "USICT" || yearLabel === "2024") ? [] : ["../assets/godaddy_clean.png"],
+            logos: (college === "USICT" || yearLabel === "2024") ? [] : ["./assets/godaddy_clean.png"],
             isHighestSlide: true,
             branches: branches.map(b => {
                 let short = "BR";
@@ -1517,7 +1517,7 @@ function updateHeroCarousel(data, yearLabel) {
             value: `${data.total_companies}`,
             unit: "Firms",
             subtitle: `Participated in the ${yearLabel} recruitment drive`,
-            logos: college === "USICT" ? [] : (yearLabel === "2024" ? ["../assets/infosys_clean.png", "../assets/genpact_clean.png"] : ["../assets/infosys_clean.png", "../assets/genpact_clean.png", "../assets/tvs_clean.png"])
+            logos: college === "USICT" ? [] : (yearLabel === "2024" ? ["./assets/infosys_clean.png", "./assets/genpact_clean.png"] : ["./assets/infosys_clean.png", "./assets/genpact_clean.png", "./assets/tvs_clean.png"])
         });
     }
 

@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         signInTrigger.addEventListener("click", () => {
             const authModal = document.getElementById("authModal");
             if (authModal) authModal.classList.add("show");
-            else window.location.href = "web.html";
+            else window.location.href = "index.html";
         });
     }
 });
@@ -181,7 +181,7 @@ async function initAuthAndProfile() {
     if (!token) {
         if (isProtected) {
             showToast("Unauthorized. Please login.", "error");
-            setTimeout(() => { window.location.href = "web.html"; }, 1000);
+            setTimeout(() => { window.location.href = "index.html"; }, 1000);
             return;
         }
         updateUIForGuest();
@@ -299,7 +299,7 @@ function handleLogout(message = null) {
     else showToast("Logged out successfully.", "success");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setTimeout(() => { window.location.href = "web.html"; }, 1000);
+    setTimeout(() => { window.location.href = "index.html"; }, 1000);
 }
 
 window.addEventListener("click", (e) => {

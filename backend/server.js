@@ -23,7 +23,7 @@ app.use(express.json()); // Body parser for JSON
  * --- FRONTEND STATIC SERVING ---
  * Serve the UI files (HTML, JS, CSS) from the 'frontend' directory
  */
-app.use("/html", express.static(path.join(__dirname, "../frontend/html")));
+app.use(express.static(path.join(__dirname, "../frontend")));
 app.use("/js", express.static(path.join(__dirname, "../frontend/js")));
 app.use("/css", express.static(path.join(__dirname, "../frontend/css")));
 app.use("/assets", express.static(path.join(__dirname, "../frontend/assets")));
@@ -69,7 +69,7 @@ app.get("/api/admin", protect, admin, (req, res) => {
 
 // Root Redirect (Auto-open home page)
 app.get("/", (req, res) => {
-    res.redirect("/html/web.html");
+    res.redirect("/index.html");
 });
 
 /**
