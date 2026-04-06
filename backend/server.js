@@ -28,11 +28,18 @@ app.use(cors({
 }));
 app.use(express.json()); // Body parser for JSON
 
+// Enable proxy trust to ensure Render's load balancer forwards HTTPS properly
+app.set("trust proxy", 1);
+
 // Express session setup (required by Passport for OAuth)
 app.use(session({
     secret: process.env.JWT_SECRET || "fallback_default_secret",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === "production", // requires HTTPS headers properly parsed
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
 }));
 
 // Initialize Passport middleware
