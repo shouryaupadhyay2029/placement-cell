@@ -481,29 +481,48 @@ function initCustomCursor() {
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
+    // Dot position variables
+    let dotX = mouseX;
+    let dotY = mouseY;
+    // Ring position variables
     let ringX = mouseX;
     let ringY = mouseY;
+    
     let isHovering = false;
     let isClicking = false;
 
+    // Fast-path: Only store raw numbers in the event handler (no DOM updates here)
     document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-
-        requestAnimationFrame(() => {
-            cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) ${isHovering ? 'scale(0)' : 'scale(1)'}`;
-        });
     });
 
     const render = () => {
-        ringX += (mouseX - ringX) * 0.2;
-        ringY += (mouseY - ringY) * 0.2;
+        // High-speed interpolation (dot follows closely)
+        dotX += (mouseX - dotX) * 1.0; 
+        dotY += (mouseY - dotY) * 1.0;
+        
+        // Fluid interpolation for the outer ring
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
 
-        let scale = 1;
-        if (isHovering) scale = 1.6;
-        if (isClicking) scale = 0.8;
+        // Apply scale classes explicitly (avoid heavy computed string repaints if possible)
+        let ringScale = 1;
+        let dotScale = 1;
+        
+        if (isHovering) {
+            ringScale = 1.6;
+            dotScale = 0;
+        }
+        if (isClicking) {
+            ringScale = 0.8;
+            dotScale = 0;
+        }
 
-        cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(${scale})`;
+        // Single synchronized GPU-accelerated hardware dispatch
+        cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(${dotScale})`;
+        cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(${ringScale})`;
+        
         requestAnimationFrame(render);
     };
     requestAnimationFrame(render);
