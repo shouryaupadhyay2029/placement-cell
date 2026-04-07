@@ -78,10 +78,14 @@ const { protect, admin } = require("./middleware/authMiddleware");
 const { enforceCollege } = require("./middleware/collegeMiddleware");
 const { lockPlacementData } = require("./middleware/dataGuardMiddleware");
 const googleAuthRoutes = require("./routes/googleAuth");
+const analyzeRoutes = require("./routes/analyzeRoutes");
+const analyzeAdvancedRoutes = require("./routes/analyzeAdvancedRoutes");
 
 // API routes
 app.use("/api/auth/google", googleAuthRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/analyze", analyzeRoutes);
+app.use("/api/analyze-advanced", analyzeAdvancedRoutes);
 app.use("/api/students", enforceCollege, lockPlacementData, studentRoutes);
 app.use("/api/companies", enforceCollege, lockPlacementData, companyRoutes);
 app.use("/api/placements", enforceCollege, lockPlacementData, placementRoutes);

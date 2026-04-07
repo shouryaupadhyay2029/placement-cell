@@ -154,13 +154,12 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("userEligibilityProfile", JSON.stringify(profile));
             showToast("Success Profile verified! Evaluating matches...", "success");
 
-            window.evaluateGlobalEligibility();
-
-            // Refresh selected company details if visible
-            if (companySelect.value) {
-                const comp = allCompanies.find(c => String(c.id || c.companyName || c.company || c._id) === String(companySelect.value));
-                if (comp) renderCompanyDetails(comp);
-            }
+            window.evaluateGlobalEligibility().then(() => {
+                const resultsContainer = document.getElementById("eligibilityResults");
+                if (resultsContainer) {
+                    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         });
     }
 
@@ -174,97 +173,138 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Calculation Logic
-    window.evaluateGlobalEligibility = function() {
-        const resultsContainer = document.getElementById("eligibilityResults");
-        if (!currentUserProfile || allCompanies.length === 0) {
-            if (resultsContainer) resultsContainer.style.display = "none";
-            return;
+    // AI MENTOR ENGINE — calls /api/analyze-advanced
+    window.evaluateGlobalEligibility = async function() {
+        const resultsEl = document.getElementById("eligibilityResults");
+        const emptyEl   = document.getElementById("eligibilityEmpty");
+        if (!currentUserProfile) return;
+
+        showLoader(true);
+        try {
+            const payload = {
+                cgpa:   currentUserProfile.cgpa,
+                branch: currentUserProfile.branch,
+                skills: currentUserProfile.skills
+            };
+
+            const response = await window.api.post('/analyze-advanced', payload);
+            if (!response.ok) throw new Error("Analysis engine unreachable");
+
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message || "Analysis failed");
+
+            // Show dashboard, hide empty state
+            if (emptyEl)   emptyEl.style.display   = 'none';
+            if (resultsEl) resultsEl.style.display  = 'block';
+
+            renderMentorDashboard(data);
+
+        } catch (err) {
+            console.error("❌ Mentor Engine:", err);
+            showToast("Could not connect to the Mentor Engine. Please try again shortly.", "error");
+        } finally {
+            showLoader(false);
+        }
+    };
+
+    function renderMentorDashboard(d) {
+        // 🧠 Smart Insight
+        const insightEl = document.getElementById("mentorInsight");
+        if (insightEl) insightEl.textContent = d.insights || '';
+
+        // 🟢 Strengths
+        const strengthsEl = document.getElementById("mentorStrengths");
+        if (strengthsEl) {
+            if (d.strengths && d.strengths.length) {
+                strengthsEl.innerHTML = d.strengths.map(s => `
+                    <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <span style="color:#10b981; margin-top:2px; flex-shrink:0;">✦</span>
+                        <div>
+                            <div style="font-weight:700; font-size:13px; color:#fff;">${escHtml(s.skill)}</div>
+                            <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; line-height:1.5;">${escHtml(s.reason)}</div>
+                        </div>
+                    </div>`).join('');
+            } else {
+                strengthsEl.innerHTML = `<p style="color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">Keep building — every skill you add becomes a strength!</p>`;
+            }
         }
 
-        const stats = allCompanies.map(c => analyzeMatch(currentUserProfile, c));
-        if (resultsContainer) resultsContainer.style.display = "block";
+        // 🟡 Areas to Grow
+        const missingEl = document.getElementById("mentorMissing");
+        if (missingEl) {
+            if (d.missingSkills && d.missingSkills.length) {
+                missingEl.innerHTML = d.missingSkills.map(s => `
+                    <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <span style="color:#f59e0b; margin-top:2px; flex-shrink:0;">→</span>
+                        <div>
+                            <div style="font-weight:700; font-size:13px; color:#fff;">${escHtml(s.skill)}</div>
+                            <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; line-height:1.5;">${escHtml(s.reason)}</div>
+                        </div>
+                    </div>`).join('');
+            } else {
+                missingEl.innerHTML = `<p style="color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">Excellent coverage! Focus on deepening your expertise.</p>`;
+            }
+        }
 
-        renderResultsList("eligibleList", stats.filter(s => s.status === 'eligible').sort((a,b) => b.match - a.match));
-        renderResultsList("improveList", stats.filter(s => s.status === 'improve').sort((a,b) => b.match - a.match));
-        renderResultsList("ineligibleList", stats.filter(s => s.status === 'ineligible'));
+        // 🔥 High Impact Skills (pills)
+        const highImpactEl = document.getElementById("mentorHighImpact");
+        if (highImpactEl) {
+            if (d.highImpactSkills && d.highImpactSkills.length) {
+                highImpactEl.innerHTML = d.highImpactSkills.map(s => `
+                    <span style="padding:6px 14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:20px; font-size:12px; font-weight:700; color:#f87171;">${escHtml(s)}</span>
+                `).join('');
+            } else {
+                highImpactEl.innerHTML = `<p style="color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">Your current skills already cover the most impactful areas!</p>`;
+            }
+        }
+
+        // 📈 Industry Trends
+        const trendsEl = document.getElementById("mentorTrends");
+        if (trendsEl && d.trends) {
+            trendsEl.innerHTML = d.trends.map((t, i) => `
+                <div style="display:flex; gap:10px; align-items:flex-start; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">
+                    <span style="color:#60a5fa; font-weight:700; flex-shrink:0;">${i + 1}.</span>
+                    <span>${escHtml(t)}</span>
+                </div>`).join('');
+        }
+
+        // 🚀 Roadmap
+        const roadmapEl = document.getElementById("mentorRoadmap");
+        if (roadmapEl && d.roadmap) {
+            roadmapEl.innerHTML = d.roadmap.map((step, i) => `
+                <div style="display:flex; gap:12px; align-items:flex-start; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <div style="width:22px; height:22px; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:#a78bfa; flex-shrink:0;">${i + 1}</div>
+                    <p style="font-size:12px; color:rgba(255,255,255,0.65); line-height:1.6; margin:0;">${escHtml(step)}</p>
+                </div>`).join('');
+        }
     }
 
-    function analyzeMatch(user, comp) {
-        const compSkills = getCompSkills(comp).map(s => s.toLowerCase());
-        const userSkills = user.skills || [];
-        
-        // Match percentage
-        const matched = userSkills.filter(s => compSkills.includes(s));
-        const percent = compSkills.length ? (matched.length / compSkills.length) * 100 : 0;
-        const missing = compSkills.filter(s => !userSkills.includes(s));
-
-        // Academic Match
-        const minCgpa = parseFloat(String(comp.cgpa || comp.eligibility?.cgpa || 0).match(/(\d+(\.\d+)?)/)?.[0] || 0);
-        const cgpaOk = user.cgpa >= minCgpa;
-        const branches = String(comp.academics || comp.eligibility?.academics || "All").toLowerCase();
-        const branchOk = branches.includes("all") || branches.includes(user.branch.toLowerCase());
-
-        let status = "eligible";
-        if (!cgpaOk || !branchOk) status = "ineligible";
-        else if (percent < 60) status = "improve";
-
-        return {
-            company: comp.companyName || comp.company || comp.company_name,
-            role: (comp.roles && comp.roles.length) ? comp.roles[0] : (comp.role || "Technical Role"),
-            package: comp.package || "₹TBD",
-            match: Math.round(percent),
-            missing,
-            status,
-            reasons: { cgpaOk, branchOk, minCgpa }
-        };
+    function escHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
+    // Extracts normalised skill array from any company object shape
     function getCompSkills(c) {
         let skills = [];
         if (c.skills) {
             if (Array.isArray(c.skills)) {
                 skills = c.skills;
             } else if (typeof c.skills === 'object') {
-                const core = Array.isArray(c.skills.core) ? c.skills.core : (typeof c.skills.core === 'string' ? [c.skills.core] : []);
-                const prog = Array.isArray(c.skills.programming) ? c.skills.programming : (typeof c.skills.programming === 'string' ? [c.skills.programming] : []);
-                const tools = Array.isArray(c.skills.tools) ? c.skills.tools : (typeof c.skills.tools === 'string' ? [c.skills.tools] : []);
+                const core  = Array.isArray(c.skills.core)        ? c.skills.core        : (typeof c.skills.core        === 'string' ? [c.skills.core]        : []);
+                const prog  = Array.isArray(c.skills.programming) ? c.skills.programming : (typeof c.skills.programming === 'string' ? [c.skills.programming] : []);
+                const tools = Array.isArray(c.skills.tools)       ? c.skills.tools       : (typeof c.skills.tools       === 'string' ? [c.skills.tools]       : []);
                 skills = [...core, ...prog, ...tools];
             } else if (typeof c.skills === 'string') {
                 skills = c.skills.includes(',') ? c.skills.split(',').map(s => s.trim()) : [c.skills];
             }
         }
-        
         if (skills.length === 0) {
             let req = c.required_skills || c.requiredSkills;
             if (Array.isArray(req)) skills = req;
             else if (typeof req === 'string') skills = req.includes(',') ? req.split(',').map(s => s.trim()) : [req];
         }
-
-        return skills.length > 0 ? skills.filter(Boolean) : ["Not specified"];
-    }
-
-    function renderResultsList(id, data) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (!data.length) {
-            el.innerHTML = `<div style="padding:12px; opacity:0.3; font-size:12px; text-align:center;">No direct matches</div>`;
-            return;
-        }
-        el.innerHTML = data.map(r => `
-            <div class="match-item glass-card" style="padding: 1.2rem; border-left: 3px solid ${r.status === 'eligible' ? '#10b981' : (r.status === 'improve' ? '#f59e0b' : '#ef4444')}; background: rgba(255,255,255,0.02);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <h4 style="margin: 0; font-size: 14px;">${r.company}</h4>
-                    <span style="color: ${r.status === 'eligible' ? '#10b981' : (r.status === 'improve' ? '#f59e0b' : '#ef4444')}; font-weight: 800; font-size: 13px;">${r.match}%</span>
-                </div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">${r.role} &bull; ${r.package}</div>
-                ${r.status === 'ineligible' ? `
-                    <div style="font-size: 10px; color: #ef4444;">${!r.reasons.cgpaOk ? '❌ Low CGPA' : ''} ${!r.reasons.branchOk ? '❌ Branch Match Failed' : ''}</div>
-                ` : `
-                    <div style="font-size: 10px; color: rgba(255,255,255,0.2);">${r.missing.length ? 'Gaps: ' + r.missing.join(', ') : 'âœ… Technical Match'}</div>
-                `}
-            </div>
-        `).join('');
+        return skills.length > 0 ? skills.filter(Boolean) : [];
     }
 
     function renderCompanyDetails(c) {

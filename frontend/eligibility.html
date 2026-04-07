@@ -340,45 +340,72 @@
                         </div>
                     </div>
 
-                    <!-- COLUMN 2: ELIGIBILITY RESULTS -->
-                    <div id="eligibilityResults" class="results-section">
-                        <div class="glass-card" style="padding: 2.5rem; min-height: 500px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.01); border-radius: 24px;">
-                            <div class="card-header" style="margin-bottom: 2.5rem;">
-                                <h3 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.4rem;">Live Match Analysis</h3>
-                                <p class="sub-text" style="font-size: 13px;">Instant evaluation across all visiting companies.</p>
-                            </div>
-                            
-                            <div class="results-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
-                                <!-- Category: High Match / Eligible -->
-                                <div class="result-category">
-                                    <h4 style="color: #10b981; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                                        <i class="fas fa-shield-halved"></i> Ready to Apply
-                                    </h4>
-                                    <div id="eligibleList" class="stack-list" style="display: flex; flex-direction: column; gap: 1rem;">
-                                        <p style="color: rgba(255,255,255,0.2); font-size: 13px; font-style: italic;">Provide profile details to see matches...</p>
-                                    </div>
-                                </div>
+                    <!-- COLUMN 2: AI MENTOR DASHBOARD -->
+                    <div id="eligibilityResults" class="results-section" style="display:none;">
 
-                                <!-- Category: Skill Gap / Improve -->
-                                <div class="result-category">
-                                    <h4 style="color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                                        <i class="fas fa-bolt"></i> Key Improvements
-                                    </h4>
-                                    <div id="improveList" class="stack-list" style="display: flex; flex-direction: column; gap: 1rem;">
-                                        <!-- Gap companies -->
-                                    </div>
-                                </div>
+                        <!-- 🧠 SMART INSIGHT -->
+                        <div class="glass-card mentor-card" style="padding: 2rem; border: 1px solid rgba(212,175,55,0.3); background: linear-gradient(135deg, rgba(212,175,55,0.06), rgba(0,0,0,0.4)); border-radius: 20px; margin-bottom: 1.5rem; position:relative; overflow:hidden;">
+                            <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; background:radial-gradient(circle, rgba(212,175,55,0.1), transparent); border-radius:50%;"></div>
+                            <h4 style="color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-brain"></i> Smart Insight
+                            </h4>
+                            <p id="mentorInsight" style="color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.8; font-style: italic; margin:0;"></p>
+                        </div>
 
-                                <!-- Category: Not Eligible -->
-                                <div class="result-category">
-                                    <h4 style="color: #ef4444; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                                        <i class="fas fa-circle-xmark"></i> Not Eligible
-                                    </h4>
-                                    <div id="ineligibleList" class="stack-list" style="display: flex; flex-direction: column; gap: 1rem;">
-                                        <!-- Ineligible companies -->
-                                    </div>
-                                </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+
+                            <!-- 🟢 YOUR STRENGTHS -->
+                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(16,185,129,0.2); background: rgba(16,185,129,0.03); border-radius: 20px;">
+                                <h4 style="color: #10b981; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-star"></i> Your Strengths
+                                </h4>
+                                <div id="mentorStrengths" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
                             </div>
+
+                            <!-- 🟡 AREAS TO IMPROVE -->
+                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(245,158,11,0.2); background: rgba(245,158,11,0.03); border-radius: 20px;">
+                                <h4 style="color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-seedling"></i> Areas to Grow
+                                </h4>
+                                <div id="mentorMissing" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                            </div>
+                        </div>
+
+                        <!-- 🔥 HIGH IMPACT SKILLS -->
+                        <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(239,68,68,0.2); background: rgba(239,68,68,0.03); border-radius: 20px; margin-bottom: 1.5rem;">
+                            <h4 style="color: #f87171; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-fire"></i> High Impact Skills to Unlock
+                            </h4>
+                            <div id="mentorHighImpact" style="display:flex; flex-wrap:wrap; gap:0.6rem;"></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+                            <!-- 📈 INDUSTRY TRENDS -->
+                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(96,165,250,0.2); background: rgba(96,165,250,0.03); border-radius: 20px;">
+                                <h4 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-chart-line"></i> Industry Trends
+                                </h4>
+                                <div id="mentorTrends" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                            </div>
+
+                            <!-- 🚀 LEARNING ROADMAP -->
+                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(167,139,250,0.2); background: rgba(167,139,250,0.03); border-radius: 20px;">
+                                <h4 style="color: #a78bfa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-route"></i> Learning Roadmap
+                                </h4>
+                                <div id="mentorRoadmap" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- EMPTY STATE (shown before analysis) -->
+                    <div id="eligibilityEmpty" class="results-section">
+                        <div class="glass-card" style="padding: 4rem; text-align:center; border: 1px dashed rgba(212,175,55,0.2); border-radius: 24px; background: rgba(255,255,255,0.01);">
+                            <div style="font-size:3rem; margin-bottom:1.5rem; opacity:0.4;">🧠</div>
+                            <h3 style="color:rgba(255,255,255,0.5); font-weight:500;">Your AI Mentor is ready</h3>
+                            <p style="color:rgba(255,255,255,0.25); font-size:14px; margin-top:0.8rem; max-width:360px; margin-left:auto; margin-right:auto; line-height:1.7;">Fill in your profile and click <strong style="color:var(--primary);">Analyze Eligibility</strong> to receive personalized career guidance.</p>
                         </div>
                     </div>
                 </div>
