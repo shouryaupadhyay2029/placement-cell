@@ -19,73 +19,91 @@
         }
         
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .main-info-card:hover {
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
-            border-color: rgba(212, 175, 55, 0.4) !important;
-            transform: translateY(-2px);
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-5px);
-        }
-        
-        .branch-tags span:hover {
-            background: rgba(212, 175, 55, 0.15) !important;
-            border-color: var(--primary) !important;
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        #companySelect:hover {
-            border-color: var(--primary) !important;
-            background: rgba(212, 175, 55, 0.05) !important;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            100% { transform: scale(1.1); opacity: 0.5; }
         }
 
-        @media (max-width: 992px) {
-            .eligibility-workspace {
-                grid-template-columns: 1fr !important;
-            }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
-        /* Specific Dropdown Fix: Make dropdown options opaque for readability */
-        #companySelect {
-            background-color: #000 !important;
-            background: #000 !important;
-            color: var(--primary) !important;
-            cursor: pointer;
-            backdrop-filter: none !important;
-            opacity: 1 !important;
+        .premium-card {
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            z-index: 1;
         }
 
-        #companySelect option {
-            background-color: #000 !important;
-            background: #000 !important;
-            color: var(--primary) !important;
-            padding: 12px;
+        .premium-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            border-color: rgba(212, 175, 55, 0.6) !important;
+        }
+
+        .card-glow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .profile-tag {
+            padding: 6px 14px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 30px;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.2);
+        }
+
+        .insight-list > div {
+            animation: fadeIn 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .loader-status-text {
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--primary);
             font-weight: 600;
-            opacity: 1 !important;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            min-height: 20px;
+            animation: pulse 1.5s infinite;
         }
 
-        /* Hover state for options (standard UI can ignore this but good for custom) */
-        #companySelect option:hover {
-            background-color: #1a1a1a !important;
+        @keyframes expandIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .skill-card:hover {
+            border-color: rgba(212,175,55,0.2) !important;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+
+        .skill-card-header:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .btn-start-learning:hover, .btn-practice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -101,7 +119,8 @@
                 <div class="face"></div>
                 <div class="face"></div>
             </div>
-            <div class="loader-text">Placing</div>
+            <div class="loader-text">TALENT ENGINE</div>
+            <div id="loaderStatus" class="loader-status-text">INITIALIZING SYSTEMS</div>
         </div>
     </div>
     <div class="particles"></div>
@@ -343,68 +362,60 @@
                     <!-- COLUMN 2: AI MENTOR DASHBOARD -->
                     <div id="eligibilityResults" class="results-section" style="display:none;">
 
-                        <!-- 🏷 PROFILE TYPE BADGE -->
-                        <div id="profileTypeBanner" class="glass-card mentor-card" style="padding: 1.5rem 2rem; border-radius: 20px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:20px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02);">
-                            <div id="profileTypeIcon" style="font-size:2.5rem; line-height:1;"></div>
-                            <div>
-                                <div style="font-size:10px; text-transform:uppercase; letter-spacing:2px; opacity:0.4; margin-bottom:4px;">Detected Profile</div>
-                                <div id="profileTypeLabel" style="font-size:1.3rem; font-weight:900; color:#fff;"></div>
-                                <div id="profileTypeSub" style="font-size:12px; opacity:0.5; margin-top:3px;"></div>
-                            </div>
-                        </div>
-
-                        <!-- 🧠 SMART INSIGHT -->
-                        <div class="glass-card mentor-card" style="padding: 2rem; border: 1px solid rgba(212,175,55,0.3); background: linear-gradient(135deg, rgba(212,175,55,0.06), rgba(0,0,0,0.4)); border-radius: 20px; margin-bottom: 1.5rem; position:relative; overflow:hidden;">
-                            <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; background:radial-gradient(circle, rgba(212,175,55,0.1), transparent); border-radius:50%;"></div>
-                            <h4 style="color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; display:flex; align-items:center; gap:8px;">
-                                <i class="fas fa-brain"></i> Smart Insight
-                            </h4>
-                            <p id="mentorInsight" style="color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.8; font-style: italic; margin:0;"></p>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-
-                            <!-- 🟢 YOUR STRENGTHS -->
-                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(16,185,129,0.2); background: rgba(16,185,129,0.03); border-radius: 20px;">
-                                <h4 style="color: #10b981; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
-                                    <i class="fas fa-star"></i> Your Strengths
+                        <!-- 🧠 SMART INSIGHT (CARD 1) -->
+                        <div class="premium-card insight-card" style="padding: 2.5rem; border: 1px solid rgba(212,175,55,0.4); background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(0,0,0,0.8)); border-radius: 24px; margin-bottom: 2rem; position:relative; overflow:hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+                            <div class="card-glow"></div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; position: relative; z-index: 1;">
+                                <h4 style="color: var(--primary); font-size: 12px; text-transform: uppercase; letter-spacing: 3px; display:flex; align-items:center; gap:10px; font-weight: 800;">
+                                    <i class="fas fa-microchip" style="font-size: 1.2rem;"></i> Strategic Intelligence
                                 </h4>
-                                <div id="mentorStrengths" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                                <div id="profileTypeTag" class="profile-tag"></div>
                             </div>
-
-                            <!-- 🟡 AREAS TO IMPROVE -->
-                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(245,158,11,0.2); background: rgba(245,158,11,0.03); border-radius: 20px;">
-                                <h4 style="color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
-                                    <i class="fas fa-seedling"></i> Areas to Grow
-                                </h4>
-                                <div id="mentorMissing" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
-                            </div>
+                            <p id="mentorInsight" style="color: rgba(255,255,255,0.7); font-size: 16px; line-height: 1.8; font-weight: 400; margin:0; position: relative; z-index: 1;"></p>
                         </div>
 
-                        <!-- 🔥 HIGH IMPACT SKILLS -->
-                        <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(239,68,68,0.2); background: rgba(239,68,68,0.03); border-radius: 20px; margin-bottom: 1.5rem;">
-                            <h4 style="color: #f87171; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
-                                <i class="fas fa-fire"></i> High Impact Skills to Unlock
+                        <!-- 🟢 YOUR STRENGTHS (CARD 2) -->
+                        <div class="premium-card strength-card" style="padding: 2rem; border: 1px solid rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); border-radius: 24px; margin-bottom: 1.5rem;">
+                            <h4 style="color: #10b981; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                                <i class="fas fa-certificate"></i> Verified Strengths
                             </h4>
-                            <div id="mentorHighImpact" style="display:flex; flex-wrap:wrap; gap:0.6rem;"></div>
+                            <div id="mentorStrengths" class="insight-list" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.2rem;"></div>
+                        </div>
+
+                        <!-- 🟡 SKILL GAP ENGINE (CARD 3) -->
+                        <div class="premium-card progress-card" style="padding: 2rem; border: 1px solid rgba(245,158,11,0.15); background: rgba(0,0,0,0.4); border-radius: 24px; margin-bottom: 1.5rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+                                <h4 style="color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display:flex; align-items:center; gap:10px; margin:0;">
+                                    <i class="fas fa-bolt"></i> Skill Gap Engine
+                                </h4>
+                                <span style="font-size:10px; color:rgba(255,255,255,0.25);">Click any card to expand</span>
+                            </div>
+                            <div id="mentorMissing"></div>
+                        </div>
+
+                        <!-- 📅 WEEKLY ACTION PLAN (CARD 4) -->
+                        <div class="premium-card" style="padding: 2rem; border: 1px solid rgba(212,175,55,0.15); background: rgba(0,0,0,0.3); border-radius: 24px; margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                                <i class="fas fa-calendar-week"></i> Weekly Action Plan
+                            </h4>
+                            <div id="mentorHighImpact" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-
-                            <!-- 📈 INDUSTRY TRENDS -->
-                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(96,165,250,0.2); background: rgba(96,165,250,0.03); border-radius: 20px;">
-                                <h4 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
-                                    <i class="fas fa-chart-line"></i> Industry Trends
+                            <!-- 📈 INDUSTRY TRENDS (CARD 5) -->
+                            <div class="premium-card trend-card" style="padding: 2rem; border: 1px solid rgba(96,165,250,0.3); background: rgba(96,165,250,0.05); border-radius: 24px;">
+                                <h4 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                                    <i class="fas fa-chart-line"></i> Market Trends
                                 </h4>
-                                <div id="mentorTrends" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                                <div id="mentorTrends" style="display:flex; flex-direction:column; gap:1rem;"></div>
                             </div>
 
-                            <!-- 🚀 LEARNING ROADMAP -->
-                            <div class="glass-card mentor-card" style="padding: 1.8rem; border: 1px solid rgba(167,139,250,0.2); background: rgba(167,139,250,0.03); border-radius: 20px;">
-                                <h4 style="color: #a78bfa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem; display:flex; align-items:center; gap:8px;">
-                                    <i class="fas fa-route"></i> Learning Roadmap
+                            <!-- 🚀 LEARNING ROADMAP (CARD 6) -->
+                            <div class="premium-card roadmap-card" style="padding: 2rem; border: 1px solid rgba(167,139,250,0.3); background: rgba(167,139,250,0.05); border-radius: 24px;">
+                                <h4 style="color: #a78bfa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                                    <i class="fas fa-map-signs"></i> Master Plan
                                 </h4>
-                                <div id="mentorRoadmap" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                                <div id="mentorRoadmap" style="display:flex; flex-direction:column; gap:1rem;"></div>
                             </div>
                         </div>
 
@@ -412,10 +423,10 @@
 
                     <!-- EMPTY STATE (shown before analysis) -->
                     <div id="eligibilityEmpty" class="results-section">
-                        <div class="glass-card" style="padding: 4rem; text-align:center; border: 1px dashed rgba(212,175,55,0.2); border-radius: 24px; background: rgba(255,255,255,0.01);">
-                            <div style="font-size:3rem; margin-bottom:1.5rem; opacity:0.4;">🧠</div>
-                            <h3 style="color:rgba(255,255,255,0.5); font-weight:500;">Your AI Mentor is ready</h3>
-                            <p style="color:rgba(255,255,255,0.25); font-size:14px; margin-top:0.8rem; max-width:360px; margin-left:auto; margin-right:auto; line-height:1.7;">Fill in your profile and click <strong style="color:var(--primary);">Analyze Eligibility</strong> to receive personalized career guidance.</p>
+                        <div class="glass-card" style="padding: 5rem 2rem; text-align:center; border: 1px dashed rgba(212,175,55,0.2); border-radius: 32px; background: rgba(255,255,255,0.01); transition: all 0.5s ease;">
+                            <div class="ai-orb" style="width: 80px; height: 80px; background: radial-gradient(circle, var(--primary), transparent); border-radius: 50%; margin: 0 auto 2rem auto; filter: blur(20px); opacity: 0.3; animation: pulse 2s infinite alternate;"></div>
+                            <h3 style="color:rgba(255,255,255,0.7); font-weight:600; font-size: 1.5rem; letter-spacing: -0.5px;">Initialize Your Talent Analysis</h3>
+                            <p style="color:rgba(255,255,255,0.3); font-size:15px; margin-top:1rem; max-width:400px; margin-left:auto; margin-right:auto; line-height:1.7;">Provide your professional details to generate a comprehensive, AI-driven placement strategy and industry alignment report.</p>
                         </div>
                     </div>
                 </div>
