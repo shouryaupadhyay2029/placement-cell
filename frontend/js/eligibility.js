@@ -232,9 +232,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!data.success) throw new Error(data.message || "Analysis failed");
 
-                // Full pipeline trace
-            console.info('[SPA v4.1] Raw input:', data._meta?.rawInput);
-            console.info('[SPA v4.1] Parsed tokens:', data._meta?.parsedTokens);
+            // Full pipeline trace
+            console.info(`[SPA Engine v${data.engineVersion || '4.1'}] Raw input:`, data._meta?.rawInput);
+            console.info(`[SPA Engine v${data.engineVersion || '4.1'}] Parsed tokens:`, data._meta?.parsedTokens);
             console.info('[SPA v4.1] Recognized:', data._meta?.recognizedSkills);
             console.info('[SPA v4.1] Unrecognized:', data._meta?.unrecognizedTokens);
             console.info('[SPA v4.1] Profile:', data.profileType, '| Stage:', data.stage);
@@ -304,34 +304,64 @@ document.addEventListener("DOMContentLoaded", () => {
         const roleColor       = roleColors[role]  || '#60a5fa';
 
         const unrecognizedBanner = unrecognized.length > 0 ? `
-            <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:12px; color:rgba(255,255,255,0.6);">
+            <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:10px; padding:12px 16px; margin-bottom:18px; font-size:12px; color:rgba(255,255,255,0.6);">
                 ⚠ <strong style="color:#f59e0b;">${unrecognized.length} skill${unrecognized.length > 1 ? 's' : ''} not recognized:</strong>
                 ${unrecognized.map(u => `<code style="background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:4px; font-size:11px;">${esc(u)}</code>`).join(' ')}
-                — try standard names like <em>Python, JavaScript, DSA, Java, React, SQL</em>
             </div>` : '';
 
         el.innerHTML = `
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
                 <span style="font-size:10px; font-weight:800; padding:4px 12px; border-radius:20px; background:${stageColor}22; color:${stageColor}; border:1px solid ${stageColor}55; text-transform:uppercase; letter-spacing:1.5px;">${esc(d.stage || 'beginner')} stage</span>
                 <span style="font-size:10px; font-weight:800; padding:4px 12px; border-radius:20px; background:${roleColor}18; color:${roleColor}; border:1px solid ${roleColor}44; text-transform:uppercase; letter-spacing:1.5px;">🎯 ${esc(roleLabel)}</span>
                 <span style="font-size:11px; color:rgba(255,255,255,0.3);">Recognized ${totalRecognized} of ${totalParsed} skill${totalParsed !== 1 ? 's' : ''}</span>
             </div>
             ${unrecognizedBanner}
 
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:18px; margin-bottom:16px;">
-                <div style="font-size:10px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">📊 Profile Reality Check</div>
-                <p style="font-size:14px; color:rgba(255,255,255,0.8); line-height:1.75; margin:0;">${esc(ins.honestDescription || '')}</p>
+            <!-- Strategic Header -->
+            <div style="margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.06);">
+                <div style="font-size:10px; font-weight:800; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:2px; margin-bottom:5px;">Strategic Summary</div>
+                <div style="font-size:1.4rem; font-weight:900; color:#fff; letter-spacing:-0.5px;">${esc(ins.summary || 'Analytical Review')}</div>
             </div>
 
-            <div style="background:rgba(212,175,55,0.06); border:1px solid rgba(212,175,55,0.2); border-radius:12px; padding:16px; margin-bottom:14px;">
-                <div style="font-size:10px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;">⚡ Highest Impact Action</div>
-                <p style="font-size:13px; color:rgba(255,255,255,0.75); margin:0; line-height:1.65;">${esc(ins.immediateAction || '')}</p>
+            <!-- Main Intelligence Grid -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
+                <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Current Focus</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6;">${esc(ins.currentFocus)}</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Key Gaps</div>
+                    <div style="font-size:13px; color:#ef4444; font-weight:700;">${esc(ins.keyGaps)}</div>
+                </div>
             </div>
 
-            ${ins.depthAnalysis ? `
-            <div style="font-size:13px; color:rgba(255,255,255,0.45); line-height:1.65; padding:12px 16px; background:rgba(255,255,255,0.01); border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
-                ${esc(ins.depthAnalysis)}
-            </div>` : ''}
+            <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
+                <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Skill Distribution</div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.5); font-family:monospace; line-height:1.7; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px;">
+                    ${(ins.skillDistribution || '').replace(/\n/g, '<br>')}
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
+                <div style="background:rgba(239,68,68,0.03); padding:15px; border-radius:12px; border:1px solid rgba(239,68,68,0.15);">
+                    <div style="font-size:9px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Impact on Placements</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.impact)}</div>
+                </div>
+                <div style="background:rgba(16,185,129,0.03); padding:15px; border-radius:12px; border:1px solid rgba(16,185,129,0.15);">
+                    <div style="font-size:9px; font-weight:800; color:#10b981; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Recommended Actions</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.recommendations)}</div>
+                </div>
+            </div>
+
+            <div style="background:linear-gradient(90deg, rgba(212,175,55,0.15), rgba(0,0,0,0.3)); border:1px solid rgba(212,175,55,0.3); border-radius:14px; padding:18px; display:flex; align-items:center; gap:15px;">
+                <div style="width:40px; height:40px; background:var(--primary); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i class="fas fa-chevron-right" style="color:#000; font-size:1.1rem;"></i>
+                </div>
+                <div>
+                    <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px;">Next Logical Step</div>
+                    <div style="font-size:14px; color:#fff; font-weight:700;">${esc(ins.nextStep)}</div>
+                </div>
+            </div>
         `;
     }
 
