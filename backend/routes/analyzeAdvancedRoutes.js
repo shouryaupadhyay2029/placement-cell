@@ -289,7 +289,7 @@ const SKILL_DB = {
     },
     docker: {
         id:'docker', name:'Docker & Containerization',
-        domain:'devops', tier:4, weight:5,
+        domain:'devops_cloud', tier:4, weight:5,
         difficulty:'Medium', difficultyScore:5, estimatedWeeks:3, dailyHours:1, demandScore:65,
         complementaryTo:['backend','node','python'], prerequisites:['node'],
         whyItMatters:'Solves environment consistency and is a standard in backend/DevOps workflows. Shows you can deploy and manage production systems.',
@@ -308,7 +308,7 @@ const SKILL_DB = {
     },
     sql: {
         id:'sql', name:'SQL & Relational Databases',
-        domain:'data', tier:2, weight:8,
+        domain:'data_science_ai', tier:2, weight:8,
         difficulty:'Medium', difficultyScore:4, estimatedWeeks:3, dailyHours:1, demandScore:90,
         complementaryTo:['backend','dbms','python','java'], prerequisites:[],
         whyItMatters:'Expected in virtually every technical interview — frontend, backend, and data roles all require SQL.',
@@ -420,15 +420,28 @@ function resolveSkills(normalizedTokens) {
 // ─────────────────────────────────────────────────────────────
 //  MODULE 3: COVERAGE & DEPTH ENGINE
 // ─────────────────────────────────────────────────────────────
-const ALL_DOMAINS = ['core_fundamentals','languages','frontend','backend','data','tools','devops'];
+const ALL_DOMAINS = [
+    'frontend', 'backend', 'core_fundamentals', 'devops_cloud', 
+    'data_science_ai', 'mobile_app_dev', 'cybersecurity', 'languages', 'tools'
+];
 
 function computeCoverage(knownIds) {
     const domainMap = {};
-    ALL_DOMAINS.forEach(d => { domainMap[d] = { known:[], total:[] }; });
-    Object.values(SKILL_DB).forEach(s => domainMap[s.domain].total.push(s.id));
+    ALL_DOMAINS.forEach(d => {
+        domainMap[d] = { known: [], total: [] };
+    });
+
+    Object.values(SKILL_DB).forEach(s => {
+        if (domainMap[s.domain]) {
+            domainMap[s.domain].total.push(s.id);
+        }
+    });
+
     knownIds.forEach(id => {
         const s = SKILL_DB[id];
-        if (s) domainMap[s.domain].known.push(id);
+        if (s && domainMap[s.domain]) {
+            domainMap[s.domain].known.push(id);
+        }
     });
 
     const domainStrength = {};
@@ -451,12 +464,13 @@ function computeCoverage(knownIds) {
 //  MODULE 4: PROFILE CLASSIFICATION ENGINE
 // ─────────────────────────────────────────────────────────────
 function classifyProfile(knownIds, coverage, cgpa) {
-    const { domainsActive, coreFundamentalsKnown, domainStrength } = coverage;
+    const { domainsActive, coreFundamentalsKnown, domainStrength, domainMap } = coverage;
     const n = knownIds.length;
     const hasDSA      = knownIds.includes('dsa');
     const hasFront    = domainStrength['frontend'].level !== 'absent';
     const hasBack     = domainStrength['backend'].level !== 'absent';
-    const hasDB       = domainStrength['core_fundamentals'].known.includes('dbms') || domainStrength['core_fundamentals'].known.includes('sql');
+    const coreFundamentals = coverage.domainMap['core_fundamentals'] || { known: [] };
+    const hasDB       = coreFundamentals.known.includes('dbms') || coreFundamentals.known.includes('sql');
 
     let type = 'Developing Engineer';
     let stage = 'beginner';

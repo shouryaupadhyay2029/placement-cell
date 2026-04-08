@@ -32,7 +32,7 @@ async function cycleLoader(messages) {
     if (!el) return;
     for (const msg of messages) {
         el.textContent = msg;
-        await new Promise(r => setTimeout(r, 900));
+        await new Promise(r => setTimeout(r, 400));
     }
 }
 
