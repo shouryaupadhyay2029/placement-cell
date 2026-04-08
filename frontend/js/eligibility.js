@@ -208,6 +208,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function renderMentorDashboard(d) {
+        // 🏷 Profile Type Badge
+        const iconEl  = document.getElementById("profileTypeIcon");
+        const labelEl = document.getElementById("profileTypeLabel");
+        const subEl   = document.getElementById("profileTypeSub");
+        const banner  = document.getElementById("profileTypeBanner");
+        if (d.badge && iconEl) {
+            iconEl.textContent  = d.badge.icon || "⚡";
+            labelEl.textContent = d.badge.label || d.profileType;
+            subEl.textContent   = `${d.profileType} Profile`;
+            if (banner) banner.style.borderColor = `${d.badge.color}33`;
+            if (labelEl) labelEl.style.color = d.badge.color || "#fff";
+        }
+
         // 🧠 Smart Insight
         const insightEl = document.getElementById("mentorInsight");
         if (insightEl) insightEl.textContent = d.insights || '';
@@ -217,33 +230,42 @@ document.addEventListener("DOMContentLoaded", () => {
         if (strengthsEl) {
             if (d.strengths && d.strengths.length) {
                 strengthsEl.innerHTML = d.strengths.map(s => `
-                    <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
-                        <span style="color:#10b981; margin-top:2px; flex-shrink:0;">✦</span>
+                    <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <span style="color:#10b981;margin-top:2px;flex-shrink:0;">✦</span>
                         <div>
-                            <div style="font-weight:700; font-size:13px; color:#fff;">${escHtml(s.skill)}</div>
-                            <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; line-height:1.5;">${escHtml(s.reason)}</div>
+                            <div style="font-weight:700;font-size:13px;color:#fff;">${escHtml(s.skill)}</div>
+                            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;line-height:1.5;">${escHtml(s.reason)}</div>
                         </div>
                     </div>`).join('');
             } else {
-                strengthsEl.innerHTML = `<p style="color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">Keep building — every skill you add becomes a strength!</p>`;
+                strengthsEl.innerHTML = `<p style="color:rgba(255,255,255,0.25);font-size:13px;font-style:italic;">Keep building — every skill you add becomes a strength!</p>`;
             }
         }
 
-        // 🟡 Areas to Grow
+        // 🟡 Areas to Grow — structured into core / practical / enhancement
         const missingEl = document.getElementById("mentorMissing");
         if (missingEl) {
-            if (d.missingSkills && d.missingSkills.length) {
-                missingEl.innerHTML = d.missingSkills.map(s => `
-                    <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
-                        <span style="color:#f59e0b; margin-top:2px; flex-shrink:0;">→</span>
+            const gaps = d.gaps || {};
+            const GAP_META = {
+                core:        { label: "Foundation Gaps",  color: "#ef4444" },
+                practical:   { label: "Practical Skills", color: "#f59e0b" },
+                enhancement: { label: "Growth Areas",     color: "#60a5fa" },
+            };
+            let html = '';
+            for (const [type, items] of Object.entries(GAP_META)) {
+                const list = gaps[type] || [];
+                if (!list.length) continue;
+                html += `<div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:${items.color};opacity:0.8;margin:10px 0 6px;font-weight:800;">${items.label}</div>`;
+                html += list.slice(0, 3).map(s => `
+                    <div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03);">
+                        <span style="color:${items.color};margin-top:2px;flex-shrink:0;font-size:12px;">→</span>
                         <div>
-                            <div style="font-weight:700; font-size:13px; color:#fff;">${escHtml(s.skill)}</div>
-                            <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; line-height:1.5;">${escHtml(s.reason)}</div>
+                            <div style="font-weight:700;font-size:13px;color:#fff;">${escHtml(s.skill)}</div>
+                            <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:1px;line-height:1.5;">${escHtml(s.reason)}</div>
                         </div>
                     </div>`).join('');
-            } else {
-                missingEl.innerHTML = `<p style="color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">Excellent coverage! Focus on deepening your expertise.</p>`;
             }
+            missingEl.innerHTML = html || `<p style="color:rgba(255,255,255,0.25);font-size:13px;font-style:italic;">Your coverage is excellent — go deep rather than wide.</p>`;
         }
 
         // 🔥 High Impact Skills (pills)
@@ -251,10 +273,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (highImpactEl) {
             if (d.highImpactSkills && d.highImpactSkills.length) {
                 highImpactEl.innerHTML = d.highImpactSkills.map(s => `
-                    <span style="padding:6px 14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:20px; font-size:12px; font-weight:700; color:#f87171;">${escHtml(s)}</span>
+                    <span style="padding:6px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:20px;font-size:12px;font-weight:700;color:#f87171;">${escHtml(s)}</span>
                 `).join('');
             } else {
-                highImpactEl.innerHTML = `<p style="color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">Your current skills already cover the most impactful areas!</p>`;
+                highImpactEl.innerHTML = `<p style="color:rgba(255,255,255,0.25);font-size:13px;font-style:italic;">Your current skills already cover the most impactful areas!</p>`;
             }
         }
 
@@ -262,8 +284,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const trendsEl = document.getElementById("mentorTrends");
         if (trendsEl && d.trends) {
             trendsEl.innerHTML = d.trends.map((t, i) => `
-                <div style="display:flex; gap:10px; align-items:flex-start; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">
-                    <span style="color:#60a5fa; font-weight:700; flex-shrink:0;">${i + 1}.</span>
+                <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:6px;">
+                    <span style="color:#60a5fa;font-weight:700;flex-shrink:0;">${i + 1}.</span>
                     <span>${escHtml(t)}</span>
                 </div>`).join('');
         }
@@ -272,10 +294,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const roadmapEl = document.getElementById("mentorRoadmap");
         if (roadmapEl && d.roadmap) {
             roadmapEl.innerHTML = d.roadmap.map((step, i) => `
-                <div style="display:flex; gap:12px; align-items:flex-start; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
-                    <div style="width:22px; height:22px; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:#a78bfa; flex-shrink:0;">${i + 1}</div>
-                    <p style="font-size:12px; color:rgba(255,255,255,0.65); line-height:1.6; margin:0;">${escHtml(step)}</p>
+                <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <div style="width:22px;height:22px;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#a78bfa;flex-shrink:0;">${i + 1}</div>
+                    <p style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.6;margin:0;">${escHtml(step)}</p>
                 </div>`).join('');
+        }
+
+        // Entrance animation on results panel
+        const resultsEl = document.getElementById("eligibilityResults");
+        if (resultsEl) {
+            resultsEl.style.opacity = "0";
+            resultsEl.style.transform = "translateY(12px)";
+            resultsEl.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+            requestAnimationFrame(() => {
+                resultsEl.style.opacity = "1";
+                resultsEl.style.transform = "translateY(0)";
+            });
         }
     }
 
