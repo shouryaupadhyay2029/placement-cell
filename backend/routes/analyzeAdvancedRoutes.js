@@ -30,7 +30,11 @@ const SKILL_DB = {
             'Week 3: Recursion — subsets, permutations, combination sum.',
             'Week 4: Trees — inorder/preorder/postorder, BST operations, LCA.'
         ],
-        links:{theory:'https://www.geeksforgeeks.org/data-structures/',practice:'https://leetcode.com/problemset/',guide:'https://neetcode.io/roadmap'}
+        links:{theory:'https://www.geeksforgeeks.org/data-structures/',practice:'https://leetcode.com/problemset/',guide:'https://neetcode.io/roadmap'},
+        youtube:[
+            {title:'DSA Full Course – Abdul Bari',url:'https://www.youtube.com/playlist?list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O'},
+            {title:'Striver DSA Sheet – Take U Forward',url:'https://www.youtube.com/watch?v=0bHoB32fuj0'}
+        ]
     },
     oops: {
         id:'oops', name:'Object Oriented Programming',
@@ -49,7 +53,11 @@ const SKILL_DB = {
             'Week 2: Implement Singleton, Factory, Builder design patterns.',
             'Week 3: Refactor an existing project to apply SOLID principles.'
         ],
-        links:{theory:'https://www.geeksforgeeks.org/object-oriented-programming-in-cpp/',practice:'https://www.geeksforgeeks.org/oops-interview-questions/',guide:'https://refactoring.guru/design-patterns'}
+        links:{theory:'https://www.geeksforgeeks.org/object-oriented-programming-in-cpp/',practice:'https://www.geeksforgeeks.org/oops-interview-questions/',guide:'https://refactoring.guru/design-patterns'},
+        youtube:[
+            {title:'OOP Concepts in 10 min – Web Dev Simplified',url:'https://www.youtube.com/watch?v=pTB0EiLXUC8'},
+            {title:'SOLID Principles Explained – Fireship',url:'https://www.youtube.com/watch?v=XzdhzyAukMM'}
+        ]
     },
     dbms: {
         id:'dbms', name:'Database Management (DBMS & SQL)',
@@ -69,7 +77,11 @@ const SKILL_DB = {
             'Week 3: Transactions, ACID, and Isolation Levels with examples.',
             'Week 4: Indexing theory + LeetCode SQL problems 50+.'
         ],
-        links:{theory:'https://www.geeksforgeeks.org/dbms/',practice:'https://leetcode.com/tag/database/',guide:'https://www.geeksforgeeks.org/sql-tutorial/'}
+        links:{theory:'https://www.geeksforgeeks.org/dbms/',practice:'https://leetcode.com/tag/database/',guide:'https://www.geeksforgeeks.org/sql-tutorial/'},
+        youtube:[
+            {title:'SQL Full Course – Programming with Mosh',url:'https://www.youtube.com/watch?v=7S_tz1z_5bA'},
+            {title:'DBMS Complete Course – Gate Smashers',url:'https://www.youtube.com/watch?v=kBdlM6hNDAE'}
+        ]
     },
     os: {
         id:'os', name:'Operating Systems',
@@ -78,6 +90,10 @@ const SKILL_DB = {
         complementaryTo:['cpp','backend'], prerequisites:[],
         whyItMatters:'OS is tested in 70% of product company interviews. Understanding processes, memory, and I/O helps write better code and debug complex issues.',
         impactIfIgnored:'Struggle with system-level interview questions and backend performance debugging.',
+        youtube:[
+            {title:'Operating Systems – Neso Academy',url:'https://www.youtube.com/watch?v=vBURTt97EkA'},
+            {title:'OS Concepts for Interviews – Gate Smashers',url:'https://www.youtube.com/watch?v=bkSWJJZNgf8'}
+        ],
         roadmap:{
             beginner:['Process vs Thread, Process lifecycle','CPU Scheduling — FCFS, SJF, Round Robin','Memory: Stack vs Heap, Static vs Dynamic'],
             intermediate:['Virtual Memory, Paging & Segmentation',"Deadlocks — Banker's Algorithm, Prevention",'File Systems — FAT, NTFS, inode'],
@@ -490,112 +506,244 @@ function classifyProfile(knownIds, coverage, cgpa) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  MODULE 5: GAP DETECTION ENGINE (CONTEXT-AWARE)
+//  MODULE 5A: ROLE DETECTION ENGINE
+//  Determines primary role from skill cluster signals
 // ─────────────────────────────────────────────────────────────
-const CRITICAL_FUNDAMENTALS = ['dsa', 'oops', 'dbms', 'os'];
+const ROLE_CLUSTERS = {
+    frontend:  ['javascript','react'],
+    backend:   ['node','java','python'],
+    data:      ['python','sql','dbms'],
+    systems:   ['c','cpp','os'],
+    core:      ['dsa','oops','dbms','os','cn']
+};
 
-function detectGaps(knownIds, profile, coverage) {
-    const gaps = [];
-    const { stage } = profile;
-    const hasDSA    = knownIds.includes('dsa');
-    const hasJS     = knownIds.includes('javascript');
-    const hasPython = knownIds.includes('python');
-    const hasC      = knownIds.includes('c') || knownIds.includes('cpp') || knownIds.includes('java');
-    const hasBackend = knownIds.includes('node') || knownIds.includes('java') || knownIds.includes('python');
-    const hasSQL    = knownIds.includes('sql') || knownIds.includes('dbms');
-    const hasFront  = knownIds.includes('react') || knownIds.includes('javascript');
-    const hasGit    = knownIds.includes('git');
+function detectRole(knownIds) {
+    if (knownIds.length === 0) return 'beginner';
 
-    // ─ CRITICAL: Missing Fundamentals ─
-    CRITICAL_FUNDAMENTALS.forEach(id => {
-        if (knownIds.includes(id)) return;
-        const skill = SKILL_DB[id];
-
-        let contextReason = skill.whyItMatters;
-
-        // Personalized reasoning based on what they DO have
-        if (id === 'dsa') {
-            if (hasJS || hasFront) {
-                contextReason = `You have web development skills, but without DSA you will fail the online assessment stage at every product company (Microsoft, Amazon, Google, Flipkart, funded startups). These assessments are DSA-only — your React knowledge will not help you there.`;
-            } else if (hasPython) {
-                contextReason = `Python is a great language, but DSA is tested independently of language. Knowing Python syntax without DSA means you cannot solve the algorithmic problems that every hiring filter is based on.`;
-            } else if (hasC) {
-                contextReason = `You know a systems language, which is a good start. Now apply that language knowledge to solve algorithmic problems systematically — that's what DSA transforms your profile into.`;
-            }
-        }
-        if (id === 'dbms') {
-            if (hasJS || hasBackend) {
-                contextReason = `You are building applications, but every real application persists data. Not knowing DBMS means you cannot design schemas, write queries, or answer the data-related questions that appear in 85% of technical interviews.`;
-            }
-        }
-        if (id === 'oops') {
-            if (hasJS) {
-                contextReason = `JavaScript uses OOP concepts (prototypal inheritance, classes) internally. You are using it without understanding the foundation. OOP design is directly tested in every service-based company interview.`;
-            } else if (hasPython) {
-                contextReason = `Python supports full OOP. Not studying it formally means you are missing the design principles that make code maintainable and interviews passable.`;
-            }
-        }
-
-        gaps.push({ ...skill, priority:'CRITICAL', reasoning: contextReason, gapType:'missing_fundamental' });
+    const scores = {};
+    Object.entries(ROLE_CLUSTERS).forEach(([role, skills]) => {
+        scores[role] = skills.filter(s => knownIds.includes(s)).length;
     });
 
-    // ─ HIGH: Complementary Skill Gaps ─
-    if ((hasJS || hasFront) && !knownIds.includes('node') && !hasBackend) {
-        gaps.push({
-            ...SKILL_DB['node'], priority:'HIGH',
-            reasoning: `You know JavaScript/frontend but cannot build APIs or connect to databases. This limits you to purely UI roles. Node.js is the natural next step given your JS background and will unlock full-stack positions, which are far more abundant.`,
-            gapType:'missing_complement'
-        });
+    const hasDSA      = knownIds.includes('dsa');
+    const hasFront    = scores.frontend > 0;
+    const hasBack     = scores.backend  > 0;
+    const hasData     = scores.data     > 0;
+    const hasSystems  = scores.systems  > 0;
+
+    if (hasFront && hasBack)   return 'fullstack';
+    if (hasFront && !hasBack)  return 'frontend';
+    if (hasBack  && !hasFront) return 'backend';
+    if (hasData  && !hasFront) return 'data';
+    if (hasSystems || hasDSA)  return 'core';
+    return 'beginner';
+}
+
+// ─────────────────────────────────────────────────────────────
+//  MODULE 5B: DYNAMIC ROLE-AWARE GAP ENGINE
+//  Gaps are entirely determined by role + missing clusters
+// ─────────────────────────────────────────────────────────────
+function addGap(gaps, id, priority, reasoning, gapType) {
+    if (gaps.find(g => g.id === id)) return; // no duplicates
+    const skill = SKILL_DB[id];
+    if (!skill) return;
+    gaps.push({ ...skill, priority, reasoning, gapType });
+}
+
+function detectGaps(knownIds, profile, coverage, role) {
+    const gaps  = [];
+    const has   = id => knownIds.includes(id);
+    const hasAny = ids => ids.some(id => knownIds.includes(id));
+
+    const hasDSA     = has('dsa');
+    const hasOOP     = has('oops');
+    const hasDBMS    = has('dbms') || has('sql');
+    const hasOS      = has('os');
+    const hasGit     = has('git');
+    const hasJS      = has('javascript');
+    const hasPython  = has('python');
+    const hasJava    = has('java');
+    const hasCpp     = has('cpp') || has('c');
+    const hasFront   = hasAny(['react','javascript']);
+    const hasBack    = hasAny(['node','java','python']);
+    const hasNode    = has('node');
+    const hasReact   = has('react');
+
+    // ─────────────────────────────────────────────────────
+    //  ROLE: FRONTEND (JS/React without backend)
+    // ─────────────────────────────────────────────────────
+    if (role === 'frontend') {
+        // #1 — Backend complement is the most logical next step
+        addGap(gaps,'node','CRITICAL',
+            `You have frontend skills but zero backend capability. This is the single biggest limiter for frontend developers — most job descriptions ask for at least basic backend API knowledge. Node.js is the natural complement since you already know JavaScript, letting you become full-stack without learning a new language.`,
+            'role_complement');
+        // #2 — DSA is required regardless
+        if (!hasDSA) addGap(gaps,'dsa','CRITICAL',
+            `Frontend knowledge does not help you in online assessments. Every product company — regardless of role — tests DSA in the first round. Your current JavaScript skills will not appear in round 1 until you can solve algorithmic problems.`,
+            'universal_requirement');
+        // #3 — SQL because backend needs it
+        if (!hasDBMS) addGap(gaps,'sql','HIGH',
+            `Once you build backend APIs, data must be stored somewhere. SQL is expected knowledge for any backend-adjacent role. Frontend developers who also know SQL are significantly more hirable for full-stack positions.`,
+            'role_complement');
+        // #4 — OOP for interviews
+        if (!hasOOP) addGap(gaps,'oops','HIGH',
+            `JavaScript classes and React's component architecture are built on OOP principles. Understanding them formally will improve your code quality and unlock your ability to answer design questions in interviews.`,
+            'foundation_gap');
+        // #5 — Git
+        if (!hasGit) addGap(gaps,'git','HIGH',
+            `Without Git you cannot collaborate on any real project or showcase work on GitHub. Recruiters check GitHub profiles directly — an empty one is a red flag.`,
+            'tool_gap');
+        // #6 — Python as optional upskill
+        if (!hasPython) addGap(gaps,'python','MEDIUM',
+            `Python opens backend and data science pathways. Given your JavaScript background, Python is fast to learn and dramatically widens your role options beyond pure frontend.`,
+            'optional_upskill');
     }
 
-    if (hasPython && !hasSQL) {
-        gaps.push({
-            ...SKILL_DB['sql'], priority:'HIGH',
-            reasoning: `Python without SQL means you cannot persist or query data — core to data engineering, data science, and backend development. SQL is the universal companion to Python in almost every data-adjacent role.`,
-            gapType:'missing_complement'
-        });
+    // ─────────────────────────────────────────────────────
+    //  ROLE: BACKEND (Node / Python / Java without React)
+    // ─────────────────────────────────────────────────────
+    else if (role === 'backend') {
+        // #1 — DSA is the primary filter
+        if (!hasDSA) addGap(gaps,'dsa','CRITICAL',
+            `Backend engineers are still filtered by DSA in product company OAs. Knowing how to build APIs is not enough — you must also solve Medium LeetCode problems to clear screening rounds. Without this, your backend knowledge never gets evaluated.`,
+            'universal_requirement');
+        // #2 — Database knowledge
+        if (!hasDBMS) addGap(gaps,'dbms','CRITICAL',
+            `You are building server-side applications but have no database foundation. Every backend role expects you to design schemas, write complex queries, understand transactions, and optimize indexes. This is an immediate gap that will be exposed in any backend interview.`,
+            'critical_foundation');
+        // #3 — OOP (for architecture)
+        if (!hasOOP) addGap(gaps,'oops','HIGH',
+            `Backend codebases are organized around OOP patterns — services, repositories, factories. Without understanding SOLID and design patterns, your code will not scale and interviews will expose this at the design question stage.`,
+            'foundation_gap');
+        // #4 — OS for backend internals
+        if (!hasOS) addGap(gaps,'os','HIGH',
+            `Backend performance issues — memory leaks, race conditions, I/O bottlenecks — require OS-level understanding to debug. Product companies test OS in backend interview rounds specifically.`,
+            'depth_gap');
+        // #5 — Frontend basics for context
+        if (!hasFront) addGap(gaps,'react','MEDIUM',
+            `Understanding how frontends communicate with your APIs makes you a significantly better backend engineer. React knowledge also dramatically increases the number of full-stack roles you qualify for.`,
+            'optional_upskill');
+        // #6 — Git
+        if (!hasGit) addGap(gaps,'git','HIGH',
+            `Version control is non-negotiable in backend development. No team project uses only local files — and GitHub CI/CD pipelines depend entirely on Git.`,
+            'tool_gap');
     }
 
-    if ((hasBackend || hasFront) && !hasSQL && !knownIds.includes('dbms')) {
-        if (!gaps.find(g => g.id === 'sql')) {
-            gaps.push({
-                ...SKILL_DB['sql'], priority:'HIGH',
-                reasoning: `You are building applications but have no database layer. SQL is required to store, retrieve, and manipulate data — without it you are fundamentally limited in what you can build or discuss in an interview.`,
-                gapType:'missing_complement'
-            });
-        }
+    // ─────────────────────────────────────────────────────
+    //  ROLE: DATA (Python + SQL focus)
+    // ─────────────────────────────────────────────────────
+    else if (role === 'data') {
+        // #1 — DSA is still required
+        if (!hasDSA) addGap(gaps,'dsa','CRITICAL',
+            `Data roles at analytics/AI companies still run DSA-based assessments. Companies like Tredence, Mu Sigma, Fractal, and product companies hiring data engineers filter on algorithmic ability first. Python and SQL alone will not clear these rounds.`,
+            'universal_requirement');
+        // #2 — Backend to make data products
+        if (!hasBack || (!has('node') && !has('python'))) addGap(gaps,'node','HIGH',
+            `Data scientists who can also build REST APIs for their ML models are dramatically more valuable. The typical gap is: you can analyze data but cannot expose it as a service. Node.js or FastAPI fills this immediately.`,
+            'role_complement');
+        // #3 — DBMS depth
+        if (!has('dbms')) addGap(gaps,'dbms','HIGH',
+            `SQL alone is not sufficient. Data engineering interviews test ACID, indexing, query optimization, and distributed database design. DBMS theory unlocks the depth expected at data-focused companies.`,
+            'depth_gap');
+        // #4 — OOP for ML code quality
+        if (!hasOOP) addGap(gaps,'oops','MEDIUM',
+            `ML pipelines, data models, and ETL scripts written without OOP patterns become unmaintainable quickly. OOP is the difference between a data notebook and production-grade data code.`,
+            'foundation_gap');
+        // #5 — Git
+        if (!hasGit) addGap(gaps,'git','HIGH',
+            `Data projects committed to Git with proper notebooks and reproducible pipelines are what recruiters look for. Kaggle profiles without an underlying GitHub are less credible.`,
+            'tool_gap');
     }
 
-    // ─ HIGH: Git (non-negotiable tool) ─
-    if (!hasGit && knownIds.length > 0) {
-        gaps.push({
-            ...SKILL_DB['git'], priority:'HIGH',
-            reasoning: `Git is a professional baseline — not optional. Without it you cannot work in a team, cannot showcase code, and your GitHub profile (which recruiters check) remains empty. This is the highest return-on-time investment for your profile right now.`,
-            gapType:'missing_tool'
-        });
+    // ─────────────────────────────────────────────────────
+    //  ROLE: FULLSTACK (has both frontend + backend)
+    // ─────────────────────────────────────────────────────
+    else if (role === 'fullstack') {
+        // #1 — DSA is still the product company filter
+        if (!hasDSA) addGap(gaps,'dsa','CRITICAL',
+            `You have a genuinely practical full-stack profile — but product companies will still filter you on DSA before they see any of it. Your development skills become visible only after you clear the algorithmic screening. This is the single highest-leverage investment you can make right now.`,
+            'universal_requirement');
+        // #2 — Database (if missing)
+        if (!hasDBMS) addGap(gaps,'dbms','CRITICAL',
+            `Full-stack without database knowledge is incomplete. The data layer connects your frontend and backend — skipping it means you cannot fully build or explain any production application.`,
+            'critical_foundation');
+        // #3 — OOP and design
+        if (!hasOOP) addGap(gaps,'oops','HIGH',
+            `Full-stack engineers at senior levels are expected to design systems. OOP and design patterns are the foundation of that skill. Service-based companies test this explicitly.`,
+            'depth_gap');
+        // #4 — OS for system design prep
+        if (!hasOS) addGap(gaps,'os','MEDIUM',
+            `System design interviews — which begin appearing after 1-2 rounds at product companies — draw heavily on OS concepts. Processes, threads, caching, and I/O directly translate to distributed system design.`,
+            'depth_gap');
+        // #5 — Git
+        if (!hasGit) addGap(gaps,'git','HIGH',
+            `Full-stack projects without Git history and proper branching signal an inexperienced developer to reviewers. Your GitHub profile is your portfolio — it must be active.`,
+            'tool_gap');
     }
 
-    // ─ MEDIUM: High-value additions (only if not already overloaded with CRITICAL) ─
-    const criticalCount = gaps.filter(g => g.priority === 'CRITICAL').length;
-    if (criticalCount <= 3) {
-        ['python','java','react','cn'].forEach(id => {
-            if (knownIds.includes(id)) return;
-            if (gaps.find(g => g.id === id)) return;
-            const skill = SKILL_DB[id];
-            if (!skill) return;
-            gaps.push({
-                ...skill, priority:'MEDIUM',
-                reasoning: `${skill.name} has a ${skill.demandScore}% industry demand score. Adding it significantly increases the number of roles and companies you qualify for.`,
-                gapType:'high_value_addition'
-            });
-        });
+    // ─────────────────────────────────────────────────────
+    //  ROLE: CORE / DSA-FIRST (C++/Java + DSA)
+    // ─────────────────────────────────────────────────────
+    else if (role === 'core') {
+        // #1 — Missing DSA even in core role?
+        if (!hasDSA) addGap(gaps,'dsa','CRITICAL',
+            `Your systems/language background is strong, but without structured DSA practice you are not interview-ready. Competitive programming and system language knowledge are different from solving structured problems under time pressure.`,
+            'critical_foundation');
+        // #2 — Practical dev skill to show output
+        if (!hasFront && !hasBack) addGap(gaps,'node','HIGH',
+            `Core CS knowledge without a practical build skill (backend or frontend) leaves your profile theoretical. Recruiters want to see something deployed. Node.js or Python backend is the fastest path from problem-solver to full engineer.`,
+            'role_complement');
+        // #3 — DBMS
+        if (!hasDBMS) addGap(gaps,'dbms','HIGH',
+            `Database design is tested in almost every technical interview alongside DSA. Without it you have a blind spot that appears immediately in any backend or system design question.`,
+            'foundation_gap');
+        // #4 — OOP depth
+        if (!hasOOP) addGap(gaps,'oops','HIGH',
+            `Understanding OOP formally — not just using objects — is what separates a programmer from an engineer. Design patterns and SOLID are tested in senior+1 interviews at product companies.`,
+            'depth_gap');
+        // #5 — Git
+        if (!hasGit) addGap(gaps,'git','MEDIUM',
+            `Competitive programmers without Git look like they only solve problems in isolation. A GitHub profile with projects demonstrates that you can build, not just solve.`,
+            'tool_gap');
     }
 
-    // Sort: CRITICAL → HIGH → MEDIUM → by demand score desc
+    // ─────────────────────────────────────────────────────
+    //  ROLE: BEGINNER (no clear cluster yet)
+    // ─────────────────────────────────────────────────────
+    else {
+        // Suggest the most valuable entry path
+        const lang = hasPython ? 'python' : hasJS ? 'javascript' : hasJava ? 'java' : null;
+        if (!hasDSA) addGap(gaps,'dsa','CRITICAL',
+            `DSA is the most important skill for placement in India, regardless of your target company. Starting it early — even as a beginner — gives you the maximum advantage when placements begin. Every week you delay compounds the difficulty later.`,
+            'universal_requirement');
+        if (!lang) addGap(gaps,'python','HIGH',
+            `Before learning DSA, frameworks, or databases, you must be fluent in at least one programming language. Python is the best starting point — clean syntax, massive community, and applicable to backend, data science, and ML roles.`,
+            'foundation');
+        if (!hasOOP) addGap(gaps,'oops','HIGH',
+            `OOP is the design language of every major codebase. Learning it early means every framework and language you pick up later will make more sense — it is investment that never goes to waste.`,
+            'foundation_gap');
+        if (!hasDBMS) addGap(gaps,'dbms','HIGH',
+            `Nearly every application you will ever build requires a database. Starting with SQL fundamentals now means you can build complete, real projects — not just scripts.`,
+            'foundation_gap');
+        if (!hasGit) addGap(gaps,'git','MEDIUM',
+            `Git is a 1-week investment that immediately makes you look professional. Set it up now so that every project you build from this point is tracked and visible on GitHub.`,
+            'tool_gap');
+    }
+
+    // ─────────────────────────────────────────────────────
+    //  UNIVERSAL: OS for all non-beginner roles
+    // ─────────────────────────────────────────────────────
+    if (!hasOS && role !== 'beginner' && role !== 'frontend' && gaps.length < 6) {
+        addGap(gaps,'os','MEDIUM',
+            `Operating systems concepts appear in 70% of product company interviews. Process management, memory, and concurrency are regularly tested in backend and systems design rounds.`,
+            'universal_depth');
+    }
+
+    // Sort: CRITICAL → HIGH → MEDIUM → demandScore desc
     const order = { CRITICAL:0, HIGH:1, MEDIUM:2 };
     gaps.sort((a, b) => {
         const pd = (order[a.priority]||3) - (order[b.priority]||3);
-        return pd !== 0 ? pd : b.demandScore - a.demandScore;
+        return pd !== 0 ? pd : (b.demandScore||0) - (a.demandScore||0);
     });
 
     return gaps.slice(0, 8);
@@ -680,33 +828,33 @@ function generateMarketInsights(knownIds, profile, cgpa) {
 // ─────────────────────────────────────────────────────────────
 //  MODULE 7: STRATEGIC INSIGHT ENGINE
 // ─────────────────────────────────────────────────────────────
-function generateStrategicInsight(knownIds, profile, gaps, coverage) {
-    const { type, honestDescription } = profile;
-    const topGap = gaps[0];
+function generateStrategicInsight(knownIds, profile, gaps, coverage, role) {
+    const { honestDescription } = profile;
+    const topGap        = gaps[0];
     const criticalCount = gaps.filter(g => g.priority === 'CRITICAL').length;
 
-    let immediateAction = '';
-    if (topGap) {
-        immediateAction = `Start with ${topGap.name} today. Commit ${topGap.dailyHours}h per day — ${topGap.estimatedWeeks} weeks of focused effort will bring you to interview-ready level. Impact if you delay: ${topGap.impactIfIgnored}`;
-    } else if (knownIds.length > 0) {
-        immediateAction = 'Your skill coverage is solid. Focus on deepening problem-solving with harder LeetCode problems and building a portfolio project that demonstrates your strongest skill.';
-    } else {
-        immediateAction = 'Start by choosing one programming language (Python or JavaScript are best for beginners) and commit to 30 days of daily practice before adding anything else.';
-    }
+    // Role-specific immediate action (variation per role, not generic)
+    const roleActions = {
+        frontend:  topGap ? `As a frontend developer, your immediate move is ${topGap.name}. ${topGap.reasoning}` : 'Deepen your React skills — Next.js, state management, testing. Build a full-stack project to showcase range.',
+        backend:   topGap ? `Your backend profile needs ${topGap.name} urgently. ${topGap.reasoning}` : 'Optimize your APIs, add caching, and target 100+ LeetCode Mediums to clear product company OAs.',
+        fullstack: topGap ? `Full-stack profile identified. Critical gap: ${topGap.name}. ${topGap.reasoning}` : 'Focus on system design — design Twitter, YouTube, and URL shorteners. Then solve 100 LeetCode Mediums.',
+        data:      topGap ? `Your data profile is missing: ${topGap.name}. ${topGap.reasoning}` : 'Build a published data project with EDA + model + API endpoint. This is the data portfolio standard.',
+        core:      topGap ? `Strong systems base. Next priority: ${topGap.name}. ${topGap.reasoning}` : 'Target 150+ LeetCode problems across all categories. Add a practical web project to demonstrate build skills.',
+        beginner:  topGap ? `Start here: ${topGap.name}. ${topGap.reasoning}` : 'Choose one language, build 3 small projects, then begin DSA. Consistency over 90 days will transform your profile.'
+    };
+    const immediateAction = roleActions[role] || roleActions.beginner;
 
+    // Role-specific depth description
     const { domainsActive, coreFundamentalsKnown } = coverage;
-    let depthAnalysis = '';
-    if (knownIds.length === 0) {
-        depthAnalysis = 'No skills detected. Please enter your skills separated by commas (e.g., "Python, JavaScript, React").';
-    } else if (domainsActive.length === 1) {
-        depthAnalysis = `Your skills are concentrated in one domain (${domainsActive[0].replace('_',' ')}). Placement interviews test a broader set — especially core CS fundamentals that are currently absent.`;
-    } else if (criticalCount >= 3) {
-        depthAnalysis = `Despite having ${knownIds.length} skill${knownIds.length > 1 ? 's' : ''}, there are ${criticalCount} critical fundamental gaps that will block you in technical interviews. Address them in order of priority.`;
-    } else if (domainsActive.length >= 4) {
-        depthAnalysis = `Good breadth across ${domainsActive.length} domains. The next goal is depth — become notably strong in 2 areas rather than superficially covering many.`;
-    } else {
-        depthAnalysis = `You cover ${domainsActive.length} domain${domainsActive.length > 1 ? 's' : ''} with ${knownIds.length} skill${knownIds.length > 1 ? 's' : ''}. ${criticalCount > 0 ? `Addressing the ${criticalCount} critical gap${criticalCount > 1 ? 's' : ''} identified is the highest priority.` : 'Continue building depth in your strongest areas.'}`;
-    }
+    const roleDepth = {
+        frontend:  `Your profile is ${knownIds.length === 1 ? 'a single skill — ' : ''}frontend-oriented with ${knownIds.length} recognized skill${knownIds.length !== 1 ? 's' : ''}. Frontend is a valid specialization, but all industry roles expect at minimum basic backend and DSA beside it.`,
+        backend:   `Backend-focused profile across ${domainsActive.length} domain(s). ${criticalCount > 0 ? `${criticalCount} critical gap(s) will be exposed in backend interviews — DSA and DBMS are non-negotiable even for server-side roles.` : 'Solid depth. Focus on distributed systems and system design next.'}`,
+        fullstack: `Full-stack coverage across ${domainsActive.length} domain(s) — a strong job-market profile. ${criticalCount > 0 ? `However, ${criticalCount} critical gap(s) remain that interviewers will find.` : 'Polish your DSA and add one flagship project to stand out.'}`,
+        data:      `Data-oriented profile with Python/SQL foundation. ${criticalCount > 0 ? 'The missing DSA and backend skills are the next frontier.' : 'Build production-grade data projects as your portfolio differentiator.'}`,
+        core:      `Systems/competitive profile across ${domainsActive.length} domain(s). Strong theoretical foundation. The gap is practical output — deployed projects and full-stack exposure.`,
+        beginner:  `Early-stage profile with ${knownIds.length || 'no'} recognized skill(s). The most important insight: pick one direction (web development or DSA) and go deep for 90 days before diversifying.`
+    };
+    const depthAnalysis = roleDepth[role] || roleDepth.beginner;
 
     return { honestDescription, immediateAction, depthAnalysis };
 }
@@ -773,7 +921,7 @@ router.post('/', (req, res) => {
 
         // ── STEP 1: Parse raw input ───────────────────────
         const rawTokens = parseSkillsInput(skills);
-        console.log('\n━━━ SPA v4.1 ANALYSIS ━━━');
+        console.log('\n━━━ SPA v5.0 ANALYSIS ━━━');
         console.log('INPUT received:', skills);
         console.log('PARSED tokens:', rawTokens);
 
@@ -788,12 +936,16 @@ router.post('/', (req, res) => {
         const coverage = computeCoverage(knownIds);
         console.log('ACTIVE domains:', coverage.domainsActive);
 
+        // ── STEP 3B: Detect Role ─────────────────────────
+        const role = detectRole(knownIds);
+        console.log('DETECTED ROLE:', role);
+
         // ── STEP 4: Profile ───────────────────────────────
         const profile  = classifyProfile(knownIds, coverage, parseFloat(cgpa));
         console.log('PROFILE type:', profile.type, '| stage:', profile.stage);
 
-        // ── STEP 5: Gap Detection ─────────────────────────
-        const gaps     = detectGaps(knownIds, profile, coverage);
+        // ── STEP 5: Role-Aware Gap Detection ─────────────
+        const gaps = detectGaps(knownIds, profile, coverage, role);
         console.log('GAPS detected:', gaps.length, '→', gaps.map(g => `${g.id}(${g.priority})`).join(', '));
 
         // ── STEP 6: Market Intelligence ───────────────────
@@ -801,7 +953,7 @@ router.post('/', (req, res) => {
         console.log('MARKET insights generated:', marketInsights.length);
 
         // ── STEP 7: Strategic Insight ─────────────────────
-        const strategic = generateStrategicInsight(knownIds, profile, gaps, coverage);
+        const strategic = generateStrategicInsight(knownIds, profile, gaps, coverage, role);
 
         // ── STEP 8: Action Plan ───────────────────────────
         const actionPlan = generateActionPlan(gaps, profile, knownIds);
@@ -822,6 +974,7 @@ router.post('/', (req, res) => {
             success: true,
             profileType: profile.type,
             stage:       profile.stage,
+            role,
             strategic,
             strengths,
             gaps: {

@@ -297,6 +297,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalParsed     = (d._meta?.parsedTokens || []).length;
         const totalRecognized = (d._meta?.recognizedSkills || []).length;
         const unrecognized    = d._meta?.unrecognizedTokens || [];
+        const role            = d.role || 'beginner';
+        const roleLabels      = { frontend:'Frontend Dev', backend:'Backend Dev', fullstack:'Full-Stack Dev', data:'Data / ML', core:'CS / DSA', beginner:'Beginner' };
+        const roleColors      = { frontend:'#f472b6', backend:'#34d399', fullstack:'#60a5fa', data:'#fb923c', core:'#a78bfa', beginner:'#94a3b8' };
+        const roleLabel       = roleLabels[role] || role;
+        const roleColor       = roleColors[role]  || '#60a5fa';
 
         const unrecognizedBanner = unrecognized.length > 0 ? `
             <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:12px; color:rgba(255,255,255,0.6);">
@@ -306,9 +311,10 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>` : '';
 
         el.innerHTML = `
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
                 <span style="font-size:10px; font-weight:800; padding:4px 12px; border-radius:20px; background:${stageColor}22; color:${stageColor}; border:1px solid ${stageColor}55; text-transform:uppercase; letter-spacing:1.5px;">${esc(d.stage || 'beginner')} stage</span>
-                <span style="font-size:11px; color:rgba(255,255,255,0.35);">Recognized ${totalRecognized} of ${totalParsed} input skill${totalParsed !== 1 ? 's' : ''}</span>
+                <span style="font-size:10px; font-weight:800; padding:4px 12px; border-radius:20px; background:${roleColor}18; color:${roleColor}; border:1px solid ${roleColor}44; text-transform:uppercase; letter-spacing:1.5px;">🎯 ${esc(roleLabel)}</span>
+                <span style="font-size:11px; color:rgba(255,255,255,0.3);">Recognized ${totalRecognized} of ${totalParsed} skill${totalParsed !== 1 ? 's' : ''}</span>
             </div>
             ${unrecognizedBanner}
 
@@ -413,54 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         el.innerHTML = html;
 
-        // ── Event Delegation (one listener for ALL interactions) ─
-        el.addEventListener('click', function(e) {
-            const header = e.target.closest('.skill-card-header');
-            const planBtn = e.target.closest('[data-action="plan"]');
-
-            // Expand / Collapse (only if header clicked, not a link inside)
-            if (header && !e.target.closest('a') && !e.target.closest('button')) {
-                const card   = header.closest('.skill-card');
-                const body   = card.querySelector('.skill-card-body');
-                const chev   = header.querySelector('.chev');
-                if (!body || !chev) return;
-                const isOpen = body.style.display !== 'none';
-                body.style.display   = isOpen ? 'none' : 'block';
-                chev.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-                if (!isOpen) card.style.borderColor = header.dataset.borderColor || 'rgba(212,175,55,0.3)';
-                else card.style.borderColor = 'rgba(255,255,255,0.07)';
-                return;
-            }
-
-            // Add to Plan button
-            if (planBtn) {
-                e.preventDefault();
-                e.stopPropagation();
-                const skillId = planBtn.dataset.skillId;
-                const added   = togglePlan(skillId);
-                planBtn.textContent  = added ? '✓ In Plan' : '+ Add to Plan';
-                planBtn.style.color  = added ? '#10b981' : 'rgba(255,255,255,0.55)';
-                planBtn.style.borderColor = added ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.1)';
-                showToast(added ? 'Added to your learning plan.' : 'Removed from plan.', 'info');
-                // Also update badge in header
-                const card = planBtn.closest('.skill-card');
-                const badge = card?.querySelector('.plan-badge');
-                if (badge) badge.style.display = added ? 'inline' : 'none';
-                return;
-            }
-        });
-
-        // ── Learn button click tracking (separate since it navigates) ─
-        el.querySelectorAll('a[data-action="track-learn"]').forEach(a => {
-            a.addEventListener('click', e => {
-                const skillId = a.dataset.skillId;
-                if (skillId) {
-                    markStarted(skillId);
-                    showToast(`Learning session started for ${skillId} 🚀`, 'success');
-                    refreshProgressInCard(skillId);
-                }
-            });
-        });
     }
 
     function buildSkillCard(skill, cfg) {
@@ -481,7 +439,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="skill-card" data-id="${skill.id}" style="border:1px solid rgba(255,255,255,0.07); border-radius:18px; overflow:hidden; background:rgba(10,10,10,0.95); transition:border-color 0.2s;">
 
             <!-- HEADER -->
-            <div class="skill-card-header" style="padding:20px 22px; cursor:pointer; user-select:none;">
+            <div class="skill-card-header" data-border-color="${cfg.color}" style="padding:20px 22px; cursor:pointer; user-select:none;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div style="flex:1;">
                         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px;">
@@ -559,6 +517,23 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div style="font-size:10px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-top:4px;">Daily</div>
                         </div>
                     </div>
+
+                    <!-- YouTube Resources -->
+                    ${skill.youtube?.length ? `
+                    <div style="margin-bottom:18px;">
+                        <div style="font-size:10px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">▶ Watch & Learn</div>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            ${skill.youtube.map(v => `
+                                <a href="${esc(v.url)}" target="_blank" style="display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:10px; text-decoration:none; transition:background 0.2s;">
+                                    <div style="width:32px; height:32px; background:#ef4444; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <i class="fab fa-youtube" style="color:#fff; font-size:0.9rem;"></i>
+                                    </div>
+                                    <span style="font-size:12px; color:rgba(255,255,255,0.75); font-weight:600; line-height:1.3;">${esc(v.title)}</span>
+                                    <i class="fas fa-external-link-alt" style="color:rgba(255,255,255,0.2); font-size:0.7rem; margin-left:auto;"></i>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>` : ''}
 
                     <!-- Action Buttons -->
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -750,4 +725,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     init();
+
+    // ── Global Skill Card Event Delegation (ONE LISTENER) ──
+    const missingEl = document.getElementById("mentorMissing");
+    if (missingEl) {
+        missingEl.addEventListener('click', (e) => {
+            const header  = e.target.closest('.skill-card-header');
+            const planBtn = e.target.closest('[data-action="plan"]');
+            const learnLink = e.target.closest('a[data-action="learn"]');
+
+            // 1. Expand / Collapse
+            if (header && !e.target.closest('a') && !e.target.closest('button')) {
+                const card = header.closest('.skill-card');
+                const body = card.querySelector('.skill-card-body');
+                const chev = header.querySelector('.chev');
+                if (!body || !chev) return;
+
+                const isOpen = body.style.display !== 'none';
+                body.style.display = isOpen ? 'none' : 'block';
+                chev.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+                card.style.borderColor = isOpen ? 'rgba(255,255,255,0.07)' : (header.dataset.borderColor || 'rgba(212,175,55,0.3)');
+                return;
+            }
+
+            // 2. Add to Plan
+            if (planBtn) {
+                e.stopPropagation();
+                const skillId = planBtn.dataset.skillId;
+                const added   = togglePlan(skillId);
+                planBtn.textContent  = added ? '✓ In Plan' : '+ Add to Plan';
+                planBtn.style.color  = added ? '#10b981' : 'rgba(255,255,255,0.55)';
+                planBtn.style.borderColor = added ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.1)';
+                showToast(added ? 'Added to plan.' : 'Removed from plan.', 'info');
+                
+                // Update badge in header if exists
+                const card = planBtn.closest('.skill-card');
+                const badge = card?.querySelector('.plan-badge');
+                if (badge) badge.style.display = added ? 'inline' : 'none';
+                return;
+            }
+
+            // 3. Track Learn
+            if (learnLink) {
+                const skillId = learnLink.dataset.skillId;
+                if (skillId) {
+                    markStarted(skillId);
+                    showToast(`Learning session logged for ${skillId} 🚀`, 'success');
+                    refreshProgressInCard(skillId);
+                }
+            }
+        });
+    }
 });
