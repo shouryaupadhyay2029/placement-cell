@@ -248,6 +248,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             console.error("❌ Eligibility Engine:", err);
             showToast("Could not reach the analysis engine. Check server and retry.", "error");
+            renderDashboard({ strengths: [], gaps: {}, marketInsights: [], actionPlan: [] });
+            show("eligibilityResults");
+            hide("eligibilityEmpty");
         } finally {
             showLoader(false);
         }
@@ -320,36 +323,36 @@ document.addEventListener("DOMContentLoaded", () => {
             <!-- Strategic Header -->
             <div style="margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.06);">
                 <div style="font-size:10px; font-weight:800; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:2px; margin-bottom:5px;">Strategic Summary</div>
-                <div style="font-size:1.4rem; font-weight:900; color:#fff; letter-spacing:-0.5px;">${esc(ins.summary || 'Analytical Review')}</div>
+                <div style="font-size:1.4rem; font-weight:900; color:#fff; letter-spacing:-0.5px;">${esc(ins.summary || 'Awaiting Candidate Data')}</div>
             </div>
 
             <!-- Main Intelligence Grid -->
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                 <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                     <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Current Focus</div>
-                    <div style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6;">${esc(ins.currentFocus)}</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6;">${esc(ins.currentFocus || 'N/A')}</div>
                 </div>
                 <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                     <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Key Gaps</div>
-                    <div style="font-size:13px; color:#ef4444; font-weight:700;">${esc(ins.keyGaps)}</div>
+                    <div style="font-size:13px; color:#ef4444; font-weight:700;">${esc(ins.keyGaps || 'N/A')}</div>
                 </div>
             </div>
 
             <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
                 <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Skill Distribution</div>
                 <div style="font-size:12px; color:rgba(255,255,255,0.5); font-family:monospace; line-height:1.7; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px;">
-                    ${(ins.skillDistribution || '').replace(/\n/g, '<br>')}
+                    ${(ins.skillDistribution || 'No mapping possible').replace(/\n/g, '<br>')}
                 </div>
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                 <div style="background:rgba(239,68,68,0.03); padding:15px; border-radius:12px; border:1px solid rgba(239,68,68,0.15);">
                     <div style="font-size:9px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Impact on Placements</div>
-                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.impact)}</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.impact || 'N/A')}</div>
                 </div>
                 <div style="background:rgba(16,185,129,0.03); padding:15px; border-radius:12px; border:1px solid rgba(16,185,129,0.15);">
                     <div style="font-size:9px; font-weight:800; color:#10b981; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Recommended Actions</div>
-                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.recommendations)}</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.recommendations || 'N/A')}</div>
                 </div>
             </div>
 
@@ -359,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div>
                     <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px;">Next Logical Step</div>
-                    <div style="font-size:14px; color:#fff; font-weight:700;">${esc(ins.nextStep)}</div>
+                    <div style="font-size:14px; color:#fff; font-weight:700;">${esc(ins.nextStep || 'Complete data profile')}</div>
                 </div>
             </div>
         `;
@@ -374,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!strengths.length) {
             el.innerHTML = `<div style="padding:20px; text-align:center; color:rgba(255,255,255,0.25); font-size:13px; font-style:italic;">
-                No recognized skills found. Ensure your skills match known technologies (e.g., "JavaScript", "Python", "DSA").
+                No data available yet
             </div>`;
             return;
         }
@@ -426,7 +429,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ].filter(s => s.items.length > 0);
 
         if (!sections.length) {
-            el.innerHTML = `<div style="padding:24px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px;">No significant gaps detected with current skill data.</div>`;
+            el.innerHTML = `<div style="padding:24px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px; font-style:italic;">
+                Analysis will appear after data is loaded
+            </div>`;
             return;
         }
 
@@ -639,7 +644,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (highEl) {
             if (!plan.length) {
-                highEl.innerHTML = `<p style="color:rgba(255,255,255,0.25);font-size:13px;">Complete analysis to generate your weekly plan.</p>`;
+                highEl.innerHTML = `
+                    <div style="display:flex; gap:14px; padding:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:14px;">
+                        <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.05); flex-shrink:0;"></div>
+                        <div style="flex:1;">
+                            <div style="height:14px; width:40%; background:rgba(255,255,255,0.1); border-radius:4px; margin-bottom:8px;"></div>
+                            <div style="height:12px; width:70%; background:rgba(255,255,255,0.05); border-radius:4px; margin-bottom:4px;"></div>
+                            <div style="height:12px; width:50%; background:rgba(255,255,255,0.05); border-radius:4px;"></div>
+                        </div>
+                    </div>`;
             } else {
                 highEl.innerHTML = plan.slice(0, 4).map((w, i) => `
                     <div style="display:flex; gap:14px; padding:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:14px; border-left:3px solid var(--primary);">
@@ -658,7 +671,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (roadmapEl) {
-            roadmapEl.innerHTML = plan.map((w, i) => `
+            if (!plan.length) {
+                roadmapEl.innerHTML = `
+                    <div style="display:flex; gap:14px; align-items:flex-start; padding-bottom:12px;">
+                        <div style="width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.05); flex-shrink:0;"></div>
+                        <div style="flex:1;">
+                            <div style="height:12px; width:30%; background:rgba(255,255,255,0.1); border-radius:4px; margin-bottom:6px;"></div>
+                            <div style="height:10px; width:80%; background:rgba(255,255,255,0.05); border-radius:4px;"></div>
+                        </div>
+                    </div>`;
+            } else {
+                roadmapEl.innerHTML = plan.map((w, i) => `
                 <div style="display:flex; gap:14px; align-items:flex-start; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.03);">
                     <div style="width:26px; height:26px; border:1.5px solid rgba(167,139,250,0.5); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:#a78bfa; flex-shrink:0;">${i + 1}</div>
                     <div>
@@ -667,6 +690,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             `).join('');
+            }
         }
     }
 

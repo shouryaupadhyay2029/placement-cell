@@ -423,11 +423,15 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
                 showToast("Importing CSV...", "info");
                 // Use window.api.fetch for multipart if needed, or just standard fetch with X-College head
+                const token = localStorage.getItem("token");
+                const importHeaders = {
+                    "X-College-Context": localStorage.getItem("college") || "USAR"
+                };
+                if (token) importHeaders["Authorization"] = `Bearer ${token}`;
+
                 const response = await fetch("/api/companies/import", {
                     method: "POST",
-                    headers: {
-                        "X-College-Context": localStorage.getItem("college") || "USAR"
-                    },
+                    headers: importHeaders,
                     body: formData
                 });
 

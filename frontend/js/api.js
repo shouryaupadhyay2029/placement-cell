@@ -18,8 +18,10 @@ const api = {
         if (!this._woke) {
             this._woke = true;
             try {
-                // Ping basic root or health endpoint
-                fetch(`${API_BASE_URL}/profile`, { headers: { "X-Warmup": "true" } }).catch(() => {});
+                const token = localStorage.getItem("token");
+                const pingHeaders = { "X-Warmup": "true" };
+                if (token) pingHeaders["Authorization"] = `Bearer ${token}`;
+                fetch(`${API_BASE_URL}/profile`, { headers: pingHeaders }).catch(() => {});
             } catch(e) {}
         }
     },

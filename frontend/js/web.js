@@ -1096,6 +1096,8 @@ async function fetchRecruitmentData(year = "2025") {
 document.addEventListener("DOMContentLoaded", () => {
     // Logic now handled by dynamic batch fetcher at the end of the file
 
+    const batchTabsContainer = document.getElementById("batchTabsContainer");
+    const storedYear = localStorage.getItem("selectedBatchYear") || "2025";
     // 2. Set tabs active state and add listeners (for analytics page if present)
     if (batchTabsContainer) {
         batchTabsContainer.querySelectorAll(".batch-tab").forEach(tab => {
