@@ -247,7 +247,7 @@ function initGoogleAuthBtn() {
             customBtn.disabled = true;
 
             // Uses API_BASE securely parsed from api.js
-            window.location.href = `${API_BASE}/api/auth/google`;
+            window.location.href = `${window.API_BASE}/api/auth/google`;
         });
     }
 }

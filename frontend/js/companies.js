@@ -429,13 +429,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
                 if (token) importHeaders["Authorization"] = `Bearer ${token}`;
 
-                const response = await fetch("/api/companies/import", {
+                const response = await fetch(`${window.API_BASE_URL}/companies/import`, {
                     method: "POST",
                     headers: importHeaders,
                     body: formData
                 });
 
                 const result = await response.json();
+                
+                console.log("API RESPONSE:", result);
+                console.log("STATUS:", response.status);
+                if (!response.ok) {
+                    console.error("API failed:", response.status);
+                }
+
                 if (response.ok) {
                     showToast(result.message, "success");
                     fetchCompanies(); // Refresh list

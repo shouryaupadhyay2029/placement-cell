@@ -114,6 +114,13 @@ const api = {
 
             const data = await response.clone().json().catch(() => ({}));
 
+            console.log("API RESPONSE:", data);
+            console.log("STATUS:", response.status);
+
+            if (!response.ok) {
+                console.error("API failed:", response.status);
+            }
+
             // Handle Error Responses gracefully
             if (!response.ok || data.success === false) {
                 const errorMsg = data.error || data.message || "An unknown operational failure occurred";
@@ -162,3 +169,5 @@ if ('requestIdleCallback' in window) {
 }
 
 window.api = api;
+window.API_BASE_URL = API_BASE_URL;
+window.API_BASE = API_BASE;

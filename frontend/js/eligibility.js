@@ -103,8 +103,9 @@ window.fetchCompanies = async function () {
         );
 
         window.populateDropdown?.();
-    } catch (e) {
-        console.error("[fetch companies]", e);
+    } catch (error) {
+        console.error("Error:", error);
+        window.populateDropdown?.(); // will populate empty list gracefully
     }
 };
 
@@ -230,36 +231,139 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!res.ok) throw new Error(`Server responded ${res.status}`);
             const data = await res.json();
 
-            if (!data.success) throw new Error(data.message || "Analysis failed");
+            if (!data) {
+                console.warn("Skipping analysis: no input data");
+                renderFallbackUI();
+                return;
+            }
+
+            const safeData = data || {};
+
+            if (!safeData.success) throw new Error(safeData.message || "Analysis failed");
+
+            const meta = safeData._meta || {};
+            const engineV = safeData.engineVersion || '4.1';
 
             // Full pipeline trace
-            console.info(`[SPA Engine v${data.engineVersion || '4.1'}] Raw input:`, data._meta?.rawInput);
-            console.info(`[SPA Engine v${data.engineVersion || '4.1'}] Parsed tokens:`, data._meta?.parsedTokens);
-            console.info('[SPA v4.1] Recognized:', data._meta?.recognizedSkills);
-            console.info('[SPA v4.1] Unrecognized:', data._meta?.unrecognizedTokens);
-            console.info('[SPA v4.1] Profile:', data.profileType, '| Stage:', data.stage);
-            console.info('[SPA v4.1] Gaps:', data.gaps?.total);
+            console.info(`[SPA Engine v${engineV}] Raw input:`, meta.rawInput || 'N/A');
+            console.info(`[SPA Engine v${engineV}] Parsed tokens:`, meta.parsedTokens || []);
+            console.info('[SPA v4.1] Recognized:', meta.recognizedSkills || []);
+            console.info('[SPA v4.1] Unrecognized:', meta.unrecognizedTokens || []);
+            console.info('[SPA v4.1] Profile:', safeData.profileType || safeData.strategic?.profileType || 'N/A', '| Stage:', safeData.stage || 'beginner');
+            console.info('[SPA v4.1] Gaps:', safeData.gaps?.total || Object.keys(safeData.gaps || {}).length || 0);
 
-            localStorage.setItem("lastAnalysis_v4", JSON.stringify(data));
+            localStorage.setItem("lastAnalysis_v4", JSON.stringify(safeData));
             show("eligibilityResults");
             hide("eligibilityEmpty");
-            renderDashboard(data);
+            renderDashboard(safeData);
 
-        } catch (err) {
-            console.error("❌ Eligibility Engine:", err);
+        } catch (error) {
+            console.error("Error:", error);
             showToast("Could not reach the analysis engine. Check server and retry.", "error");
-            renderDashboard({ strengths: [], gaps: {}, marketInsights: [], actionPlan: [] });
-            show("eligibilityResults");
-            hide("eligibilityEmpty");
+            renderFallbackUI();
         } finally {
             showLoader(false);
         }
     };
 
+    function renderFallbackUI() {
+        const elStrategic = document.getElementById("mentorInsight");
+        const elStrengths = document.getElementById("mentorStrengths");
+        const elMissing = document.getElementById("mentorMissing");
+        const elTrends = document.getElementById("mentorTrends");
+        const elActionHigh = document.getElementById("mentorHighImpact");
+        const elRoadmap = document.getElementById("mentorRoadmap");
+
+        if (elStrategic) {
+            elStrategic.innerHTML = `
+                <div style="padding:40px 20px; text-align:center; color:rgba(255,255,255,0.4);">
+                    <div style="font-size:3rem; margin-bottom:15px; opacity:0.3; color:var(--primary);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 style="color:#fff; margin-bottom:8px; font-weight:600; font-size:1.2rem;">Analysis Not Available</h3>
+                    <p style="font-size:13px; max-width:320px; margin:0 auto; line-height:1.6; color:rgba(255,255,255,0.5);">The intelligence engine is currently unavailable or returned no data. Please adjust your profile and try again.</p>
+                </div>
+            `;
+        }
+
+        // Skeleton cards for Strengths
+        if (elStrengths) {
+            elStrengths.innerHTML = `
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px;">
+                    <div>
+                        <div style="height:14px; width:120px; background:rgba(255,255,255,0.08); border-radius:6px; margin-bottom:8px;"></div>
+                        <div style="height:10px; width:60px; background:rgba(255,255,255,0.04); border-radius:10px;"></div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="height:12px; width:40px; background:rgba(255,255,255,0.04); border-radius:4px; margin-bottom:6px;"></div>
+                    </div>
+                </div>
+            `.repeat(3);
+        }
+
+        // Fallback for Gaps
+        if (elMissing) {
+            elMissing.innerHTML = `
+                <div style="padding:30px; text-align:center; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.1); border-radius:14px;">
+                    <i class="fas fa-database" style="font-size:2rem; color:rgba(255,255,255,0.1); margin-bottom:15px; display:block;"></i>
+                    <div style="color:rgba(255,255,255,0.4); font-size:14px; font-weight:600;">Data loading or unavailable</div>
+                    <div style="color:rgba(255,255,255,0.2); font-size:12px; margin-top:5px;">Unable to fetch missing skill requirements.</div>
+                </div>
+            `;
+        }
+
+        // Skeleton for Market Trends
+        if (elTrends) {
+            elTrends.innerHTML = `
+                <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:14px; margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                        <div style="height:12px; width:30%; background:rgba(255,255,255,0.08); border-radius:4px;"></div>
+                        <div style="height:12px; width:15%; background:rgba(255,255,255,0.05); border-radius:10px;"></div>
+                    </div>
+                    <div style="height:10px; width:90%; background:rgba(255,255,255,0.04); border-radius:4px; margin-bottom:6px;"></div>
+                    <div style="height:10px; width:70%; background:rgba(255,255,255,0.04); border-radius:4px;"></div>
+                </div>
+            `.repeat(2);
+        }
+
+        // Skeleton for Action Plan (High Impact)
+        const skeletonAction = `
+            <div style="display:flex; gap:14px; padding:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:14px; margin-bottom:12px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.05); flex-shrink:0;"></div>
+                <div style="flex:1;">
+                    <div style="height:14px; width:40%; background:rgba(255,255,255,0.08); border-radius:4px; margin-bottom:8px;"></div>
+                    <div style="height:12px; width:70%; background:rgba(255,255,255,0.04); border-radius:4px; margin-bottom:4px;"></div>
+                    <div style="height:12px; width:50%; background:rgba(255,255,255,0.04); border-radius:4px;"></div>
+                </div>
+            </div>`;
+
+        if (elActionHigh) {
+            elActionHigh.innerHTML = skeletonAction.repeat(3);
+        }
+
+        // Skeleton for Roadmap
+        const skeletonRoadmap = `
+            <div style="display:flex; gap:14px; align-items:flex-start; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.03);">
+                <div style="width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.05); flex-shrink:0;"></div>
+                <div style="flex:1;">
+                    <div style="height:12px; width:30%; background:rgba(255,255,255,0.08); border-radius:4px; margin-bottom:6px;"></div>
+                    <div style="height:10px; width:80%; background:rgba(255,255,255,0.04); border-radius:4px;"></div>
+                </div>
+            </div>`;
+
+        if (elRoadmap) {
+            elRoadmap.innerHTML = skeletonRoadmap.repeat(4);
+        }
+
+        show("eligibilityResults");
+        hide("eligibilityEmpty");
+    }
+
     // ═══════════════════════════════════════════════════════
     //  MASTER RENDERER
     // ═══════════════════════════════════════════════════════
     function renderDashboard(d) {
+        if (!d) return;
         const name = currentUserProfile?.name?.split(' ')[0] || 'Candidate';
         renderStrategicAnalysis(d, name);
         renderStrengths(d.strengths || []);

@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
+const FRONTEND_URL = process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://placement-cell-chi.vercel.app' : 'http://127.0.0.1:5500');
+
 /**
  * JWT Generation
  */
@@ -26,22 +28,22 @@ router.get("/", passport.authenticate("google", { scope: ["profile", "email"], s
 router.get(
   "/callback",
   (req, res, next) => {
-    passport.authenticate("google", { session: false, failureRedirect: "https://placement-cell-chi.vercel.app/index.html?error=google_login_failed" }, (err, user, info) => {
+    passport.authenticate("google", { session: false, failureRedirect: `${FRONTEND_URL}/index.html?error=google_login_failed` }, (err, user, info) => {
       try {
         if (err) {
           console.error("❌ Passport Auth Error:", err);
-          return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=google_login_failed");
+          return res.redirect(`${FRONTEND_URL}/index.html?error=google_login_failed`);
         }
         
         if (!user) {
           console.error("❌ Passport Callback: No user object returned by strategy.");
-          return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=google_user_missing");
+          return res.redirect(`${FRONTEND_URL}/index.html?error=google_user_missing`);
         }
 
         // Since we injected session: false, we skip req.logIn and immediately generate JWT
         if (!process.env.JWT_SECRET) {
           console.error("❌ CRITICAL: JWT_SECRET environment variable is missing.");
-          return res.redirect("https://placement-cell-chi.vercel.app/index.html?error=server_config_error");
+          return res.redirect(`${FRONTEND_URL}/index.html?error=server_config_error`);
         }
 
         // Successful authentication
@@ -49,7 +51,7 @@ router.get(
         const token = generateToken(user._id);
 
         // Redirect to frontend with Token in URL query params
-        return res.redirect(`https://placement-cell-chi.vercel.app/index.html?token=${token}&success=true`);
+        return res.redirect(`${FRONTEND_URL}/index.html?token=${token}&success=true`);
       } catch (exception) {
         console.error("❌ Google Callback Exception:", exception);
         next(exception);
