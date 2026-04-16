@@ -10,6 +10,8 @@ const API_BASE = window.location.hostname === "localhost" || window.location.hos
 
 const API_BASE_URL = `${API_BASE}/api`;
 
+let serverWakeNotified = false;
+
 const api = {
     /**
      * Executes a background ping to wake up the Render server upon load.
@@ -95,18 +97,56 @@ const api = {
         let timeoutTimer = null;
         
         try {
-            // If the user actively requested this (not background), assume Render server might be cold
             if (!backgroundSilent) {
                 timeoutTimer = setTimeout(() => {
-                    if (typeof showToast === 'function') {
-                        showToast("Waking up server... This may take up to 45 seconds on first load.", "info", 5000);
+                    if (!serverWakeNotified) {
+                        serverWakeNotified = true;
+                        
+                        const loader = document.getElementById("loader");
+                        if (loader) {
+                            const loaderText = loader.querySelector(".loader-text");
+                            if (loaderText) {
+                                if (!loader.dataset.origText) loader.dataset.origText = loaderText.textContent;
+                                loaderText.textContent = "Initializing server... Please wait (first load may take ~30 seconds)";
+                            }
+                            loader.classList.remove("hidden");
+                            loader.classList.add("cold-start-active");
+                        }
                     }
                 }, 3500); // 3.5 seconds to trigger cold start warning
             }
 
-            const response = await fetch(url, { ...options, headers });
+            const fetchWithRetry = async (fetchUrl, fetchOptions, retries = 2) => {
+                try {
+                    const res = await fetch(fetchUrl, fetchOptions);
+                    if (!res.ok && (res.status === 502 || res.status === 503 || res.status === 504)) {
+                        throw new Error(`Cold start error: ${res.status}`);
+                    }
+                    return res;
+                } catch (err) {
+                    if (retries > 0) {
+                        console.warn(`Connection unstable or waking up. Retrying ${fetchUrl}... (${retries} attempts left)`);
+                        await new Promise(resolve => setTimeout(resolve, 2000)); // Brief pause to allow container spin-up
+                        return await fetchWithRetry(fetchUrl, fetchOptions, retries - 1);
+                    }
+                    throw err;
+                }
+            };
+
+            const response = await fetchWithRetry(url, { ...options, headers }, 2);
             
             if (timeoutTimer) clearTimeout(timeoutTimer);
+
+            const activeLoader = document.getElementById("loader");
+            if (activeLoader && activeLoader.classList.contains("cold-start-active")) {
+                activeLoader.classList.add("hidden");
+                activeLoader.classList.remove("cold-start-active");
+                
+                const loaderText = activeLoader.querySelector(".loader-text");
+                if (loaderText && activeLoader.dataset.origText) {
+                    loaderText.textContent = activeLoader.dataset.origText;
+                }
+            }
 
             if (window.location.hostname === "localhost" && !backgroundSilent) {
                 console.log(`📡 Response status: ${response.status} for ${url}`);

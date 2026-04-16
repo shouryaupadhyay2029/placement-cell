@@ -81,8 +81,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateBatchFilterOptions();
 
+    let isFetching = false;
+
     async function fetchCompanies() {
-        if (!tableBody) return;
+        if (isFetching) return;
+        isFetching = true;
+
+        if (!tableBody) {
+            isFetching = false;
+            return;
+        }
 
         const loader = document.getElementById("loader");
         if (loader) loader.classList.remove("hidden");
@@ -137,6 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
             tableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #ff4d4d; padding: 20px;">Error loading companies. Please ensure backend is running at https://placepro-backend.onrender.com</td></tr>`;
             const loader = document.getElementById("loader");
             if (loader) loader.classList.add("hidden");
+        } finally {
+            isFetching = false;
         }
     }
 

@@ -1904,7 +1904,12 @@ function updateBatchUI(batches, college) {
     }
 }
 
+let isFetching = false;
+
 async function triggerPageRefresh(year) {
+    if (isFetching) return;
+    isFetching = true;
+
     const mainContent = document.querySelector('.main-content');
     const loader = document.getElementById('loader');
 
@@ -1931,32 +1936,8 @@ async function triggerPageRefresh(year) {
         setTimeout(() => {
             if (mainContent) mainContent.classList.remove('context-switching');
             if (loader) loader.classList.add('hidden');
+            isFetching = false;
         }, 500); // smooth professional delay for transitions
     }
 }
 
-// Initial Load Sync
-document.addEventListener("DOMContentLoaded", async () => {
-    const savedCollege = localStorage.getItem("college") || "USAR";
-    const savedYear = localStorage.getItem("selectedBatchYear");
-
-    // Set initial context before fetching
-    if (typeof updateContextIndicator === 'function') {
-        updateContextIndicator(savedCollege, savedYear);
-    }
-
-    // Fetch batches first to know what's available
-    try {
-        const bRes = await window.api.get(`/companies/batches`);
-        const batches = bRes.ok ? await bRes.json() : [];
-
-        if (batches.length > 0) {
-            const year = savedYear || batches[0];
-            localStorage.setItem("selectedBatchYear", year);
-            updateBatchUI(batches, savedCollege);
-            triggerPageRefresh(year);
-        }
-    } catch (e) {
-        console.error("Initial load failed:", e);
-    }
-});
