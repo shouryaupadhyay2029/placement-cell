@@ -791,37 +791,45 @@ router.post('/', (req, res) => {
             return s ? { id, name:s.name, capabilities:s.capabilities } : null;
         }).filter(Boolean);
 
+        const finalGapsArray = [
+            ...gaps.filter(g => g.priority === 'HIGH').map(g => ({ ...g, resources: { youtube: g.youtube?.[0], practice: g.links?.practice, theory: g.links?.theory } })),
+            ...gaps.filter(g => g.priority === 'MEDIUM').map(g => ({ ...g, resources: { youtube: g.youtube?.[0], practice: g.links?.practice, theory: g.links?.theory } }))
+        ];
+
         return res.status(200).json({
             success: true,
-            engineVersion: "8.1.0-mentor",
-            role: capabilitySummary.active.slice(0, 2).join(' + ') || 'Developing Capability',
-            strategic,
-            strengths,
-            gaps: {
-                critical: gaps.filter(g => g.priority === 'HIGH').map(g => ({ ...g, resources: { youtube: g.youtube?.[0], practice: g.links?.practice, theory: g.links?.theory } })),
-                high:     gaps.filter(g => g.priority === 'MEDIUM').map(g => ({ ...g, resources: { youtube: g.youtube?.[0], practice: g.links?.practice, theory: g.links?.theory } })),
-                total:    gaps.length
-            },
-            marketInsights,
-            actionPlan,
-            helpfulResources: [
-                ...knownIds.map(id => ({ name: SKILL_DB[id].name, type: 'primary', youtube: SKILL_DB[id].youtube?.[0], docs: SKILL_DB[id].links?.theory })),
-                ...gaps.map(g => ({ name: g.name, type: 'gap-bridge', youtube: g.youtube?.[0], practice: g.links?.practice }))
-            ],
-            executionStrategy: {
-                title: "Execution Mode: 2 Hours/Day High-Impact Split",
-                schedule: [
-                    { time: "45 Mins", activity: "Theoretical Deep Dive & Documentation", mode: "Focused" },
-                    { time: "60 Mins", activity: "Hands-on Implementation / Solving", mode: "Execution" },
-                    { time: "15 Mins", activity: "Review & GitHub Push", mode: "Consistency" }
+            data: {
+                engineVersion: "8.1.0-mentor",
+                profile: {
+                    ...strategic,
+                    role: capabilitySummary.active.slice(0, 2).join(' + ') || 'Developing Capability'
+                },
+                skills: strengths,
+                gaps: finalGapsArray,
+                recommendations: actionPlan,
+                
+                // Keep backward-compatible legacy keys safely inside data for existing UI
+                marketInsights,
+                actionPlan,
+                helpfulResources: [
+                    ...knownIds.map(id => ({ name: SKILL_DB[id].name, type: 'primary', youtube: SKILL_DB[id].youtube?.[0], docs: SKILL_DB[id].links?.theory })),
+                    ...gaps.map(g => ({ name: g.name, type: 'gap-bridge', youtube: g.youtube?.[0], practice: g.links?.practice }))
                 ],
-                tips: [
-                    "Don't just watch videos - code as you watch.",
-                    "Build at least 2 mini-projects this month.",
-                    "Push daily commits to maintain GitHub heat."
-                ]
-            },
-            _meta: { normalized: knownIds, capabilities: capabilitySummary.active }
+                executionStrategy: {
+                    title: "Execution Mode: 2 Hours/Day High-Impact Split",
+                    schedule: [
+                        { time: "45 Mins", activity: "Theoretical Deep Dive & Documentation", mode: "Focused" },
+                        { time: "60 Mins", activity: "Hands-on Implementation / Solving", mode: "Execution" },
+                        { time: "15 Mins", activity: "Review & GitHub Push", mode: "Consistency" }
+                    ],
+                    tips: [
+                        "Don't just watch videos - code as you watch.",
+                        "Build at least 2 mini-projects this month.",
+                        "Push daily commits to maintain GitHub heat."
+                    ]
+                },
+                _meta: { normalized: knownIds, capabilities: capabilitySummary.active }
+            }
         });
 
 

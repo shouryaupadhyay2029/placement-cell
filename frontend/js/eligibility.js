@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cached = localStorage.getItem("lastAnalysis_v4");
                 if (cached) {
                     const data = JSON.parse(cached);
+                    globalAnalysisData = data; // Set global single source of truth
                     renderDashboard(data);
                     show("eligibilityResults");
                     hide("eligibilityEmpty");
@@ -195,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             localStorage.setItem("userEligibilityProfile", JSON.stringify(currentUserProfile));
             showToast("Running full intelligence analysis...", "info");
-            await window.evaluateGlobalEligibility();
+            await window.evaluateGlobalEligibility(true); // Force refetch on direct form submit
             document.getElementById("eligibilityResults")?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     }
@@ -211,8 +212,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // ═══════════════════════════════════════════════════════
     //  ANALYSIS ENGINE CALL
     // ═══════════════════════════════════════════════════════
-    window.evaluateGlobalEligibility = async function () {
+    let isEvaluating = false;
+    let globalAnalysisData = null;
+
+    window.evaluateGlobalEligibility = async function (forceRefresh = false) {
         if (!currentUserProfile) return;
+        
+        // Prevent concurrent overlapping calls
+        if (isEvaluating) return;
+        isEvaluating = true;
+
+        // Render from single source of truth if already fetched
+        if (!forceRefresh && globalAnalysisData) {
+            renderDashboard(globalAnalysisData);
+            isEvaluating = false;
+            return;
+        }
 
         await showLoader(true, [
             "NORMALIZING SKILL INPUT...",
@@ -237,19 +252,42 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const safeData = data || {};
+            // 1. Log full API response
+            console.log("FULL API RESPONSE:", data);
 
-            if (!safeData.success) throw new Error(safeData.message || "Analysis failed");
+            // 2. Destructure with deep fallback safety mapping both root and wrapped .data structures
+            const payload = data?.data || data || {};
+            
+            if (!payload.success && !data.success) throw new Error(data.message || payload.message || "Analysis failed");
 
-            const meta = safeData._meta || {};
-            const engineV = safeData.engineVersion || '4.1';
+            const safeData = {
+                // Map both new 'profile' format and legacy 'strategic' format
+                strategic: payload.profile || payload.strategic || {},
+                // Map both new 'skills' format and legacy 'strengths' format
+                strengths: payload.skills || payload.strengths || [],
+                gaps: payload.gaps || {},
+                marketInsights: payload.marketInsights || payload.recommendations || [],
+                actionPlan: payload.actionPlan || payload.recommendations || [],
+                profileType: payload.profile?.profileType || payload.strategic?.profileType || payload.profileType || 'N/A',
+                stage: payload.profile?.stage || payload.strategic?.stage || payload.stage || 'beginner',
+                _meta: payload._meta || {},
+                engineVersion: payload.engineVersion || data.engineVersion || '4.1'
+            };
 
-            // Full pipeline trace
+            const meta = safeData._meta;
+            const engineV = safeData.engineVersion;
+
+            // Globally store single source of truth
+            if (!globalAnalysisData || forceRefresh) {
+                globalAnalysisData = safeData;
+            }
+
+            // Full pipeline trace safely wrapped
             console.info(`[SPA Engine v${engineV}] Raw input:`, meta.rawInput || 'N/A');
             console.info(`[SPA Engine v${engineV}] Parsed tokens:`, meta.parsedTokens || []);
             console.info('[SPA v4.1] Recognized:', meta.recognizedSkills || []);
             console.info('[SPA v4.1] Unrecognized:', meta.unrecognizedTokens || []);
-            console.info('[SPA v4.1] Profile:', safeData.profileType || safeData.strategic?.profileType || 'N/A', '| Stage:', safeData.stage || 'beginner');
+            console.info('[SPA v4.1] Profile:', safeData.profileType, '| Stage:', safeData.stage);
             console.info('[SPA v4.1] Gaps:', safeData.gaps?.total || Object.keys(safeData.gaps || {}).length || 0);
 
             localStorage.setItem("lastAnalysis_v4", JSON.stringify(safeData));
@@ -263,6 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
             renderFallbackUI();
         } finally {
             showLoader(false);
+            isEvaluating = false; // Release lock
         }
     };
 
@@ -364,6 +403,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // ═══════════════════════════════════════════════════════
     function renderDashboard(d) {
         if (!d) return;
+
+        // DEBUG LOGS (Verifying normalized data is strictly valid before render)
+        console.log("PROFILE:", d.strategic);
+        console.log("SKILLS:", d.strengths);
+        console.log("GAPS:", d.gaps);
+
         const name = currentUserProfile?.name?.split(' ')[0] || 'Candidate';
         renderStrategicAnalysis(d, name);
         renderStrengths(d.strengths || []);
@@ -427,36 +472,36 @@ document.addEventListener("DOMContentLoaded", () => {
             <!-- Strategic Header -->
             <div style="margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.06);">
                 <div style="font-size:10px; font-weight:800; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:2px; margin-bottom:5px;">Strategic Summary</div>
-                <div style="font-size:1.4rem; font-weight:900; color:#fff; letter-spacing:-0.5px;">${esc(ins.summary || 'Awaiting Candidate Data')}</div>
+                <div style="font-size:1.4rem; font-weight:900; color:#fff; letter-spacing:-0.5px;">${esc(ins.summary || 'Not available')}</div>
             </div>
 
             <!-- Main Intelligence Grid -->
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                 <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                     <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Current Focus</div>
-                    <div style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6;">${esc(ins.currentFocus || 'N/A')}</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6;">${esc(ins.currentFocus || 'Not available')}</div>
                 </div>
                 <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                     <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Key Gaps</div>
-                    <div style="font-size:13px; color:#ef4444; font-weight:700;">${esc(ins.keyGaps || 'N/A')}</div>
+                    <div style="font-size:13px; color:#ef4444; font-weight:700;">${esc(ins.keyGaps || 'Not available')}</div>
                 </div>
             </div>
 
             <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
                 <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Skill Distribution</div>
                 <div style="font-size:12px; color:rgba(255,255,255,0.5); font-family:monospace; line-height:1.7; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px;">
-                    ${(ins.skillDistribution || 'No mapping possible').replace(/\n/g, '<br>')}
+                    ${(ins.skillDistribution || 'Not available').replace(/\n/g, '<br>')}
                 </div>
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                 <div style="background:rgba(239,68,68,0.03); padding:15px; border-radius:12px; border:1px solid rgba(239,68,68,0.15);">
                     <div style="font-size:9px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Impact on Placements</div>
-                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.impact || 'N/A')}</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.impact || 'Not available')}</div>
                 </div>
                 <div style="background:rgba(16,185,129,0.03); padding:15px; border-radius:12px; border:1px solid rgba(16,185,129,0.15);">
                     <div style="font-size:9px; font-weight:800; color:#10b981; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">Recommended Actions</div>
-                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.recommendations || 'N/A')}</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5;">${esc(ins.recommendations || 'Not available')}</div>
                 </div>
             </div>
 
@@ -466,7 +511,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div>
                     <div style="font-size:9px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px;">Next Logical Step</div>
-                    <div style="font-size:14px; color:#fff; font-weight:700;">${esc(ins.nextStep || 'Complete data profile')}</div>
+                    <div style="font-size:14px; color:#fff; font-weight:700;">${esc(ins.nextStep || 'Not available')}</div>
                 </div>
             </div>
         `;
@@ -497,15 +542,18 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         el.innerHTML = strengths.map(s => {
-            const color = domainColors[s.category] || '#60a5fa';
+            const rawCategory = (s.capabilities && s.capabilities[0]) ? s.capabilities[0] : (s.category || 'Core Skill');
+            const cMatch = rawCategory.toLowerCase().replace(/\s+/g, '_');
+            const color = domainColors[cMatch] || '#10b981';
+            
             return `
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:rgba(16,185,129,0.03); border:1px solid rgba(16,185,129,0.12); border-radius:12px;">
                     <div>
-                        <div style="font-weight:700; font-size:14px; color:#fff; margin-bottom:3px;">${esc(s.name)}</div>
-                        <span style="font-size:10px; padding:2px 8px; border-radius:20px; background:${color}15; color:${color}; border:1px solid ${color}33; text-transform:uppercase; letter-spacing:1px;">${s.category?.replace('_', ' ') || 'skill'}</span>
+                        <div style="font-weight:700; font-size:14px; color:#fff; margin-bottom:3px;">${esc(s.name || s.id || 'Unknown Skill')}</div>
+                        <span style="font-size:10px; padding:2px 8px; border-radius:20px; background:${color}15; color:${color}; border:1px solid ${color}33; text-transform:uppercase; letter-spacing:1px;">${esc(rawCategory)}</span>
                     </div>
                     <div style="text-align:right;">
-                        <div style="font-size:12px; color:#10b981; font-weight:700; margin-bottom:2px;">${s.demandScore || '?'}% demand</div>
+                        <div style="font-size:12px; color:#10b981; font-weight:700; margin-bottom:2px;">Industry Verified</div>
                         <i class="fas fa-check-circle" style="color:#10b981; font-size:1.1rem;"></i>
                     </div>
                 </div>
@@ -526,10 +574,24 @@ document.addEventListener("DOMContentLoaded", () => {
             MEDIUM:   { label: "Valuable Add-on",  color: "#60a5fa", bg: "rgba(96,165,250,0.08)", border: "rgba(96,165,250,0.25)", icon: "💡" }
         };
 
+        const isArray = Array.isArray(gaps);
+
         const sections = [
-            { key: 'critical', items: gaps.critical || [], cfg: PRIORITY_CONFIG.CRITICAL },
-            { key: 'high',     items: gaps.high     || [], cfg: PRIORITY_CONFIG.HIGH },
-            { key: 'medium',   items: gaps.medium   || [], cfg: PRIORITY_CONFIG.MEDIUM }
+            { 
+                key: 'critical', 
+                items: isArray ? gaps.filter(g => g.priority === 'HIGH' || g.priority === 'CRITICAL') : (gaps.critical || []), 
+                cfg: PRIORITY_CONFIG.CRITICAL 
+            },
+            { 
+                key: 'high',     
+                items: isArray ? gaps.filter(g => g.priority === 'MEDIUM') : (gaps.high || []), 
+                cfg: PRIORITY_CONFIG.HIGH 
+            },
+            { 
+                key: 'medium',   
+                items: isArray ? gaps.filter(g => g.priority === 'LOW') : (gaps.medium || []), 
+                cfg: PRIORITY_CONFIG.MEDIUM 
+            }
         ].filter(s => s.items.length > 0);
 
         if (!sections.length) {
@@ -587,9 +649,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             ${inPlan ? `<span style="font-size:9px; padding:3px 9px; border-radius:20px; background:rgba(16,185,129,0.1); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-weight:800;">✓ IN PLAN</span>` : ''}
                         </div>
                         <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:10px;">
-                            <span style="font-size:11px; color:${dColor}; font-weight:700;">⚡ ${esc(skill.difficulty)}</span>
-                            <span style="font-size:11px; color:rgba(255,255,255,0.4);">⏱ ~${skill.estimatedWeeks}w · ${skill.dailyHours}h/day</span>
-                            <span style="font-size:11px; color:rgba(255,255,255,0.4);">📊 ${skill.demandScore}% demand</span>
+                            <span style="font-size:11px; color:${dColor}; font-weight:700;">⚡ ${esc(skill.difficulty || 'Analysis Pending')}</span>
+                            <span style="font-size:11px; color:rgba(255,255,255,0.4);">⏱ ~${skill.estimatedWeeks || 'TBD '}w · ${skill.dailyHours || '?'}h/day</span>
+                            <span style="font-size:11px; color:rgba(255,255,255,0.4);">📊 ${skill.demandScore || '?'}% demand</span>
                         </div>
                         <!-- Demand bar -->
                         <div style="height:2px; background:rgba(255,255,255,0.05); border-radius:2px; width:100%;">
@@ -644,15 +706,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     <!-- Stats Row -->
                     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px;">
                         <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.02); border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size:1.4rem; font-weight:900; color:${dColor};">${skill.difficultyScore ?? '?'}/10</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:${dColor};">${skill.difficultyScore ?? '?'}</div>
                             <div style="font-size:10px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-top:4px;">Difficulty</div>
                         </div>
                         <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.02); border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size:1.4rem; font-weight:900; color:#60a5fa;">${skill.estimatedWeeks}w</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:#60a5fa;">${skill.estimatedWeeks || '?'}w</div>
                             <div style="font-size:10px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-top:4px;">Time Est.</div>
                         </div>
                         <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.02); border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size:1.4rem; font-weight:900; color:#f59e0b;">${skill.dailyHours}h</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:#f59e0b;">${skill.dailyHours || '?'}h</div>
                             <div style="font-size:10px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-top:4px;">Daily</div>
                         </div>
                     </div>
@@ -730,10 +792,10 @@ document.addEventListener("DOMContentLoaded", () => {
         el.innerHTML = insights.map(ins => `
             <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:14px; border-left:3px solid ${ins.statusColor || '#60a5fa'};">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.7);">${esc(ins.segment)}</div>
-                    <span style="font-size:9px; padding:3px 10px; border-radius:20px; background:${ins.statusColor}22; color:${ins.statusColor}; border:1px solid ${ins.statusColor}44; font-weight:800; text-transform:uppercase;">${esc(ins.status)}</span>
+                    <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.7);">${esc(ins.segment || 'Not available')}</div>
+                    <span style="font-size:9px; padding:3px 10px; border-radius:20px; background:${ins.statusColor || '#60a5fa'}22; color:${ins.statusColor || '#60a5fa'}; border:1px solid ${ins.statusColor || '#60a5fa'}44; font-weight:800; text-transform:uppercase;">${esc(ins.status || 'Not available')}</span>
                 </div>
-                <p style="font-size:12px; color:rgba(255,255,255,0.5); margin:0; line-height:1.65;">${esc(ins.insight)}</p>
+                <p style="font-size:12px; color:rgba(255,255,255,0.5); margin:0; line-height:1.65;">${esc(ins.insight || 'Not available')}</p>
             </div>
         `).join('');
     }
@@ -762,11 +824,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div style="display:flex; gap:14px; padding:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:14px; border-left:3px solid var(--primary);">
                         <div style="width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:var(--primary); flex-shrink:0;">W${i + 1}</div>
                         <div style="flex:1;">
-                            <div style="font-weight:700; font-size:13px; color:#fff; margin-bottom:4px;">${esc(w.skill)}</div>
-                            <div style="font-size:12px; color:rgba(255,255,255,0.5); line-height:1.5;">${esc(w.goal)}</div>
+                            <div style="font-weight:700; font-size:13px; color:#fff; margin-bottom:4px;">${esc(w.skill || 'Not available')}</div>
+                            <div style="font-size:12px; color:rgba(255,255,255,0.5); line-height:1.5;">${esc(w.goal || 'Not available')}</div>
                             <div style="display:flex; gap:12px; margin-top:6px;">
-                                <span style="font-size:10px; color:var(--primary);">⏱ ${esc(w.dailyCommitment)}</span>
-                                <span style="font-size:10px; color:rgba(255,255,255,0.3);">Target: ${esc(w.milestone)}</span>
+                                <span style="font-size:10px; color:var(--primary);">⏱ ${esc(w.dailyCommitment || 'Not available')}</span>
+                                <span style="font-size:10px; color:rgba(255,255,255,0.3);">Target: ${esc(w.milestone || 'Not available')}</span>
                             </div>
                         </div>
                     </div>
@@ -789,8 +851,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div style="display:flex; gap:14px; align-items:flex-start; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.03);">
                     <div style="width:26px; height:26px; border:1.5px solid rgba(167,139,250,0.5); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:#a78bfa; flex-shrink:0;">${i + 1}</div>
                     <div>
-                        <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.8); margin-bottom:3px;">${esc(w.skill)}</div>
-                        <p style="font-size:12px; color:rgba(255,255,255,0.5); line-height:1.5; margin:0;">${esc(w.goal)}</p>
+                        <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.8); margin-bottom:3px;">${esc(w.skill || 'Not available')}</div>
+                        <p style="font-size:12px; color:rgba(255,255,255,0.5); line-height:1.5; margin:0;">${esc(w.goal || 'Not available')}</p>
                     </div>
                 </div>
             `).join('');

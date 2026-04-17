@@ -213,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setTimeout(() => {
             if (tableBody) tableBody.classList.remove("fade-in");
-            if (loader) loader.classList.add("hidden");
+            const globalLoader = document.getElementById("loader");
+            if (globalLoader) globalLoader.classList.add("hidden");
         }, 300);
     }
 
