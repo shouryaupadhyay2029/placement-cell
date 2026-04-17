@@ -13,69 +13,73 @@
     <link rel="stylesheet" href="./css/toast.css">
     <link rel="stylesheet" href="./css/mobile.css">
     <style>
-        .intelligence-grid {
-            transform: translateY(20px);
-            opacity: 0;
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ════════════════════════════════════════════
+           LAYOUT SYSTEM  —  Spacing & Rhythm Tokens
+           ════════════════════════════════════════════ */
+
+        /* Global section padding */
+        .section-block {
+            padding: 28px 32px;
+            border-radius: 24px;
+            position: relative;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.3; }
-            100% { transform: scale(1.1); opacity: 0.5; }
+        /* Limit prose text width for readability */
+        .prose-limit {
+            max-width: 720px;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        /* Vertical rhythm between dashboard cards */
+        .results-stack > * + * {
+            margin-top: 2rem;
         }
 
+        /* Premium card base */
         .premium-card {
-            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),
+                        box-shadow 0.35s ease,
+                        border-color 0.25s ease;
             position: relative;
             z-index: 1;
         }
 
         .premium-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            border-color: rgba(212, 175, 55, 0.6) !important;
+            transform: translateY(-5px);
+            box-shadow: 0 24px 56px rgba(0,0,0,0.45);
+            border-color: rgba(212, 175, 55, 0.45) !important;
         }
 
+        /* Radial glow overlay */
         .card-glow {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 70%);
+            background: radial-gradient(circle at top right, rgba(212,175,55,0.07), transparent 65%);
             pointer-events: none;
             z-index: 0;
         }
 
+        /* Profile type badge */
         .profile-tag {
-            padding: 6px 14px;
-            background: rgba(212, 175, 55, 0.15);
-            border: 1px solid var(--primary);
+            padding: 6px 16px;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212,175,55,0.5);
             color: var(--primary);
             border-radius: 30px;
             font-size: 10px;
             text-transform: uppercase;
             font-weight: 800;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(212,175,55,0.2);
+            letter-spacing: 1.2px;
+            box-shadow: 0 4px 14px rgba(212,175,55,0.18);
+            white-space: nowrap;
         }
 
+        /* Strength cards fade in */
         .insight-list > div {
-            animation: fadeIn 0.8s ease forwards;
+            animation: fadeIn 0.7s ease forwards;
             opacity: 0;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
+        /* Loader */
         .loader-status-text {
             margin-top: 25px;
             font-size: 14px;
@@ -87,24 +91,27 @@
             animation: pulse 1.5s infinite;
         }
 
-        @keyframes expandIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
+        /* Skill gap cards */
         .skill-card:hover {
             border-color: rgba(212,175,55,0.2) !important;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 36px rgba(0,0,0,0.45);
         }
-
         .skill-card-header:hover {
-            background: rgba(255,255,255,0.02);
+            background: rgba(255,255,255,0.015);
         }
-
         .btn-start-learning:hover, .btn-practice:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
+
+        /* ─── Shared keyframes ─── */
+        .intelligence-grid { transform: translateY(20px); opacity: 0; }
+        @keyframes slideUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes pulse     { 0% { transform:scale(1); opacity:0.3; } 100% { transform:scale(1.1); opacity:0.5; } }
+        @keyframes shimmer   { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
+        @keyframes fadeIn    { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes expandIn  { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes loadProgress { 0% { width:0; opacity:0; } 100% { opacity:1; } }
     </style>
 </head>
 
@@ -294,10 +301,10 @@
     <div class="container">
         <!-- MAIN CONTENT -->
         <main class="main-content">
-            <section id="eligibility" class="section active" style="padding-top: 120px;">
+            <section id="eligibility" class="section active" style="padding-top: 120px; padding-bottom: 60px;">
                 
                 <!-- 1. COMPANY INTELLIGENCE (TOP) -->
-                <div class="company-intelligence-section" style="margin-top: 1rem; margin-bottom: 3rem;">
+                <div class="company-intelligence-section" style="margin-top: 1rem; margin-bottom: 4rem;">
                     <div class="card-header" style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
                         <div>
                             <h2 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 2rem;">Company Intelligence</h2>
@@ -321,7 +328,7 @@
                 </div>
 
                 <!-- 2. TWO-COLUMN GRID FOR ANALYTICS (BELOW) -->
-                <div class="eligibility-workspace" style="display: grid; grid-template-columns: 420px 1fr; gap: 2.5rem; align-items: start;">
+                <div class="eligibility-workspace" style="display: grid; grid-template-columns: 420px 1fr; gap: 3rem; align-items: start;">
                     
                     <!-- COLUMN 1: USER PROFILE FORM -->
                     <div class="user-input-section">
@@ -363,59 +370,56 @@
                     <div id="eligibilityResults" class="results-section" style="display:none;">
 
                         <!-- 🧠 SMART INSIGHT (CARD 1) -->
-                        <div class="premium-card insight-card" style="padding: 2.5rem; border: 1px solid rgba(212,175,55,0.4); background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(0,0,0,0.8)); border-radius: 24px; margin-bottom: 2rem; position:relative; overflow:hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+                        <div class="premium-card insight-card section-block" style="border: 1px solid rgba(212,175,55,0.35); background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(0,0,0,0.85)); border-radius: 24px; margin-bottom: 2.5rem; overflow:hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
                             <div class="card-glow"></div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; position: relative; z-index: 1;">
-                                <h4 style="color: var(--primary); font-size: 12px; text-transform: uppercase; letter-spacing: 3px; display:flex; align-items:center; gap:10px; font-weight: 800;">
-                                    <i class="fas fa-microchip" style="font-size: 1.2rem;"></i> Strategic Intelligence
-                                </h4>
+                            <div style="position: absolute; top: 28px; right: 32px; z-index: 10;">
                                 <div id="profileTypeTag" class="profile-tag"></div>
                             </div>
-                            <p id="mentorInsight" style="color: rgba(255,255,255,0.7); font-size: 16px; line-height: 1.8; font-weight: 400; margin:0; position: relative; z-index: 1;"></p>
+                            <p id="mentorInsight" class="prose-limit" style="color: rgba(255,255,255,0.75); font-size: 15.5px; line-height: 1.85; font-weight: 400; margin:0; position: relative; z-index: 1;"></p>
                         </div>
 
                         <!-- 🟢 YOUR STRENGTHS (CARD 2) -->
-                        <div class="premium-card strength-card" style="padding: 2rem; border: 1px solid rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); border-radius: 24px; margin-bottom: 1.5rem;">
-                            <h4 style="color: #10b981; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                        <div class="premium-card strength-card section-block" style="border: 1px solid rgba(16,185,129,0.15); background: rgba(16,185,129,0.04); border-radius: 24px; margin-bottom: 2.5rem;">
+                            <h4 style="color: #10b981; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.8rem; display:flex; align-items:center; gap:10px;">
                                 <i class="fas fa-certificate"></i> Verified Strengths
                             </h4>
-                            <div id="mentorStrengths" class="insight-list" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.2rem;"></div>
+                            <div id="mentorStrengths" class="insight-list" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1.4rem;"></div>
                         </div>
 
                         <!-- 🟡 SKILL GAP ENGINE (CARD 3) -->
-                        <div class="premium-card progress-card" style="padding: 2rem; border: 1px solid rgba(245,158,11,0.15); background: rgba(0,0,0,0.4); border-radius: 24px; margin-bottom: 1.5rem;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+                        <div class="premium-card progress-card section-block" style="border: 1px solid rgba(245,158,11,0.1); background: rgba(0,0,0,0.35); border-radius: 24px; margin-bottom: 2.5rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
                                 <h4 style="color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display:flex; align-items:center; gap:10px; margin:0;">
                                     <i class="fas fa-bolt"></i> Skill Gap Engine
                                 </h4>
-                                <span style="font-size:10px; color:rgba(255,255,255,0.25);">Click any card to expand</span>
+                                <span style="font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:0.5px;">Click any card to expand</span>
                             </div>
                             <div id="mentorMissing"></div>
                         </div>
 
                         <!-- 📅 WEEKLY ACTION PLAN (CARD 4) -->
-                        <div class="premium-card" style="padding: 2rem; border: 1px solid rgba(212,175,55,0.15); background: rgba(0,0,0,0.3); border-radius: 24px; margin-bottom: 1.5rem;">
-                            <h4 style="color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                        <div class="premium-card section-block" style="border: 1px solid rgba(212,175,55,0.1); background: rgba(0,0,0,0.3); border-radius: 24px; margin-bottom: 2.5rem;">
+                            <h4 style="color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; display:flex; align-items:center; gap:10px;">
                                 <i class="fas fa-calendar-week"></i> Weekly Action Plan
                             </h4>
-                            <div id="mentorHighImpact" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                            <div id="mentorHighImpact"></div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
                             <!-- 📈 INDUSTRY TRENDS (CARD 5) -->
-                            <div class="premium-card trend-card" style="padding: 2rem; border: 1px solid rgba(96,165,250,0.3); background: rgba(96,165,250,0.05); border-radius: 24px;">
-                                <h4 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                            <div class="premium-card trend-card section-block" style="border: 1px solid rgba(96,165,250,0.12); background: rgba(96,165,250,0.03); border-radius: 24px;">
+                                <h4 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; display:flex; align-items:center; gap:10px;">
                                     <i class="fas fa-chart-line"></i> Market Trends
                                 </h4>
-                                <div id="mentorTrends" style="display:flex; flex-direction:column; gap:1rem;"></div>
+                                <div id="mentorTrends" style="display:flex; flex-direction:column; gap:1.2rem;"></div>
                             </div>
 
                             <!-- 🚀 LEARNING ROADMAP (CARD 6) -->
-                            <div class="premium-card roadmap-card" style="padding: 2rem; border: 1px solid rgba(167,139,250,0.3); background: rgba(167,139,250,0.05); border-radius: 24px;">
-                                <h4 style="color: #a78bfa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; display:flex; align-items:center; gap:10px;">
+                            <div class="premium-card roadmap-card section-block" style="border: 1px solid rgba(167,139,250,0.12); background: rgba(167,139,250,0.03); border-radius: 24px;">
+                                <h4 style="color: #a78bfa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; display:flex; align-items:center; gap:10px;">
                                     <i class="fas fa-map-signs"></i> Master Plan
                                 </h4>
-                                <div id="mentorRoadmap" style="display:flex; flex-direction:column; gap:1rem;"></div>
+                                <div id="mentorRoadmap" style="display:flex; flex-direction:column; gap:1.2rem;"></div>
                             </div>
                         </div>
 
